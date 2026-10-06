@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ملخصات وتدريبات مادة الفيزياء للمرحلة الثانوية — نظام المسارات السعودي: فيزياء ١ للصف الأول الثانوي وفيزياء ٢ للصف الثاني الثانوي، وفق كتب وزارة التعليم." />
+  <meta name="theme-color" content="#101b3f" />
+  <title>فيزياء المسارات — فيزياء ١ و٢ للمرحلة الثانوية</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ============ الترويسة ============ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-atom" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="46" height="46">
+            <circle cx="32" cy="32" r="6" fill="currentColor"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(60 32 32)"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(120 32 32)"/>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <h1>فيزياء المسارات</h1>
+          <p>فيزياء ١ و٢ — المرحلة الثانوية بنظام المسارات</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- التحكم بحجم الخط -->
+        <div class="font-controls" role="group" aria-label="حجم الخط">
+          <button id="fontDec" class="ctrl-btn" title="تصغير الخط">أ−</button>
+          <span id="fontValue" class="font-value" title="حجم الخط الحالي">100٪</span>
+          <button id="fontInc" class="ctrl-btn" title="تكبير الخط">أ+</button>
+        </div>
+
+        <!-- تبديل الثيم -->
+        <button id="themeToggle" class="theme-toggle" title="تبديل الوضع الليلي/النهاري" aria-label="تبديل الثيم">
+          <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20">
+            <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/>
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ البطل ============ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="hero-badge">منهج وزارة التعليم — المملكة العربية السعودية</span>
+        <h2>تعلّم الفيزياء بمنهجية واضحة</h2>
+        <p>
+          ملخصات مرتبة للمفاهيم والقوانين والمسائل المحلولة، وفق فصول ودروس كتابَي
+          <strong>الفيزياء (١)</strong> للصف الأول الثانوي و<strong>الفيزياء (٢)</strong> للصف الثاني الثانوي،
+          نظام المسارات.
+        </p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num">12</span><span class="stat-label">فصلاً دراسياً</span></div>
+          <div class="stat"><span class="stat-num">31</span><span class="stat-label">درساً ملخصاً</span></div>
+          <div class="stat"><span class="stat-num">70+</span><span class="stat-label">قانوناً ومعادلة</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-a"></div>
+        <div class="orbit orbit-b"></div>
+        <div class="orbit orbit-c"></div>
+        <div class="nucleus">E=mc²</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ اختيار الكتاب + البحث ============ -->
+  <nav class="book-nav">
+    <div class="book-nav-inner">
+      <div id="bookTabs" class="book-tabs" role="tablist" aria-label="اختيار الكتاب"></div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="searchInput" type="search" placeholder="ابحث عن درس أو مفهوم أو قانون…" autocomplete="off" />
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- بطاقة تعريف الكتاب -->
+    <section id="bookInfo" class="book-info"></section>
+
+    <!-- التصفية -->
+    <div class="toolbar">
+      <p id="resultInfo" class="result-info"></p>
+      <button id="clearSearch" class="text-btn hidden">مسح البحث</button>
+    </div>
+
+    <!-- الفصول -->
+    <section id="chapters" class="chapters" aria-live="polite"></section>
+
+    <!-- لا نتائج -->
+    <div id="emptyState" class="empty hidden">
+      <svg viewBox="0 0 24 24" width="54" height="54" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <h3>لا توجد نتائج مطابقة</h3>
+      <p>جرّب كلمة بحث أخرى مثل: التسارع، الزخم، الجاذبية…</p>
+    </div>
+  </main>
+
+  <!-- ============ الفوتر ============ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h4>المصادر</h4>
+        <ul>
+          <li>كتاب الفيزياء (١) — نظام المسارات، السنة الأولى المشتركة</li>
+          <li>كتاب الفيزياء (٢) — نظام المسارات، السنة الثانية</li>
+          <li>وزارة التعليم — المملكة العربية السعودية (بوابة عين ومنصة مدرستي)</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>تنبيه</h4>
+        <p>
+          هذا الموقع أداة تعليمية مساعدة للمراجعة، وقد أُعدّ استناداً إلى المنهج الرسمي.
+          المرجع النهائي يبقى الكتاب المدرسي ودليل المعلم الصادرين من الوزارة.
+        </p>
+      </div>
+    </div>
+    <p class="footer-note">﴿ وَفِي الْأَرْضِ آيَاتٌ لِّلْمُوقِنِينَ ﴾ — تعلّم الفيزياء لتفهم سنن الله في الكون</p>
+  </footer>
+
+  <!-- ============ نافذة الدرس ============ -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card">
+      <button class="modal-close" data-close aria-label="إغلاق">&times;</button>
+      <div class="modal-head">
+        <span id="modalChapter" class="chip"></span>
+        <span id="modalLesson" class="chip chip-soft"></span>
+      </div>
+      <h2 id="modalTitle"></h2>
+      <p id="modalSummary" class="modal-summary"></p>
+
+      <div id="modalConcepts" class="modal-section"></div>
+      <div id="modalFormulas" class="modal-section"></div>
+      <div id="modalExample" class="modal-section"></div>
+      <div id="modalTip" class="modal-tip"></div>
+    </div>
+  </div>
+
+  <button id="toTop" class="to-top" title="أعلى الصفحة" aria-label="أعلى الصفحة">↑</button>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
