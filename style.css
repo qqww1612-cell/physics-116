@@ -967,6 +967,68 @@ body {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
 
+/* بطاقة الاختبارات السريعة */
+.exams-card {
+  background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--surface) 90%, var(--bg-soft)));
+  border: 1.5px solid var(--line-strong);
+  border-inline-start: 6px solid var(--accent-2);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 26px 0;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  transition: transform .2s, border-color .2s;
+}
+
+.exams-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.exams-card-icon {
+  font-size: 2.6rem;
+  flex-shrink: 0;
+}
+
+.exams-card-text h3 {
+  margin: 0 0 6px;
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+.exams-card-text p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: .98rem;
+  line-height: 1.6;
+}
+
+.exams-card-btn {
+  margin-inline-start: auto;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--cyan-600), var(--violet-600));
+  color: #fff;
+  font-family: var(--font-ruqaa);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exams-card-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--violet-600) 80%, transparent);
+}
+
 /* رابط الاختبارات في الترويسة */
 .header-actions {
   display: flex;
