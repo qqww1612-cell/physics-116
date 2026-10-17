@@ -966,3 +966,53 @@ body {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* رابط الاختبارات في الترويسة */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-inline-start: auto;
+}
+
+.exams-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-ruqaa);
+  font-weight: 700;
+  font-size: .95rem;
+  text-decoration: none;
+  transition: all .2s;
+}
+
+.exams-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* إظهار رابط الاختبارات في التحكم العلوي في الجوال */
+@media (max-width: 640px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .header-actions {
+    margin-inline-start: 0;
+    justify-content: center;
+    width: 100%;
+  }
+  .exams-link {
+    justify-content: center;
+    width: 100%;
+    max-width: 220px;
+    margin-inline: auto;
+  }
+}
