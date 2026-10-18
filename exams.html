@@ -1114,7 +1114,7 @@
       chapterIndex: 0,
       currentQ: 0,
       score: 0,
-      answers: [], // { qIndex, selected, correct, explanation }
+      answers: [],
       totalQuestions: 0
     };
 
@@ -1139,9 +1139,6 @@
       changeChapterBtn: document.getElementById("changeChapterBtn")
     };
 
-    /* =========================================================
-       الوظائف
-       ========================================================= */
     function getBook() {
       return EXAMS[state.book];
     }
@@ -1173,9 +1170,7 @@
     function updateChapterInfo() {
       const ch = getChapter();
       els.chapterInfo.className = "chapter-info show";
-      els.chapterInfo.innerHTML = `
-        <strong>الفصل ${ch.num}: ${ch.title}</strong> — ${ch.desc}
-      `;
+      els.chapterInfo.innerHTML = `<strong>الفصل ${ch.num}: ${ch.title}</strong> — ${ch.desc}`;
     }
 
     function renderQuestion() {
@@ -1245,10 +1240,10 @@
 
       if (pct >= 80) {
         els.resultTitle.textContent = "ممتاز!";
-        els.resultMessage.textContent = "لقد إتقنت هذا الفصل،ustiمر так!";
+        els.resultMessage.textContent = "لقد إتقنت هذا الفصل!";
       } else if (pct >= 50) {
         els.resultTitle.textContent = "جيد!";
-        els.resultMessage.textContent = "أنت على الطريق الصحيح، راجع الدروس weak points.";
+        els.resultMessage.textContent = "أنت على الطريق الصحيح، راجع الدروس.";
       } else {
         els.resultTitle.textContent = "يحتاج مراجعة";
         els.resultMessage.textContent = "لا بأس، عاود الدراسة وحاول مرة أخرى.";
@@ -1309,9 +1304,6 @@
       });
     });
 
-    /* =========================================================
-       التشغيل
-       ========================================================= */
     renderChapterTabs();
     updateChapterInfo();
     showQuiz();
