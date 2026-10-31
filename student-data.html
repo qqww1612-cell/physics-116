@@ -1,1910 +1,1746 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b1b33" />
-  <meta name="robots" content="noindex, nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="بيانات الطالب — منصة شخصية آمنة لكل طالب في موقع فيزياء المسارات." />
+  <meta name="theme-color" content="#101b3f" />
+  <meta name="robots" content="noindex" />
   <title>بيانات الطالب — فيزياء المسارات</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.svg" />
+
+  <!-- ضبط الوضع الليلي قبل الرسم لتفادي الوميض (نفس مفتاح الموقع الرئيسي) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("physics:theme");
+        if (!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (_) {}
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    /* =========================================================
+       بيانات الطالب — نظام التصميم
+       ========================================================= */
     :root {
-      --ink: #0b1b33;
-      --ink-2: #13294b;
-      --accent: #2563eb;
-      --accent-soft: #e8efff;
-      --sky: #38bdf8;
-      --success: #0f9d6e;
-      --success-soft: #e6f7f0;
-      --warning: #b7791f;
-      --warning-soft: #fdf5e6;
-      --danger: #dc2626;
-      --danger-soft: #fdecec;
-      --bg: #f4f6fb;
+      --navy-950: #060c22;
+      --navy-900: #0a1230;
+      --navy-800: #101b3f;
+      --navy-700: #1b2a5e;
+      --cyan-600: #0891b2;
+      --cyan-500: #06b6d4;
+      --cyan-400: #22d3ee;
+      --violet-600: #7c3aed;
+      --violet-500: #8b5cf6;
+
+      --bg: #f3f5fa;
       --surface: #ffffff;
-      --text: #0b1b33;
-      --muted: #5f6f89;
-      --line: #e3e8f2;
-      --shadow-sm: 0 1px 2px rgba(11, 27, 51, .05);
-      --shadow: 0 10px 30px -12px rgba(11, 27, 51, .18);
-      --shadow-lg: 0 30px 70px -30px rgba(11, 27, 51, .35);
-      --radius: 18px;
-      --font-display: "Aref Ruqaa", "IBM Plex Sans Arabic", serif;
-      --font-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+      --surface-2: #f8f9fc;
+      --text: #121a33;
+      --text-2: #4b5675;
+      --text-3: #7d87a3;
+      --line: #e3e7f0;
+      --line-2: #d2d8e6;
+      --accent: #0e7fa0;
+      --accent-strong: #0a6a86;
+      --accent-soft: rgba(8, 145, 178, .09);
+      --focus: rgba(8, 145, 178, .28);
+
+      --ok: #0f9d6b;     --ok-soft: rgba(15, 157, 107, .1);
+      --info: #2563eb;   --info-soft: rgba(37, 99, 235, .1);
+      --warn: #c27803;   --warn-soft: rgba(194, 120, 3, .12);
+      --orange: #d9620f; --orange-soft: rgba(217, 98, 15, .11);
+      --danger: #d1344b; --danger-soft: rgba(209, 52, 75, .1);
+
+      --shadow-xs: 0 1px 2px rgba(16, 27, 63, .06);
+      --shadow-sm: 0 1px 3px rgba(16, 27, 63, .06), 0 4px 14px -6px rgba(16, 27, 63, .1);
+      --shadow-lg: 0 24px 64px -24px rgba(10, 18, 48, .35);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font: "IBM Plex Sans Arabic", system-ui, "Segoe UI", Tahoma, sans-serif;
+      --font-brand: "Aref Ruqaa", "IBM Plex Sans Arabic", serif;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+    [data-theme="dark"] {
+      --bg: #070c1f;
+      --surface: #0f1733;
+      --surface-2: #131d3d;
+      --text: #e8edfb;
+      --text-2: #a7b2d3;
+      --text-3: #75819f;
+      --line: #1f2b55;
+      --line-2: #2b3a6c;
+      --accent: #22c3e0;
+      --accent-strong: #5fd6ec;
+      --accent-soft: rgba(34, 211, 238, .11);
+      --focus: rgba(34, 211, 238, .3);
+      --ok: #34d399;     --ok-soft: rgba(52, 211, 153, .12);
+      --info: #6ea2ff;   --info-soft: rgba(110, 162, 255, .13);
+      --warn: #fbbf24;   --warn-soft: rgba(251, 191, 36, .12);
+      --orange: #fb923c; --orange-soft: rgba(251, 146, 60, .13);
+      --danger: #fb7185; --danger-soft: rgba(251, 113, 133, .12);
+      --shadow-xs: none;
+      --shadow-sm: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 8px 24px -12px rgba(0, 0, 0, .6);
+      --shadow-lg: 0 24px 64px -20px rgba(0, 0, 0, .75);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    *, *::before, *::after { box-sizing: border-box; }
     html { -webkit-text-size-adjust: 100%; }
-
     body {
-      font-family: var(--font-ui);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      direction: rtl;
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
+      margin: 0; min-height: 100vh; min-height: 100dvh;
+      font-family: var(--font); font-size: 15px; line-height: 1.65;
+      color: var(--text); background: var(--bg);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
     }
-
-    button, input, select { font: inherit; }
-    button { cursor: pointer; }
-    a { color: var(--accent); }
-
+    button, input, select { font: inherit; color: inherit; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     [hidden] { display: none !important; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .num { font-variant-numeric: tabular-nums; }
+    ::selection { background: var(--accent-soft); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    .container {
-      width: min(1120px, 100% - 40px);
-      margin-inline: auto;
+    /* ---------- أزرار ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 42px; padding-inline: 18px; border-radius: var(--radius-sm);
+      border: 1px solid transparent; background: none; cursor: pointer;
+      font-weight: 600; font-size: 14.5px; white-space: nowrap;
+      transition: background .18s var(--ease), border-color .18s, color .18s, box-shadow .18s, transform .08s;
     }
-
-    /* ---------- Header ---------- */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(11, 27, 51, .96);
-      backdrop-filter: blur(10px);
-      color: #fff;
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
-    }
-
-    .site-header .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      min-height: 70px;
-      padding-block: 10px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, rgba(56, 189, 248, .22), rgba(37, 99, 235, .35));
-      border: 1px solid rgba(255, 255, 255, .18);
-      flex: none;
-    }
-
-    .brand-mark svg { width: 26px; height: 26px; }
-
-    .brand h1 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 700;
-      line-height: 1.3;
-      white-space: nowrap;
-    }
-
-    .brand p {
-      font-size: .72rem;
-      color: rgba(255, 255, 255, .62);
-      line-height: 1.4;
-      white-space: nowrap;
-    }
-
-    .header-user {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .header-greeting {
-      text-align: left;
-      min-width: 0;
-    }
-
-    .header-greeting strong {
-      display: block;
-      font-size: .86rem;
-      font-weight: 600;
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .header-greeting span {
-      display: block;
-      font-size: .7rem;
-      color: rgba(255, 255, 255, .6);
-    }
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: .9rem;
-      color: #fff;
-      background: linear-gradient(135deg, var(--accent), var(--sky));
-      border: 2px solid rgba(255, 255, 255, .22);
-      flex: none;
-    }
-
-    .btn-ghost-light {
-      background: rgba(255, 255, 255, .08);
-      border: 1px solid rgba(255, 255, 255, .18);
-      color: #fff;
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: .8rem;
-      font-weight: 500;
-      transition: .2s;
-      white-space: nowrap;
-    }
-
-    .btn-ghost-light:hover { background: rgba(255, 255, 255, .16); }
-
-    /* ---------- Auth ---------- */
-    .auth-view {
-      min-height: calc(100vh - 70px);
-      display: grid;
-      place-items: center;
-      padding: 48px 20px;
-      background:
-        radial-gradient(900px 420px at 85% -10%, #dbe7ff 0%, transparent 60%),
-        radial-gradient(700px 380px at 10% 110%, #dff5ff 0%, transparent 60%),
-        var(--bg);
-    }
-
-    .auth-card {
-      width: min(940px, 100%);
-      display: grid;
-      grid-template-columns: 1fr 1.05fr;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .auth-aside {
-      position: relative;
-      padding: 46px 40px;
-      color: #fff;
-      background:
-        radial-gradient(500px 300px at 100% 0%, rgba(56, 189, 248, .35), transparent 60%),
-        linear-gradient(160deg, #0b1b33 0%, #13294b 60%, #1e3a68 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 30px;
-      overflow: hidden;
-    }
-
-    .auth-aside::after {
-      content: "";
-      position: absolute;
-      inset: auto -80px -110px auto;
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, .14);
-      box-shadow: 0 0 0 40px rgba(255, 255, 255, .04), 0 0 0 90px rgba(255, 255, 255, .03);
-      pointer-events: none;
-    }
-
-    .auth-aside .brand-mark {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, .1);
-    }
-
-    .auth-aside h2 {
-      font-family: var(--font-display);
-      font-size: 1.9rem;
-      line-height: 1.45;
-      margin-top: 20px;
-    }
-
-    .auth-aside p {
-      color: rgba(255, 255, 255, .72);
-      font-size: .92rem;
-      margin-top: 12px;
-      max-width: 34ch;
-    }
-
-    .auth-points {
-      list-style: none;
-      display: grid;
-      gap: 14px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .auth-points li {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      font-size: .85rem;
-      color: rgba(255, 255, 255, .82);
-    }
-
-    .auth-points .tick {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: rgba(56, 189, 248, .22);
-      border: 1px solid rgba(56, 189, 248, .5);
-      font-size: .65rem;
-      flex: none;
-      margin-top: 3px;
-    }
-
-    .auth-form-side { padding: 46px 42px; }
-
-    .auth-form-side h3 {
-      font-family: var(--font-display);
-      font-size: 1.55rem;
-      line-height: 1.4;
-    }
-
-    .auth-sub {
-      color: var(--muted);
-      font-size: .86rem;
-      margin-top: 6px;
-      margin-bottom: 24px;
-    }
-
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      padding: 5px;
-      background: #eef2f9;
-      border-radius: 12px;
-      margin-bottom: 22px;
-    }
-
-    .auth-tab {
-      border: 0;
-      background: transparent;
-      border-radius: 9px;
-      padding: 9px 10px;
-      font-size: .86rem;
-      font-weight: 600;
-      color: var(--muted);
-      transition: .18s;
-    }
-
-    .auth-tab[aria-selected="true"] {
-      background: #fff;
-      color: var(--ink);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .field { margin-bottom: 15px; }
-
-    .field label {
-      display: block;
-      font-size: .78rem;
-      font-weight: 600;
-      color: #41506a;
-      margin-bottom: 6px;
-    }
-
-    .input {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--line);
-      border-radius: 11px;
-      background: #fbfcfe;
-      color: var(--text);
-      font-size: .92rem;
-      transition: .18s;
-    }
-
-    .input::placeholder { color: #9aa7bb; }
-
-    .input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
-    }
-
-    .input[aria-invalid="true"] {
-      border-color: var(--danger);
-      box-shadow: 0 0 0 3px rgba(220, 38, 38, .1);
-    }
-
-    .hint {
-      font-size: .72rem;
-      color: var(--muted);
-      margin-top: 5px;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      border: 0;
-      border-radius: 11px;
-      padding: 12px 16px;
-      background: linear-gradient(135deg, var(--accent), #1d4ed8);
-      color: #fff;
-      font-weight: 700;
-      font-size: .95rem;
-      box-shadow: 0 12px 24px -12px rgba(37, 99, 235, .7);
-      transition: .2s;
-    }
-
-    .btn-primary:hover:not(:disabled) { transform: translateY(-1px); }
-
-    .btn-primary:disabled { opacity: .65; cursor: not-allowed; box-shadow: none; }
-
-    .auth-footer-note {
-      margin-top: 16px;
-      text-align: center;
-      font-size: .86rem;
-      color: var(--muted);
-    }
-
-    .link-button {
-      border: 0;
-      background: none;
-      color: var(--accent);
-      font-weight: 700;
-      font-size: inherit;
-      padding: 0;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .back-home {
-      display: block;
-      margin: 18px auto 0;
-      border: 0;
-      background: none;
-      color: var(--muted);
-      font-size: .8rem;
-      padding: 6px;
-    }
-
-    .back-home:hover { color: var(--accent); }
-
-    /* ---------- Alerts ---------- */
-    .alert {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      padding: 12px 14px;
-      border-radius: 11px;
-      font-size: .82rem;
-      line-height: 1.6;
-      margin-bottom: 16px;
-      border: 1px solid transparent;
-    }
-
-    .alert.error { background: var(--danger-soft); color: #8f1d1d; border-color: #f6c9c9; }
-    .alert.success { background: var(--success-soft); color: #0b6047; border-color: #bfe8d8; }
-    .alert.info { background: var(--accent-soft); color: #1e3a8a; border-color: #cfdefb; }
-    .alert.warn { background: var(--warning-soft); color: #7a5412; border-color: #f1dfb8; }
-
-    /* ---------- App layout ---------- */
-    .app-view { padding: 30px 0 60px; }
-
-    .page-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-bottom: 22px;
-    }
-
-    .page-head h2 {
-      font-family: var(--font-display);
-      font-size: 1.7rem;
-      line-height: 1.4;
-    }
-
-    .page-head p { color: var(--muted); font-size: .86rem; margin-top: 4px; }
-
-    .offline-note { margin-bottom: 18px; }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px 20px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .stat-card .stat-label {
-      font-size: .74rem;
-      font-weight: 600;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stat-card .stat-value {
-      font-family: var(--font-display);
-      font-size: 1.65rem;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-
-    .stat-card .stat-sub { font-size: .72rem; color: var(--muted); }
-
-    .stat-card.accent {
-      background: linear-gradient(150deg, #0b1b33, #173563);
-      border-color: transparent;
-      color: #fff;
-    }
-
-    .stat-card.accent .stat-label,
-    .stat-card.accent .stat-sub { color: rgba(255, 255, 255, .66); }
-
-    /* ---------- Profile card ---------- */
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 22px;
-      overflow: hidden;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--line);
-      background: #fbfcfe;
-      flex-wrap: wrap;
-    }
-
-    .panel-head h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-
-    .panel-head h3 .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 4px var(--accent-soft);
-    }
-
-    .panel-head p { font-size: .76rem; color: var(--muted); margin-top: 2px; }
-
-    .panel-body { padding: 24px; }
-
-    .profile-grid {
-      display: grid;
-      grid-template-columns: 92px 1fr;
-      gap: 22px;
-      align-items: start;
-    }
-
-    .avatar-lg {
-      width: 92px;
-      height: 92px;
-      border-radius: 24px;
-      display: grid;
-      place-items: center;
-      font-family: var(--font-display);
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: #fff;
-      background: linear-gradient(140deg, var(--ink), var(--accent));
-      box-shadow: 0 14px 26px -14px rgba(11, 27, 51, .6);
-    }
-
-    .profile-name {
-      font-family: var(--font-display);
-      font-size: 1.35rem;
-      line-height: 1.4;
-    }
-
-    .profile-email {
-      color: var(--muted);
-      font-size: .84rem;
-      word-break: break-all;
-      margin-top: 3px;
-    }
-
-    .profile-fields {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .profile-field {
-      background: #f8fafd;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px 13px;
-    }
-
-    .profile-field span {
-      display: block;
-      font-size: .7rem;
-      color: var(--muted);
-      margin-bottom: 2px;
-    }
-
-    .profile-field strong {
-      font-size: .86rem;
-      font-weight: 600;
-      word-break: break-word;
-    }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      border: 1.5px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: .8rem;
-      font-weight: 600;
-      transition: .18s;
-    }
-
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: #f7faff; }
-
-    .btn-secondary.danger { color: var(--danger); }
-    .btn-secondary.danger:hover { border-color: var(--danger); background: var(--danger-soft); }
-
-    /* ---------- Notes ---------- */
-    .note-form {
-      display: grid;
-      grid-template-columns: 1.4fr .9fr .6fr auto;
-      gap: 12px;
-      align-items: end;
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--line);
-      background: #fbfcfe;
-    }
-
-    .note-form .field { margin: 0; }
-
-    .note-form .btn-primary { width: auto; padding-inline: 22px; }
-
-    .notes-list { display: grid; gap: 10px; padding: 20px 24px 24px; }
-
-    .note-row {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 14px;
-      align-items: center;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      background: #fff;
-      transition: .18s;
-    }
-
-    .note-row:hover { border-color: #c9d7f0; box-shadow: var(--shadow-sm); }
-
-    .note-title {
-      font-weight: 700;
-      font-size: .92rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .code-chip {
-      font-size: .68rem;
-      font-weight: 600;
-      color: #41506a;
-      background: #eef2f9;
-      border: 1px solid var(--line);
-      padding: 1px 8px;
-      border-radius: 999px;
-      direction: ltr;
-    }
-
-    .note-meta { font-size: .72rem; color: var(--muted); margin-top: 2px; }
-
-    .grade-chip {
-      min-width: 58px;
-      text-align: center;
-      padding: 5px 10px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: .88rem;
-      direction: ltr;
-      background: var(--success-soft);
-      color: var(--success);
-      border: 1px solid #bfe8d8;
-    }
-
-    .grade-chip.mid { background: var(--warning-soft); color: var(--warning); border-color: #f1dfb8; }
-    .grade-chip.low { background: var(--danger-soft); color: var(--danger); border-color: #f6c9c9; }
-
-    .note-actions { display: flex; gap: 6px; }
-
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-primary { background: var(--navy-800); color: #fff; box-shadow: 0 1px 2px rgba(16,27,63,.25), inset 0 1px 0 rgba(255,255,255,.08); }
+    .btn-primary:hover:not(:disabled) { background: var(--navy-700); }
+    [data-theme="dark"] .btn-primary { background: var(--accent); color: #06202a; }
+    [data-theme="dark"] .btn-primary:hover:not(:disabled) { background: var(--accent-strong); }
+    .btn-secondary { background: var(--surface); border-color: var(--line-2); color: var(--text); box-shadow: var(--shadow-xs); }
+    .btn-secondary:hover:not(:disabled) { background: var(--surface-2); border-color: var(--text-3); }
+    .btn-ghost { color: var(--text-2); }
+    .btn-ghost:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover:not(:disabled) { filter: brightness(.93); }
+    .btn-danger-ghost { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 35%, transparent); background: var(--surface); }
+    .btn-danger-ghost:hover:not(:disabled) { background: var(--danger-soft); }
+    .btn-block { width: 100%; height: 46px; font-size: 15px; }
+    .btn-sm { height: 34px; padding-inline: 12px; font-size: 13.5px; }
     .icon-btn {
-      width: 32px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 8px;
-      color: var(--muted);
-      transition: .18s;
+      width: 38px; height: 38px; display: inline-grid; place-items: center;
+      border-radius: var(--radius-sm); border: 1px solid transparent; background: none; color: var(--text-2); cursor: pointer;
+      transition: background .15s, color .15s;
     }
+    .icon-btn:hover { background: var(--surface-2); color: var(--text); }
+    .spinner { width: 17px; height: 17px; border-radius: 50%; border: 2px solid currentColor; border-inline-end-color: transparent; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .icon-btn:hover { color: var(--accent); border-color: var(--accent); background: #f7faff; }
-    .icon-btn.danger:hover { color: var(--danger); border-color: var(--danger); background: var(--danger-soft); }
-
-    .empty-state {
-      text-align: center;
-      padding: 34px 20px;
-      border: 1.5px dashed #d7e0ef;
-      border-radius: 13px;
-      color: var(--muted);
-      background: #fbfcfe;
+    /* ---------- حقول ---------- */
+    .field { display: grid; gap: 7px; }
+    .field + .field { margin-top: 16px; }
+    .label-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    label, .label { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .hint { font-size: 12.5px; color: var(--text-3); }
+    .input-wrap { position: relative; }
+    .input, .select {
+      width: 100%; height: 46px; padding-inline: 14px;
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+      outline: none; transition: border-color .15s, box-shadow .15s;
     }
-
-    .empty-state strong { display: block; color: var(--ink); font-size: .95rem; margin-bottom: 4px; }
-    .empty-state span { font-size: .8rem; }
-
-    /* ---------- Modals ---------- */
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      background: rgba(11, 27, 51, .45);
-      backdrop-filter: blur(4px);
+    .input::placeholder { color: var(--text-3); }
+    .input:hover, .select:hover { border-color: var(--text-3); }
+    .input:focus, .select:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--focus); }
+    .input[aria-invalid="true"] { border-color: var(--danger); }
+    .input[aria-invalid="true"]:focus { box-shadow: 0 0 0 4px var(--danger-soft); }
+    .input.has-icon { padding-inline-start: 42px; }
+    .input.has-action { padding-inline-end: 46px; }
+    .input-ltr { direction: ltr; text-align: right; }
+    .input-ltr::placeholder { text-align: right; }
+    .input-wrap > .lead { position: absolute; inset-inline-start: 14px; top: 50%; translate: 0 -50%; color: var(--text-3); pointer-events: none; }
+    .input-wrap > .trail { position: absolute; inset-inline-end: 4px; top: 50%; translate: 0 -50%; }
+    .select {
+      appearance: none; cursor: pointer; padding-inline-end: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237d87a3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-size: 18px; background-position: left 14px center;
     }
+    .field-error { font-size: 12.5px; color: var(--danger); min-height: 0; }
+    .strength { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 2px; }
+    .strength span { height: 4px; border-radius: 4px; background: var(--line); transition: background .25s; }
+    .strength-text { font-size: 12px; color: var(--text-3); }
 
-    .modal-card {
-      width: min(520px, 100%);
-      max-height: 90vh;
-      overflow: auto;
-      background: var(--surface);
-      border-radius: 18px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--line);
+    /* ---------- تنبيهات ---------- */
+    .alert {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 12px 14px; border-radius: var(--radius-sm); font-size: 13.5px; line-height: 1.6;
+      border: 1px solid transparent; margin-bottom: 18px;
     }
+    .alert svg { margin-top: 2px; }
+    .alert-error { background: var(--danger-soft); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 25%, transparent); }
+    .alert-success { background: var(--ok-soft); color: var(--ok); border-color: color-mix(in srgb, var(--ok) 25%, transparent); }
+    .alert-info { background: var(--info-soft); color: var(--info); border-color: color-mix(in srgb, var(--info) 25%, transparent); }
 
-    .modal-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 22px;
+    /* =========================================================
+       شاشة التحميل
+       ========================================================= */
+    .boot { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); z-index: 50; }
+    .boot-inner { display: grid; justify-items: center; gap: 16px; color: var(--text-3); font-size: 14px; }
+    .boot .atom { color: var(--accent); animation: spin 2.4s linear infinite; }
+
+    /* =========================================================
+       واجهة الدخول
+       ========================================================= */
+    .auth { min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+    .auth-brand {
+      position: relative; overflow: hidden; color: #e6ecff;
+      background:
+        radial-gradient(900px 500px at 85% -10%, rgba(34, 211, 238, .22), transparent 60%),
+        radial-gradient(700px 500px at 0% 110%, rgba(139, 92, 246, .28), transparent 60%),
+        linear-gradient(160deg, var(--navy-800), var(--navy-950));
+      padding: 48px clamp(32px, 5vw, 72px);
+      display: flex; flex-direction: column; justify-content: space-between; gap: 40px;
+    }
+    .auth-brand::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(ellipse at 60% 40%, #000 20%, transparent 75%);
+    }
+    .auth-brand > * { position: relative; }
+    .orbit {
+      position: absolute; inset-inline-start: -140px; bottom: -160px; width: 520px; height: 520px;
+      color: rgba(34, 211, 238, .16); pointer-events: none;
+    }
+    .orbit svg { width: 100%; height: 100%; animation: spin 80s linear infinite; }
+    .brand-link { display: inline-flex; align-items: center; gap: 12px; color: #fff; text-decoration: none !important; }
+    .brand-mark {
+      width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: var(--cyan-400);
+    }
+    .brand-name { font-family: var(--font-brand); font-size: 24px; line-height: 1.2; }
+    .brand-sub { font-size: 12.5px; color: rgba(230, 236, 255, .62); }
+    .auth-pitch h2 { font-size: clamp(28px, 3.1vw, 40px); line-height: 1.3; font-weight: 700; margin: 0 0 14px; letter-spacing: -.01em; }
+    .auth-pitch h2 em { font-style: normal; background: linear-gradient(90deg, var(--cyan-400), #a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .auth-pitch p { margin: 0; color: rgba(230, 236, 255, .72); font-size: 16px; max-width: 46ch; }
+    .features { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 14px; max-width: 460px; }
+    .features li { display: flex; gap: 14px; align-items: flex-start; }
+    .features .f-ico {
+      width: 36px; height: 36px; border-radius: 10px; flex: none; display: grid; place-items: center;
+      background: rgba(34, 211, 238, .1); border: 1px solid rgba(34, 211, 238, .22); color: var(--cyan-400);
+    }
+    .features strong { display: block; font-size: 14.5px; color: #fff; font-weight: 600; }
+    .features span { font-size: 13px; color: rgba(230, 236, 255, .6); }
+    .auth-foot { font-size: 12.5px; color: rgba(230, 236, 255, .5); display: flex; gap: 8px; align-items: center; }
+
+    .auth-main { display: flex; flex-direction: column; padding: 28px clamp(20px, 4vw, 56px); background: var(--bg); }
+    .auth-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .auth-top .back { display: inline-flex; align-items: center; gap: 6px; color: var(--text-2); font-size: 14px; font-weight: 500; }
+    .auth-top .back:hover { color: var(--text); text-decoration: none; }
+    .auth-center { flex: 1; display: grid; place-items: center; padding-block: 32px; }
+    .auth-card { width: 100%; max-width: 420px; }
+    .auth-card h1 { margin: 0 0 6px; font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
+    .auth-card .lead-text { margin: 0 0 26px; color: var(--text-2); font-size: 14.5px; }
+    .seg {
+      display: grid; grid-template-columns: 1fr 1fr; padding: 4px; gap: 4px; margin-bottom: 26px;
+      background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px;
+    }
+    .seg button {
+      height: 38px; border: 0; border-radius: 9px; background: none; cursor: pointer;
+      font-weight: 600; font-size: 14px; color: var(--text-2); transition: background .2s, color .2s, box-shadow .2s;
+    }
+    .seg button[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+    .form-actions { margin-top: 24px; display: grid; gap: 12px; }
+    .text-link { background: none; border: 0; padding: 0; cursor: pointer; color: var(--accent); font-weight: 600; font-size: 13px; }
+    .text-link:hover { text-decoration: underline; }
+    .muted-center { text-align: center; font-size: 13.5px; color: var(--text-2); margin-top: 22px; }
+    .privacy-note {
+      display: flex; gap: 10px; align-items: center; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line);
+      font-size: 12.5px; color: var(--text-3);
+    }
+    .privacy-note svg { color: var(--ok); }
+    .panel { animation: fadeUp .35s var(--ease); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* =========================================================
+       لوحة الطالب
+       ========================================================= */
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: color-mix(in srgb, var(--surface) 86%, transparent);
+      backdrop-filter: saturate(160%) blur(12px); -webkit-backdrop-filter: saturate(160%) blur(12px);
       border-bottom: 1px solid var(--line);
     }
-
-    .modal-head h3 { font-family: var(--font-display); font-size: 1.15rem; }
-
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 8px;
-      color: var(--muted);
-      font-size: 1.1rem;
-      line-height: 1;
-      display: grid;
-      place-items: center;
+    .topbar-inner { max-width: 1240px; margin: 0 auto; height: 64px; padding-inline: 20px; display: flex; align-items: center; gap: 18px; }
+    .topbar .brand-link { color: var(--text); }
+    .topbar .brand-mark { width: 38px; height: 38px; background: var(--navy-800); border: 0; color: var(--cyan-400); }
+    .topbar .brand-name { font-size: 20px; }
+    .top-nav { display: flex; gap: 2px; margin-inline-start: 10px; }
+    .top-nav a { padding: 7px 12px; border-radius: 8px; color: var(--text-2); font-size: 14px; font-weight: 500; }
+    .top-nav a:hover { background: var(--surface-2); color: var(--text); text-decoration: none; }
+    .top-nav a[aria-current="page"] { color: var(--text); background: var(--surface-2); }
+    .topbar .spacer { flex: 1; }
+    .user-menu { position: relative; }
+    .user-btn {
+      display: flex; align-items: center; gap: 10px; padding: 4px; padding-inline-end: 10px;
+      border: 1px solid var(--line); border-radius: 999px; background: var(--surface); cursor: pointer;
+      transition: border-color .15s;
     }
-
-    .modal-close:hover { color: var(--danger); border-color: var(--danger); }
-
-    .modal-body { padding: 22px; }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-start;
-      padding-top: 6px;
+    .user-btn:hover { border-color: var(--line-2); }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none;
+      background: linear-gradient(135deg, var(--cyan-500), var(--violet-600)); color: #fff; font-weight: 700; font-size: 13px;
     }
-
-    .modal-actions .btn-primary { width: auto; padding-inline: 24px; }
-    .modal-actions .btn-secondary { padding: 11px 20px; }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    .avatar.lg { width: 56px; height: 56px; font-size: 20px; }
+    .user-btn .uname { font-size: 13.5px; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .menu {
+      position: absolute; inset-inline-end: 0; top: calc(100% + 8px); min-width: 250px; z-index: 30;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-lg);
+      padding: 6px; animation: fadeUp .18s var(--ease);
     }
+    .menu-head { padding: 10px 12px 12px; border-bottom: 1px solid var(--line); margin-bottom: 6px; }
+    .menu-head strong { display: block; font-size: 14px; }
+    .menu-head span { font-size: 12.5px; color: var(--text-3); direction: ltr; display: block; text-align: right; overflow: hidden; text-overflow: ellipsis; }
+    .menu button {
+      width: 100%; display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 0; background: none;
+      border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--text-2); text-align: start;
+    }
+    .menu button:hover { background: var(--surface-2); color: var(--text); }
+    .menu button.danger { color: var(--danger); }
+    .menu button.danger:hover { background: var(--danger-soft); }
 
-    /* ---------- Toast ---------- */
+    .shell { max-width: 1240px; margin: 0 auto; padding: 28px 20px 64px; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 28px; align-items: start; }
+    .sidenav { position: sticky; top: 92px; display: grid; gap: 4px; }
+    .sidenav .nav-title { font-size: 11.5px; font-weight: 600; color: var(--text-3); letter-spacing: .02em; padding: 0 12px 8px; }
+    .sidenav button {
+      display: flex; align-items: center; gap: 11px; width: 100%; height: 42px; padding-inline: 12px;
+      border: 0; border-radius: 10px; background: none; cursor: pointer; text-align: start;
+      color: var(--text-2); font-weight: 500; font-size: 14.5px; transition: background .15s, color .15s;
+    }
+    .sidenav button:hover { background: var(--surface); color: var(--text); }
+    .sidenav button[aria-selected="true"] { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
+    .sidenav button[aria-selected="true"] svg { color: var(--accent); }
+    .sidenav .count { margin-inline-start: auto; font-size: 12px; font-weight: 600; color: var(--text-3); background: var(--surface-2); border: 1px solid var(--line); padding: 0 8px; border-radius: 999px; line-height: 20px; }
+    .side-card {
+      margin-top: 18px; padding: 16px; border-radius: 14px; border: 1px dashed var(--line-2);
+      font-size: 12.5px; color: var(--text-2); display: grid; gap: 6px;
+    }
+    .side-card strong { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 13px; }
+    .side-card svg { color: var(--ok); }
+
+    .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+    .page-head h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -.01em; }
+    .page-head p { margin: 4px 0 0; color: var(--text-2); font-size: 14.5px; }
+    .view { animation: fadeUp .3s var(--ease); }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-xs); }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+    .card-head h2 { margin: 0; font-size: 16px; font-weight: 600; }
+    .card-head p { margin: 2px 0 0; font-size: 13px; color: var(--text-3); }
+    .card-body { padding: 22px; }
+    .card-foot { display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 14px 22px; border-top: 1px solid var(--line); background: var(--surface-2); border-radius: 0 0 var(--radius) var(--radius); }
+    .card-foot .status { margin-inline-end: auto; font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
+
+    /* نظرة عامة */
+    .hero {
+      position: relative; overflow: hidden; border-radius: var(--radius); padding: 26px 28px; margin-bottom: 20px; color: #e8eeff;
+      background:
+        radial-gradient(600px 300px at 100% 0%, rgba(34, 211, 238, .25), transparent 60%),
+        radial-gradient(500px 300px at 0% 100%, rgba(139, 92, 246, .3), transparent 60%),
+        linear-gradient(135deg, var(--navy-800), var(--navy-900));
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .hero .avatar.lg { box-shadow: 0 0 0 4px rgba(255,255,255,.1); }
+    .hero h1 { margin: 0; font-size: 22px; font-weight: 700; color: #fff; }
+    .hero p { margin: 4px 0 0; color: rgba(232, 238, 255, .7); font-size: 14px; }
+    .hero .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding-inline: 10px; border-radius: 999px; font-size: 12.5px; font-weight: 500; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: #e8eeff; }
+    .hero .hero-cta { margin-inline-start: auto; }
+    .hero .btn-secondary { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); color: #fff; box-shadow: none; }
+    .hero .btn-secondary:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.3); }
+
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .stat { padding: 18px 20px; }
+    .stat .s-top { display: flex; align-items: center; justify-content: space-between; color: var(--text-2); font-size: 13px; font-weight: 500; }
+    .stat .s-ico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+    .stat .s-val { font-size: 28px; font-weight: 700; margin-top: 10px; letter-spacing: -.02em; line-height: 1.2; }
+    .stat .s-sub { font-size: 12.5px; color: var(--text-3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .grid-2 { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; }
+    .bars { display: grid; gap: 14px; }
+    .bar-row { display: grid; grid-template-columns: minmax(90px, 160px) 1fr 44px; align-items: center; gap: 14px; font-size: 13.5px; }
+    .bar-row .b-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { height: 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; width: 0; transition: width .8s var(--ease); }
+    .bar-row .b-val { font-weight: 600; text-align: end; }
+
+    .ring-wrap { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+    .ring { width: 84px; height: 84px; position: relative; flex: none; }
+    .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring .r-val { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; font-size: 18px; }
+    .checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 13.5px; }
+    .checklist li { display: flex; align-items: center; gap: 10px; color: var(--text-2); }
+    .checklist .ck { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line-2); flex: none; }
+    .checklist li.done { color: var(--text); }
+    .checklist li.done .ck { background: var(--ok); border-color: var(--ok); color: #fff; }
+    .checklist .ck svg { width: 12px; height: 12px; stroke-width: 3; }
+
+    /* الملف الشخصي */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+    .form-grid .field + .field { margin-top: 0; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .readonly-box { display: flex; align-items: center; gap: 10px; height: 46px; padding-inline: 14px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2); font-size: 14px; }
+    .readonly-box .ltr { direction: ltr; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding-inline: 9px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .badge-ok { background: var(--ok-soft); color: var(--ok); }
+
+    /* المواد والدرجات */
+    .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+    .toolbar .input-wrap { flex: 1; min-width: 200px; }
+    .toolbar .input, .toolbar .select { height: 40px; }
+    .toolbar .select { width: auto; min-width: 170px; }
+    .table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .table th { text-align: start; font-size: 12.5px; font-weight: 600; color: var(--text-3); padding: 11px 18px; background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .table td { padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .table tr:last-child td { border-bottom: 0; }
+    .table tbody tr { transition: background .12s; }
+    .table tbody tr:hover { background: var(--surface-2); }
+    .subj { display: flex; align-items: center; gap: 12px; }
+    .subj-ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 14px; flex: none; }
+    .subj strong { display: block; font-weight: 600; }
+    .code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); padding: 1px 7px; border-radius: 6px; direction: ltr; display: inline-block; }
+    .grade-cell { display: flex; align-items: center; gap: 12px; min-width: 150px; }
+    .grade-cell .g-num { font-weight: 700; min-width: 30px; }
+    .mini-track { flex: 1; height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; max-width: 120px; }
+    .mini-track span { display: block; height: 100%; border-radius: 999px; }
+    .pill { display: inline-flex; align-items: center; height: 26px; padding-inline: 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+    .row-actions { display: flex; gap: 2px; justify-content: flex-end; }
+    .row-actions .icon-btn { width: 34px; height: 34px; }
+    .row-actions .icon-btn.del:hover { color: var(--danger); background: var(--danger-soft); }
+    .table-foot { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; font-size: 13px; color: var(--text-3); border-top: 1px solid var(--line); }
+
+    .empty { text-align: center; padding: 56px 24px; }
+    .empty .e-ico { width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 16px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+    .empty .e-ico svg { width: 26px; height: 26px; }
+    .empty h3 { margin: 0 0 6px; font-size: 16px; }
+    .empty p { margin: 0 auto 18px; color: var(--text-2); font-size: 14px; max-width: 360px; }
+
+    .skel { background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: shimmer 1.3s infinite; border-radius: 8px; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* الأمان */
+    .stack { display: grid; gap: 20px; }
+    .kv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .kv div { padding: 14px 16px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); min-width: 0; }
+    .kv dt { font-size: 12.5px; color: var(--text-3); margin-bottom: 4px; }
+    .kv dd { margin: 0; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .danger-zone { border-color: color-mix(in srgb, var(--danger) 30%, var(--line)); }
+    .dz-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .dz-row h3 { margin: 0; font-size: 14.5px; font-weight: 600; }
+    .dz-row p { margin: 2px 0 0; color: var(--text-2); font-size: 13.5px; }
+
+    /* نوافذ الحوار */
+    dialog {
+      border: 0; padding: 0; width: min(480px, calc(100vw - 32px)); border-radius: 18px;
+      background: var(--surface); color: var(--text); box-shadow: var(--shadow-lg);
+    }
+    dialog[open] { animation: pop .22s var(--ease); }
+    dialog::backdrop { background: rgba(6, 12, 34, .55); backdrop-filter: blur(3px); }
+    @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+    .dlg-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 22px 24px 0; }
+    .dlg-head h2 { margin: 0; font-size: 18px; font-weight: 700; }
+    .dlg-head p { margin: 4px 0 0; color: var(--text-2); font-size: 13.5px; }
+    .dlg-body { padding: 20px 24px 6px; }
+    .dlg-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 18px 24px 22px; }
+    .dlg-danger-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--danger-soft); color: var(--danger); margin-bottom: 14px; }
+
+    /* الإشعارات */
+    .toasts { position: fixed; z-index: 100; bottom: 20px; inset-inline-start: 20px; display: grid; gap: 10px; width: min(380px, calc(100vw - 40px)); }
     .toast {
-      position: fixed;
-      z-index: 300;
-      inset-inline: 20px;
-      bottom: 22px;
-      margin-inline: auto;
-      width: fit-content;
-      max-width: min(460px, 100%);
-      padding: 12px 20px;
-      border-radius: 12px;
-      color: #fff;
-      font-size: .86rem;
-      font-weight: 600;
-      box-shadow: var(--shadow);
-      background: var(--ink);
-      transform: translateY(16px);
-      opacity: 0;
-      pointer-events: none;
-      transition: .25s;
+      display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 12px;
+      background: var(--navy-900); color: #eef2ff; box-shadow: var(--shadow-lg); font-size: 14px;
+      animation: toastIn .3s var(--ease);
     }
+    [data-theme="dark"] .toast { background: #1b2758; border: 1px solid var(--line-2); }
+    .toast .t-ico { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+    .toast .t-ico svg { width: 14px; height: 14px; stroke-width: 2.6; }
+    .toast.ok .t-ico { background: #10b981; color: #fff; }
+    .toast.err .t-ico { background: #f43f5e; color: #fff; }
+    .toast.out { animation: toastOut .25s var(--ease) forwards; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes toastOut { to { opacity: 0; transform: translateY(10px); } }
 
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.success { background: #0b7a57; }
-    .toast.error { background: #b91c1c; }
-
-    /* ---------- Footer ---------- */
-    .site-footer {
-      border-top: 1px solid var(--line);
-      padding: 26px 20px;
-      text-align: center;
-      color: var(--muted);
-      font-size: .76rem;
-      background: #fff;
+    /* =========================================================
+       الاستجابة للشاشات
+       ========================================================= */
+    @media (max-width: 1080px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-2 { grid-template-columns: 1fr; }
     }
-
-    .site-footer a { color: var(--muted); text-decoration: none; }
-    .site-footer a:hover { color: var(--accent); }
-
-    /* ---------- Responsive ---------- */
-    @media (max-width: 900px) {
-      .auth-card { grid-template-columns: 1fr; max-width: 520px; }
-      .auth-aside { display: none; }
-      .auth-form-side { padding: 34px 26px; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .note-form { grid-template-columns: 1fr 1fr; }
-      .note-form .btn-primary { grid-column: 1 / -1; width: 100%; }
+    @media (max-width: 920px) {
+      .auth { grid-template-columns: 1fr; }
+      .auth-brand { padding: 22px 20px; gap: 0; }
+      .auth-pitch, .auth-foot, .orbit { display: none; }
+      .shell { grid-template-columns: 1fr; gap: 18px; padding-top: 16px; }
+      .sidenav {
+        position: sticky; top: 64px; z-index: 10; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+        margin-inline: -20px; padding: 10px 20px; background: color-mix(in srgb, var(--bg) 92%, transparent);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+      }
+      .sidenav::-webkit-scrollbar { display: none; }
+      .sidenav .nav-title, .side-card { display: none; }
+      .sidenav button { width: auto; flex: none; height: 38px; border: 1px solid var(--line); background: var(--surface); }
+      .top-nav { display: none; }
+      .user-btn .uname { display: none; }
+      .user-btn { padding-inline-end: 4px; }
     }
-
-    @media (max-width: 720px) {
-      .container { width: calc(100% - 28px); }
-      .brand p { display: none; }
-      .header-greeting { display: none; }
-      .auth-view { padding: 26px 14px; min-height: calc(100vh - 64px); }
-      .app-view { padding-top: 20px; }
-      .page-head h2 { font-size: 1.4rem; }
-      .profile-grid { grid-template-columns: 1fr; }
-      .avatar-lg { width: 72px; height: 72px; border-radius: 18px; font-size: 1.5rem; }
-      .profile-fields { grid-template-columns: 1fr; }
-      .note-form { grid-template-columns: 1fr; padding: 16px; }
-      .notes-list { padding: 16px; }
-      .panel-body { padding: 18px; }
-      .panel-head { padding: 15px 18px; }
-      .note-row { grid-template-columns: 1fr auto; }
-      .note-actions { grid-column: 1 / -1; justify-content: flex-start; }
-      .form-row { grid-template-columns: 1fr; }
-      .site-header .container { min-height: 62px; }
-      .header-user { gap: 8px; }
-      .btn-ghost-light { padding: 7px 11px; font-size: .74rem; }
+    @media (max-width: 640px) {
+      body { font-size: 14.5px; }
+      .stats { gap: 12px; }
+      .stat { padding: 14px 16px; }
+      .stat .s-val { font-size: 23px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .kv { grid-template-columns: 1fr; }
+      .hero { padding: 22px; }
+      .hero .hero-cta { margin-inline-start: 0; width: 100%; }
+      .hero .hero-cta .btn { width: 100%; }
+      .card-body { padding: 18px; }
+      .card-head { padding: 16px 18px; }
+      .card-foot { padding: 12px 18px; }
+      .toolbar .select { flex: 1; }
+      /* الجدول يتحول إلى بطاقات */
+      .table thead { display: none; }
+      .table, .table tbody, .table tr, .table td { display: block; }
+      .table tr { display: grid; grid-template-columns: 1fr auto; gap: 10px 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+      .table tr:last-child { border-bottom: 0; }
+      .table td { padding: 0; border: 0; }
+      .table td.c-subj { grid-column: 1; }
+      .table td.c-act { grid-column: 2; grid-row: 1; }
+      .table td.c-grade { grid-column: 1; }
+      .table td.c-level { grid-column: 2; align-self: center; }
+      .table td.c-code { display: none; }
+      .bar-row { grid-template-columns: 90px 1fr 36px; gap: 10px; }
+      .auth-card h1 { font-size: 23px; }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { transition: none !important; animation: none !important; }
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
     }
   </style>
 </head>
 <body>
 
-<!-- ================= Header (hidden until login) ================= -->
-<header class="site-header" id="siteHeader" hidden>
-  <div class="container">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 64 64" fill="none" stroke="#7dd3fc" stroke-width="3">
-          <circle cx="32" cy="32" r="5.5" fill="#7dd3fc" stroke="none"/>
-          <ellipse cx="32" cy="32" rx="25" ry="10.5"/>
-          <ellipse cx="32" cy="32" rx="25" ry="10.5" transform="rotate(60 32 32)"/>
-          <ellipse cx="32" cy="32" rx="25" ry="10.5" transform="rotate(120 32 32)"/>
-        </svg>
+<!-- ================= أيقونات ================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-atom" viewBox="0 0 64 64"><circle cx="32" cy="32" r="6" fill="currentColor" stroke="none"/><g fill="none" stroke="currentColor" stroke-width="3.2"><ellipse cx="32" cy="32" rx="26" ry="11"/><ellipse cx="32" cy="32" rx="26" ry="11" transform="rotate(60 32 32)"/><ellipse cx="32" cy="32" rx="26" ry="11" transform="rotate(120 32 32)"/></g></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 10 4 4 0 0 1 18 18H7Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M9 16 5 12l4-4M5 12h11"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m14 6 4 4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-arrow-back" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4ZM8 6H4v1a3 3 0 0 0 4 3M16 6h4v1a3 3 0 0 1-4 3M12 13v4M8 20h8M9 17h6"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+    <symbol id="i-devices" viewBox="0 0 24 24"><rect x="2" y="4" width="14" height="10" rx="1.5"/><path d="M6 18h6M9 14v4"/><rect x="17" y="9" width="5" height="11" rx="1"/></symbol>
+  </defs>
+</svg>
+
+<!-- ================= شاشة التحميل ================= -->
+<div class="boot" id="boot" role="status" aria-live="polite">
+  <div class="boot-inner">
+    <svg class="atom" width="44" height="44"><use href="#i-atom"/></svg>
+    <span id="bootText">جارٍ التحميل…</span>
+  </div>
+</div>
+
+<!-- ================= واجهة الدخول ================= -->
+<div class="auth" id="authView" hidden>
+  <aside class="auth-brand">
+    <a class="brand-link" href="index.html">
+      <span class="brand-mark"><svg width="26" height="26"><use href="#i-atom"/></svg></span>
+      <span>
+        <span class="brand-name">فيزياء المسارات</span>
+        <span class="brand-sub" style="display:block">بوابة الطالب</span>
       </span>
-      <div class="brand-text">
-        <h1>بيانات الطالب</h1>
-        <p>السجل الأكاديمي — فيزياء المسارات</p>
-      </div>
-    </div>
+    </a>
 
-    <div class="header-user">
-      <div class="header-greeting">
-        <strong id="headerName">—</strong>
-        <span>مرحباً بعودتك</span>
-      </div>
-      <div class="avatar" id="headerAvatar" aria-hidden="true">ط</div>
-      <button class="btn-ghost-light" id="logoutBtn" type="button">تسجيل الخروج</button>
-    </div>
-  </div>
-</header>
-
-<!-- ================= Auth view ================= -->
-<section class="auth-view" id="authView">
-  <div class="auth-card">
-    <aside class="auth-aside">
-      <div>
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 64 64" fill="none" stroke="#e2e8f0" stroke-width="2.6">
-            <circle cx="32" cy="32" r="6" fill="#e2e8f0" stroke="none"/>
-            <ellipse cx="32" cy="32" rx="26" ry="11"/>
-            <ellipse cx="32" cy="32" rx="26" ry="11" transform="rotate(60 32 32)"/>
-            <ellipse cx="32" cy="32" rx="26" ry="11" transform="rotate(120 32 32)"/>
-          </svg>
-        </span>
-        <h2>سجلك الأكاديمي<br />في مكان واحد</h2>
-        <p>تابع موادك ودرجاتك ومعدلك التراكمي من خلال حساب خاص بك، لا يطّلع عليه أحد غيرك.</p>
-      </div>
-      <ul class="auth-points">
-        <li><span class="tick">✓</span><span>بياناتك محمية ولا يراها أي مستخدم آخر.</span></li>
-        <li><span class="tick">✓</span><span>إضافة المواد والدرجات وتعديلها في أي وقت.</span></li>
-        <li><span class="tick">✓</span><span>حساب المعدل التراكمي تلقائياً.</span></li>
+    <div class="auth-pitch">
+      <h2>مساحتك الخاصة <em>لمتابعة رحلتك</em> في الفيزياء</h2>
+      <p>سجّل بياناتك ودرجاتك في مكان واحد آمن، وتابع تقدّمك الدراسي بنظرة واضحة ومنظّمة.</p>
+      <ul class="features">
+        <li>
+          <span class="f-ico"><svg class="i"><use href="#i-shield"/></svg></span>
+          <div><strong>خصوصية كاملة</strong><span>بياناتك لا يراها أحد غيرك — حماية على مستوى قاعدة البيانات.</span></div>
+        </li>
+        <li>
+          <span class="f-ico"><svg class="i"><use href="#i-chart"/></svg></span>
+          <div><strong>متابعة ذكية للدرجات</strong><span>معدّلك وأعلى درجاتك وتقديراتك محسوبة تلقائيًا.</span></div>
+        </li>
+        <li>
+          <span class="f-ico"><svg class="i"><use href="#i-cloud"/></svg></span>
+          <div><strong>من أي جهاز</strong><span>بياناتك محفوظة سحابيًا، ادخل من الجوال أو الحاسب.</span></div>
+        </li>
       </ul>
-    </aside>
-
-    <div class="auth-form-side">
-      <h3 id="authTitle">تسجيل الدخول</h3>
-      <p class="auth-sub" id="authSubtitle">أدخل بيانات حسابك للوصول إلى سجلك الأكاديمي.</p>
-
-      <div class="auth-tabs" role="tablist" aria-label="نوع الدخول">
-        <button class="auth-tab" id="tabLogin" type="button" role="tab" aria-selected="true">دخول</button>
-        <button class="auth-tab" id="tabSignup" type="button" role="tab" aria-selected="false">حساب جديد</button>
-      </div>
-
-      <div class="alert error" id="authAlert" hidden>
-        <span aria-hidden="true">⚠</span><span class="alert-text" id="authAlertText"></span>
-      </div>
-      <div class="alert success" id="authNotice" hidden>
-        <span aria-hidden="true">✓</span><span class="alert-text" id="authNoticeText"></span>
-      </div>
-
-      <form id="authForm" novalidate>
-        <div class="field" id="fullNameField" hidden>
-          <label for="fullName">الاسم الكامل</label>
-          <input class="input" type="text" id="fullName" name="fullName" autocomplete="name" placeholder="مثال: محمد عبدالله العتيبي" />
-        </div>
-
-        <div class="field">
-          <label for="email">البريد الإلكتروني</label>
-          <input class="input" type="email" id="email" name="email" autocomplete="email" inputmode="email" dir="ltr" placeholder="name@example.com" required />
-        </div>
-
-        <div class="field">
-          <label for="password">كلمة المرور</label>
-          <input class="input" type="password" id="password" name="password" autocomplete="current-password" dir="ltr" placeholder="••••••••" required />
-          <div class="hint" id="passwordHint" hidden>6 أحرف على الأقل.</div>
-        </div>
-
-        <div class="field" id="confirmField" hidden>
-          <label for="confirmPassword">تأكيد كلمة المرور</label>
-          <input class="input" type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" dir="ltr" placeholder="••••••••" />
-        </div>
-
-        <button class="btn-primary" type="submit" id="authSubmit">دخول إلى حسابي</button>
-      </form>
-
-      <p class="auth-footer-note" id="switchLine">
-        لا تملك حساباً؟
-        <button class="link-button" type="button" id="switchMode">أنشئ حساباً جديداً</button>
-      </p>
-
-      <button class="back-home" type="button" id="backHome">← العودة إلى موقع فيزياء المسارات</button>
-    </div>
-  </div>
-</section>
-
-<!-- ================= App view ================= -->
-<main class="app-view" id="appView" hidden>
-  <div class="container">
-    <div class="alert warn offline-note" id="offlineNote" hidden>
-      <span aria-hidden="true">⚠</span>
-      <span>لا يوجد اتصال بالإنترنت. قد لا تتمكن من حفظ التغييرات حتى يعود الاتصال.</span>
     </div>
 
-    <div class="alert error offline-note" id="setupNote" hidden>
-      <span aria-hidden="true">⚠</span>
-      <span>قاعدة البيانات غير مهيّأة بعد: جداول <b>profiles</b> و<b>student_notes</b> غير موجودة. شغّل كود إعداد قاعدة البيانات في Supabase SQL Editor ثم حدّث الصفحة.</span>
+    <div class="auth-foot">
+      <svg class="i"><use href="#i-lock"/></svg>
+      اتصال مشفّر · مدعوم بـ Supabase
+    </div>
+    <div class="orbit" aria-hidden="true"><svg><use href="#i-atom"/></svg></div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-top">
+      <a class="back" href="index.html"><svg class="i"><use href="#i-arrow-back"/></svg> العودة إلى الموقع</a>
+      <button class="icon-btn js-theme" type="button" aria-label="تبديل الوضع الليلي"><svg class="i"><use href="#i-moon"/></svg></button>
     </div>
 
-    <div class="page-head">
-      <div>
-        <h2>السجل الأكاديمي</h2>
-        <p>نظرة سريعة على أدائك وموادك الدراسية.</p>
-      </div>
-      <button class="btn-secondary" type="button" id="refreshBtn">↻ تحديث البيانات</button>
-    </div>
+    <div class="auth-center">
+      <div class="auth-card">
 
-    <div class="stats-grid">
-      <div class="stat-card accent">
-        <span class="stat-label">المعدل التراكمي</span>
-        <span class="stat-value" id="statGpa">—</span>
-        <span class="stat-sub" id="statGpaSub">من 100</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">عدد المواد</span>
-        <span class="stat-value" id="statCount">0</span>
-        <span class="stat-sub">مادة مسجّلة</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">الحالة الأكاديمية</span>
-        <span class="stat-value" id="statStatus" style="font-size:1.15rem;">—</span>
-        <span class="stat-sub">حسب المعدل</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">أعلى درجة</span>
-        <span class="stat-value" id="statHigh">—</span>
-        <span class="stat-sub">أفضل مادة</span>
+        <!-- تسجيل الدخول / إنشاء حساب -->
+        <section class="panel" id="panelMain">
+          <h1 id="mainTitle">مرحبًا بعودتك</h1>
+          <p class="lead-text" id="mainLead">سجّل الدخول للوصول إلى بياناتك الخاصة.</p>
+
+          <div class="seg" role="tablist" aria-label="نوع العملية">
+            <button type="button" role="tab" id="tabLogin" aria-selected="true">تسجيل الدخول</button>
+            <button type="button" role="tab" id="tabSignup" aria-selected="false">حساب جديد</button>
+          </div>
+
+          <div id="authAlert" hidden></div>
+
+          <!-- نموذج الدخول -->
+          <form id="loginForm" novalidate>
+            <div class="field">
+              <label for="loginEmail">البريد الإلكتروني</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-mail"/></svg>
+                <input class="input has-icon input-ltr" id="loginEmail" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required />
+              </div>
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label for="loginPass">كلمة المرور</label>
+                <button type="button" class="text-link" id="toForgot">نسيت كلمة المرور؟</button>
+              </div>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-lock"/></svg>
+                <input class="input has-icon has-action input-ltr" id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••" required />
+                <button type="button" class="icon-btn trail js-reveal" aria-label="إظهار كلمة المرور"><svg class="i"><use href="#i-eye"/></svg></button>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-block" type="submit">تسجيل الدخول</button>
+            </div>
+          </form>
+
+          <!-- نموذج التسجيل -->
+          <form id="signupForm" novalidate hidden>
+            <div class="field">
+              <label for="suName">الاسم الكامل</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-user"/></svg>
+                <input class="input has-icon" id="suName" type="text" autocomplete="name" placeholder="مثال: عبدالله محمد العتيبي" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="suEmail">البريد الإلكتروني</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-mail"/></svg>
+                <input class="input has-icon input-ltr" id="suEmail" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="suPass">كلمة المرور</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-lock"/></svg>
+                <input class="input has-icon has-action input-ltr js-strength" data-meter="suMeter" id="suPass" type="password" autocomplete="new-password" placeholder="٨ أحرف على الأقل" required minlength="8" />
+                <button type="button" class="icon-btn trail js-reveal" aria-label="إظهار كلمة المرور"><svg class="i"><use href="#i-eye"/></svg></button>
+              </div>
+              <div class="strength" id="suMeter" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+              <span class="strength-text" id="suMeterText">استخدم ٨ أحرف أو أكثر مع أرقام ورموز.</span>
+            </div>
+            <div class="field">
+              <label for="suPass2">تأكيد كلمة المرور</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-lock"/></svg>
+                <input class="input has-icon input-ltr" id="suPass2" type="password" autocomplete="new-password" placeholder="أعد كتابة كلمة المرور" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-block" type="submit">إنشاء الحساب</button>
+            </div>
+          </form>
+
+          <div class="privacy-note">
+            <svg class="i"><use href="#i-shield"/></svg>
+            <span>كل حساب معزول تمامًا؛ لا يمكن لأي مستخدم آخر الاطلاع على بياناتك.</span>
+          </div>
+        </section>
+
+        <!-- استعادة كلمة المرور -->
+        <section class="panel" id="panelForgot" hidden>
+          <h1>استعادة كلمة المرور</h1>
+          <p class="lead-text">أدخل بريدك الإلكتروني وسنرسل لك رابطًا لتعيين كلمة مرور جديدة.</p>
+          <div id="forgotAlert" hidden></div>
+          <form id="forgotForm" novalidate>
+            <div class="field">
+              <label for="fgEmail">البريد الإلكتروني</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-mail"/></svg>
+                <input class="input has-icon input-ltr" id="fgEmail" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-block" type="submit">إرسال رابط الاستعادة</button>
+              <button class="btn btn-ghost btn-block" type="button" id="backToLogin">
+                <svg class="i"><use href="#i-arrow-back"/></svg> العودة لتسجيل الدخول
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- تعيين كلمة مرور جديدة (بعد رابط الاستعادة) -->
+        <section class="panel" id="panelRecovery" hidden>
+          <h1>تعيين كلمة مرور جديدة</h1>
+          <p class="lead-text">اختر كلمة مرور قوية لم تستخدمها من قبل.</p>
+          <div id="recoveryAlert" hidden></div>
+          <form id="recoveryForm" novalidate>
+            <div class="field">
+              <label for="rcPass">كلمة المرور الجديدة</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-lock"/></svg>
+                <input class="input has-icon has-action input-ltr js-strength" data-meter="rcMeter" id="rcPass" type="password" autocomplete="new-password" placeholder="٨ أحرف على الأقل" required />
+                <button type="button" class="icon-btn trail js-reveal" aria-label="إظهار كلمة المرور"><svg class="i"><use href="#i-eye"/></svg></button>
+              </div>
+              <div class="strength" id="rcMeter" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+              <span class="strength-text" id="rcMeterText">استخدم ٨ أحرف أو أكثر مع أرقام ورموز.</span>
+            </div>
+            <div class="field">
+              <label for="rcPass2">تأكيد كلمة المرور</label>
+              <div class="input-wrap">
+                <svg class="i lead"><use href="#i-lock"/></svg>
+                <input class="input has-icon input-ltr" id="rcPass2" type="password" autocomplete="new-password" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary btn-block" type="submit">حفظ كلمة المرور</button>
+            </div>
+          </form>
+        </section>
+
       </div>
     </div>
+  </main>
+</div>
 
-    <section class="panel" aria-labelledby="profileTitle">
-      <div class="panel-head">
-        <div>
-          <h3 id="profileTitle"><span class="dot"></span> الملف الشخصي</h3>
-          <p>بياناتك الأساسية المرتبطة بحسابك.</p>
+<!-- ================= لوحة الطالب ================= -->
+<div id="appView" hidden>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand-link" href="index.html">
+        <span class="brand-mark"><svg width="22" height="22"><use href="#i-atom"/></svg></span>
+        <span class="brand-name">فيزياء المسارات</span>
+      </a>
+      <nav class="top-nav" aria-label="روابط الموقع">
+        <a href="index.html">الرئيسية</a>
+        <a href="exams.html">الاختبارات</a>
+        <a href="student-data.html" aria-current="page">بيانات الطالب</a>
+      </nav>
+      <span class="spacer"></span>
+      <button class="icon-btn js-theme" type="button" aria-label="تبديل الوضع الليلي"><svg class="i"><use href="#i-moon"/></svg></button>
+      <div class="user-menu">
+        <button class="user-btn" id="userBtn" type="button" aria-haspopup="menu" aria-expanded="false">
+          <span class="avatar" id="topAvatar">؟</span>
+          <span class="uname" id="topName">—</span>
+        </button>
+        <div class="menu" id="userMenu" role="menu" hidden>
+          <div class="menu-head"><strong id="menuName">—</strong><span id="menuEmail">—</span></div>
+          <button type="button" role="menuitem" data-go="profile"><svg class="i"><use href="#i-user"/></svg> الملف الشخصي</button>
+          <button type="button" role="menuitem" data-go="security"><svg class="i"><use href="#i-key"/></svg> الأمان وكلمة المرور</button>
+          <button type="button" role="menuitem" class="danger js-signout"><svg class="i"><use href="#i-logout"/></svg> تسجيل الخروج</button>
         </div>
-        <button class="btn-secondary" type="button" id="editProfileBtn">✎ تعديل البيانات</button>
       </div>
-      <div class="panel-body">
-        <div class="profile-grid">
-          <div class="avatar-lg" id="profileAvatar" aria-hidden="true">ط</div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav class="sidenav" role="tablist" aria-label="أقسام بيانات الطالب">
+      <div class="nav-title">حسابي</div>
+      <button type="button" role="tab" data-view="overview" aria-selected="true"><svg class="i"><use href="#i-home"/></svg> نظرة عامة</button>
+      <button type="button" role="tab" data-view="profile" aria-selected="false"><svg class="i"><use href="#i-user"/></svg> الملف الشخصي</button>
+      <button type="button" role="tab" data-view="grades" aria-selected="false"><svg class="i"><use href="#i-book"/></svg> المواد والدرجات <span class="count num" id="navCount">0</span></button>
+      <button type="button" role="tab" data-view="security" aria-selected="false"><svg class="i"><use href="#i-shield"/></svg> الأمان</button>
+      <div class="side-card">
+        <strong><svg class="i"><use href="#i-shield"/></svg> بياناتك محميّة</strong>
+        كل السجلات مرتبطة بحسابك فقط، ومحميّة بسياسات أمان على مستوى الصفوف.
+      </div>
+    </nav>
+
+    <main id="main">
+      <!-- ===== نظرة عامة ===== -->
+      <section class="view" data-panel="overview">
+        <div class="hero">
+          <span class="avatar lg" id="heroAvatar">؟</span>
           <div>
-            <div class="profile-name" id="profileName">—</div>
-            <div class="profile-email" id="profileEmail" dir="ltr">—</div>
-            <div class="profile-fields">
-              <div class="profile-field"><span>رقم الطالب</span><strong id="profileStudentId">—</strong></div>
-              <div class="profile-field"><span>الصف الدراسي</span><strong id="profileGrade">—</strong></div>
-              <div class="profile-field"><span>المسار / التخصص</span><strong id="profileMajor">—</strong></div>
+            <h1 id="heroGreeting">مرحبًا</h1>
+            <p id="heroSub">هذه لوحتك الشخصية لمتابعة بياناتك ودرجاتك.</p>
+            <div class="chips" id="heroChips"></div>
+          </div>
+          <div class="hero-cta">
+            <button class="btn btn-secondary js-add-subject" type="button"><svg class="i"><use href="#i-plus"/></svg> إضافة مادة</button>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="card stat">
+            <div class="s-top">عدد المواد <span class="s-ico"><svg class="i"><use href="#i-book"/></svg></span></div>
+            <div class="s-val num" id="stCount">—</div>
+            <div class="s-sub" id="stCountSub">مادة مسجّلة</div>
+          </div>
+          <div class="card stat">
+            <div class="s-top">المعدّل العام <span class="s-ico"><svg class="i"><use href="#i-target"/></svg></span></div>
+            <div class="s-val num" id="stAvg">—</div>
+            <div class="s-sub" id="stAvgSub">من ١٠٠</div>
+          </div>
+          <div class="card stat">
+            <div class="s-top">أعلى درجة <span class="s-ico"><svg class="i"><use href="#i-trophy"/></svg></span></div>
+            <div class="s-val num" id="stMax">—</div>
+            <div class="s-sub" id="stMaxSub">—</div>
+          </div>
+          <div class="card stat">
+            <div class="s-top">تحتاج تحسينًا <span class="s-ico"><svg class="i"><use href="#i-trend"/></svg></span></div>
+            <div class="s-val num" id="stMin">—</div>
+            <div class="s-sub" id="stMinSub">—</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <div><h2>أداء المواد</h2><p>درجاتك مرتّبة من الأعلى إلى الأدنى</p></div>
+              <button class="btn btn-ghost btn-sm" type="button" data-go="grades">عرض الكل</button>
+            </div>
+            <div class="card-body" id="barsBody"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>اكتمال الملف</h2><p>أكمل بياناتك لتجربة أفضل</p></div></div>
+            <div class="card-body">
+              <div class="ring-wrap">
+                <div class="ring">
+                  <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--line)" stroke-width="3.2"/><circle id="ringArc" cx="18" cy="18" r="15.5" fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="0 100" pathLength="100" style="transition:stroke-dasharray .8s var(--ease)"/></svg>
+                  <span class="r-val num" id="ringVal">0٪</span>
+                </div>
+                <div style="font-size:13.5px;color:var(--text-2)" id="ringText">أكمل ملفك الشخصي.</div>
+              </div>
+              <ul class="checklist" id="checklist"></ul>
+              <button class="btn btn-secondary btn-block" type="button" data-go="profile" style="margin-top:18px;height:42px">تحديث الملف الشخصي</button>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="panel" aria-labelledby="notesTitle">
-      <div class="panel-head">
-        <div>
-          <h3 id="notesTitle"><span class="dot"></span> المواد والدرجات</h3>
-          <p>أضف موادك ودرجاتك، ويمكنك تعديلها أو حذفها في أي وقت.</p>
-        </div>
-      </div>
-
-      <form class="note-form" id="noteForm" novalidate>
-        <div class="field">
-          <label for="noteName">اسم المادة</label>
-          <input class="input" type="text" id="noteName" placeholder="مثال: فيزياء ٢" maxlength="80" required />
-        </div>
-        <div class="field">
-          <label for="noteCode">كود المادة</label>
-          <input class="input" type="text" id="noteCode" placeholder="PHY201" maxlength="20" dir="ltr" />
-        </div>
-        <div class="field">
-          <label for="noteGrade">الدرجة</label>
-          <input class="input" type="number" id="noteGrade" placeholder="0 - 100" min="0" max="100" step="1" inputmode="numeric" required />
-        </div>
-        <button class="btn-primary" type="submit" id="addNoteBtn">+ إضافة</button>
-      </form>
-
-      <div class="notes-list" id="notesList"></div>
-    </section>
-  </div>
-</main>
-
-<footer class="site-footer">
-  <span>فيزياء المسارات — </span>
-  <a href="index.html">الصفحة الرئيسية</a>
-  <span> · بياناتك محفوظة بشكل آمن ولا يطّلع عليها أحد غيرك.</span>
-</footer>
-
-<!-- ================= Profile modal ================= -->
-<div class="modal" id="profileModal" hidden>
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
-    <div class="modal-head">
-      <h3 id="profileModalTitle">تعديل البيانات الشخصية</h3>
-      <button class="modal-close" type="button" data-close="profileModal" aria-label="إغلاق">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="alert error" id="profileAlert" hidden></div>
-      <form id="profileForm" novalidate>
-        <div class="field">
-          <label for="editName">الاسم الكامل</label>
-          <input class="input" type="text" id="editName" maxlength="100" required />
-        </div>
-        <div class="form-row">
-          <div class="field">
-            <label for="editStudentId">رقم الطالب</label>
-            <input class="input" type="text" id="editStudentId" maxlength="30" dir="ltr" />
+      <!-- ===== الملف الشخصي ===== -->
+      <section class="view" data-panel="profile" hidden>
+        <div class="page-head"><div><h1>الملف الشخصي</h1><p>معلوماتك الأساسية كطالب. لا يطّلع عليها أحد غيرك.</p></div></div>
+        <form class="card" id="profileForm" novalidate>
+          <div class="card-head"><div><h2>المعلومات الأساسية</h2><p>تُحفظ في حسابك وتظهر في لوحتك فقط.</p></div></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="pfName">الاسم الكامل</label>
+                <input class="input" id="pfName" type="text" maxlength="120" autocomplete="name" placeholder="الاسم الرباعي" />
+              </div>
+              <div class="field">
+                <label for="pfStudentId">الرقم الأكاديمي</label>
+                <input class="input input-ltr" id="pfStudentId" type="text" maxlength="30" inputmode="numeric" placeholder="مثال: 441012345" />
+              </div>
+              <div class="field">
+                <span class="label">البريد الإلكتروني</span>
+                <div class="readonly-box"><svg class="i"><use href="#i-mail"/></svg><span class="ltr" id="pfEmail">—</span><span class="badge badge-ok" style="margin-inline-start:auto">موثّق</span></div>
+              </div>
+              <div class="field">
+                <label for="pfLevel">الصف الدراسي</label>
+                <select class="select" id="pfLevel">
+                  <option value="">— اختر الصف —</option>
+                  <option>الأول الثانوي</option>
+                  <option>الثاني الثانوي</option>
+                  <option>الثالث الثانوي</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="pfMajor">المسار</label>
+                <select class="select" id="pfMajor">
+                  <option value="">— اختر المسار —</option>
+                  <option>السنة الأولى المشتركة</option>
+                  <option>المسار العام</option>
+                  <option>مسار علوم الحاسب والهندسة</option>
+                  <option>مسار الصحة والحياة</option>
+                  <option>مسار إدارة الأعمال</option>
+                  <option>المسار الشرعي</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div class="field">
-            <label for="editGrade">الصف الدراسي</label>
-            <input class="input" type="text" id="editGrade" maxlength="40" placeholder="مثال: الثاني الثانوي" />
+          <div class="card-foot">
+            <span class="status" id="profileStatus"></span>
+            <button class="btn btn-ghost" type="button" id="profileReset">تراجع</button>
+            <button class="btn btn-primary" type="submit" id="profileSave">حفظ التغييرات</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ===== المواد والدرجات ===== -->
+      <section class="view" data-panel="grades" hidden>
+        <div class="page-head">
+          <div><h1>المواد والدرجات</h1><p>سجّل موادك ودرجاتك وتابع تقديرك في كل مادة.</p></div>
+          <button class="btn btn-primary js-add-subject" type="button"><svg class="i"><use href="#i-plus"/></svg> إضافة مادة</button>
+        </div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="input-wrap">
+              <svg class="i lead"><use href="#i-search"/></svg>
+              <input class="input has-icon" id="search" type="search" placeholder="ابحث باسم المادة أو رمزها…" aria-label="بحث في المواد" />
+            </div>
+            <select class="select" id="sortBy" aria-label="ترتيب">
+              <option value="new">الأحدث إضافة</option>
+              <option value="high">الدرجة: الأعلى أولًا</option>
+              <option value="low">الدرجة: الأدنى أولًا</option>
+              <option value="name">اسم المادة (أ–ي)</option>
+            </select>
+          </div>
+          <div id="gradesBody"></div>
+        </div>
+      </section>
+
+      <!-- ===== الأمان ===== -->
+      <section class="view" data-panel="security" hidden>
+        <div class="page-head"><div><h1>الأمان</h1><p>إدارة كلمة المرور وجلسات الدخول لحسابك.</p></div></div>
+        <div class="stack">
+          <div class="card">
+            <div class="card-head"><div><h2>معلومات الحساب</h2></div></div>
+            <div class="card-body">
+              <dl class="kv" style="margin:0">
+                <div><dt>البريد الإلكتروني</dt><dd dir="ltr" style="text-align:right" id="secEmail">—</dd></div>
+                <div><dt>تاريخ إنشاء الحساب</dt><dd id="secCreated">—</dd></div>
+                <div><dt>آخر تسجيل دخول</dt><dd id="secLast">—</dd></div>
+              </dl>
+            </div>
+          </div>
+
+          <form class="card" id="pwForm" novalidate>
+            <div class="card-head"><div><h2>تغيير كلمة المرور</h2><p>ننصح باستخدام كلمة مرور فريدة لا تستخدمها في مواقع أخرى.</p></div></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="pwNew">كلمة المرور الجديدة</label>
+                  <div class="input-wrap">
+                    <input class="input has-action input-ltr js-strength" data-meter="pwMeter" id="pwNew" type="password" autocomplete="new-password" placeholder="٨ أحرف على الأقل" />
+                    <button type="button" class="icon-btn trail js-reveal" aria-label="إظهار كلمة المرور"><svg class="i"><use href="#i-eye"/></svg></button>
+                  </div>
+                  <div class="strength" id="pwMeter" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                  <span class="strength-text" id="pwMeterText">استخدم ٨ أحرف أو أكثر مع أرقام ورموز.</span>
+                </div>
+                <div class="field">
+                  <label for="pwNew2">تأكيد كلمة المرور</label>
+                  <input class="input input-ltr" id="pwNew2" type="password" autocomplete="new-password" />
+                  <span class="field-error" id="pwErr"></span>
+                </div>
+              </div>
+            </div>
+            <div class="card-foot">
+              <button class="btn btn-primary" type="submit">تحديث كلمة المرور</button>
+            </div>
+          </form>
+
+          <div class="card danger-zone">
+            <div class="card-body stack" style="gap:18px">
+              <div class="dz-row">
+                <div><h3>تسجيل الخروج</h3><p>إنهاء الجلسة على هذا الجهاز.</p></div>
+                <button class="btn btn-secondary js-signout" type="button"><svg class="i"><use href="#i-logout"/></svg> تسجيل الخروج</button>
+              </div>
+              <div class="dz-row" style="border-top:1px solid var(--line);padding-top:18px">
+                <div><h3>الخروج من جميع الأجهزة</h3><p>إنهاء كل الجلسات النشطة لحسابك على أي جهاز.</p></div>
+                <button class="btn btn-danger-ghost" type="button" id="signoutAll"><svg class="i"><use href="#i-devices"/></svg> خروج من الكل</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="field">
-          <label for="editMajor">المسار / التخصص</label>
-          <input class="input" type="text" id="editMajor" maxlength="60" placeholder="مثال: مسار عام" />
-        </div>
-        <div class="modal-actions">
-          <button class="btn-primary" type="submit" id="saveProfileBtn">حفظ التغييرات</button>
-          <button class="btn-secondary" type="button" data-close="profileModal">إلغاء</button>
-        </div>
-      </form>
-    </div>
+      </section>
+    </main>
   </div>
 </div>
 
-<!-- ================= Note modal ================= -->
-<div class="modal" id="noteModal" hidden>
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="noteModalTitle">
-    <div class="modal-head">
-      <h3 id="noteModalTitle">تعديل المادة</h3>
-      <button class="modal-close" type="button" data-close="noteModal" aria-label="إغلاق">×</button>
+<!-- ================= نافذة إضافة/تعديل مادة ================= -->
+<dialog id="subjectDlg" aria-labelledby="subjectDlgTitle">
+  <form id="subjectForm" novalidate>
+    <div class="dlg-head">
+      <div><h2 id="subjectDlgTitle">إضافة مادة</h2><p id="subjectDlgSub">أدخل بيانات المادة ودرجتك فيها.</p></div>
+      <button class="icon-btn" type="button" data-close aria-label="إغلاق"><svg class="i"><use href="#i-x"/></svg></button>
     </div>
-    <div class="modal-body">
-      <div class="alert error" id="noteAlert" hidden></div>
-      <form id="noteEditForm" novalidate>
-        <input type="hidden" id="editNoteId" />
+    <div class="dlg-body">
+      <div class="field">
+        <label for="sjName">اسم المادة</label>
+        <input class="input" id="sjName" type="text" maxlength="80" placeholder="مثال: فيزياء ١" required />
+        <span class="field-error" id="sjNameErr"></span>
+      </div>
+      <div class="form-grid" style="margin-top:16px">
         <div class="field">
-          <label for="editNoteName">اسم المادة</label>
-          <input class="input" type="text" id="editNoteName" maxlength="80" required />
+          <div class="label-row"><label for="sjCode">رمز المادة</label><span class="hint">اختياري</span></div>
+          <input class="input input-ltr" id="sjCode" type="text" maxlength="20" placeholder="PHYS 1-1" />
         </div>
-        <div class="form-row">
-          <div class="field">
-            <label for="editNoteCode">كود المادة</label>
-            <input class="input" type="text" id="editNoteCode" maxlength="20" dir="ltr" />
-          </div>
-          <div class="field">
-            <label for="editNoteGrade">الدرجة</label>
-            <input class="input" type="number" id="editNoteGrade" min="0" max="100" step="1" required />
-          </div>
+        <div class="field">
+          <div class="label-row"><label for="sjGrade">الدرجة</label><span class="hint">من ١٠٠</span></div>
+          <input class="input input-ltr" id="sjGrade" type="number" min="0" max="100" step="1" inputmode="numeric" placeholder="0 – 100" />
+          <span class="field-error" id="sjGradeErr"></span>
         </div>
-        <div class="modal-actions">
-          <button class="btn-primary" type="submit" id="saveNoteBtn">حفظ التعديل</button>
-          <button class="btn-secondary" type="button" data-close="noteModal">إلغاء</button>
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
-</div>
+    <div class="dlg-foot">
+      <button class="btn btn-ghost" type="button" data-close>إلغاء</button>
+      <button class="btn btn-primary" type="submit" id="subjectSave">حفظ المادة</button>
+    </div>
+  </form>
+</dialog>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<!-- ================= نافذة تأكيد الحذف ================= -->
+<dialog id="confirmDlg" aria-labelledby="confirmTitle">
+  <div class="dlg-body" style="padding-top:24px">
+    <div class="dlg-danger-ico"><svg class="i"><use href="#i-trash"/></svg></div>
+    <h2 id="confirmTitle" style="margin:0 0 6px;font-size:18px">حذف المادة؟</h2>
+    <p id="confirmText" style="margin:0;color:var(--text-2);font-size:14px">لا يمكن التراجع عن هذا الإجراء.</p>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn btn-ghost" type="button" data-close>إلغاء</button>
+    <button class="btn btn-danger" type="button" id="confirmOk">حذف نهائيًا</button>
+  </div>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
 
 <script>
-(() => {
-  'use strict';
+(function () {
+  "use strict";
 
-  const SUPABASE_URL = 'https://jbqotzkinlatewrjvadi.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_F93GOC_LaWY-NWadmN8wmA_F0qEh_iO';
-
-  // IMPORTANT: use window.supabase so the client variable does not shadow the library.
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-  });
+  /* =========================================================
+     الإعدادات — المفتاح العام (publishable) آمن للاستخدام في
+     المتصفح؛ الحماية الفعلية تتم عبر سياسات RLS في قاعدة البيانات.
+     ========================================================= */
+  const SUPABASE_URL = "https://jbqotzkinlatewrjvadi.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_F93GOC_LaWY-NWadmN8wmA_F0qEh_iO";
 
   const $ = (id) => document.getElementById(id);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+  const nf = new Intl.NumberFormat("ar-SA", { maximumFractionDigits: 1 });
+  const df = new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium" });
+  const dtf = new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium", timeStyle: "short" });
+  const fmt = (n) => nf.format(n);
 
-  const ui = {
-    header: $('siteHeader'),
-    authView: $('authView'),
-    appView: $('appView'),
-    authForm: $('authForm'),
-    authTitle: $('authTitle'),
-    authSubtitle: $('authSubtitle'),
-    tabLogin: $('tabLogin'),
-    tabSignup: $('tabSignup'),
-    fullNameField: $('fullNameField'),
-    fullName: $('fullName'),
-    email: $('email'),
-    password: $('password'),
-    confirmField: $('confirmField'),
-    confirmPassword: $('confirmPassword'),
-    passwordHint: $('passwordHint'),
-    authSubmit: $('authSubmit'),
-    authAlert: $('authAlert'),
-    authAlertText: $('authAlertText'),
-    authNotice: $('authNotice'),
-    authNoticeText: $('authNoticeText'),
-    switchLine: $('switchLine'),
-    switchMode: $('switchMode'),
-    backHome: $('backHome'),
-    headerName: $('headerName'),
-    headerAvatar: $('headerAvatar'),
-    logoutBtn: $('logoutBtn'),
-    refreshBtn: $('refreshBtn'),
-    offlineNote: $('offlineNote'),
-    setupNote: $('setupNote'),
-    statGpa: $('statGpa'),
-    statGpaSub: $('statGpaSub'),
-    statCount: $('statCount'),
-    statStatus: $('statStatus'),
-    statHigh: $('statHigh'),
-    profileAvatar: $('profileAvatar'),
-    profileName: $('profileName'),
-    profileEmail: $('profileEmail'),
-    profileStudentId: $('profileStudentId'),
-    profileGrade: $('profileGrade'),
-    profileMajor: $('profileMajor'),
-    editProfileBtn: $('editProfileBtn'),
-    noteForm: $('noteForm'),
-    noteName: $('noteName'),
-    noteCode: $('noteCode'),
-    noteGrade: $('noteGrade'),
-    addNoteBtn: $('addNoteBtn'),
-    notesList: $('notesList'),
-    profileModal: $('profileModal'),
-    profileForm: $('profileForm'),
-    profileAlert: $('profileAlert'),
-    editName: $('editName'),
-    editStudentId: $('editStudentId'),
-    editGrade: $('editGrade'),
-    editMajor: $('editMajor'),
-    saveProfileBtn: $('saveProfileBtn'),
-    noteModal: $('noteModal'),
-    noteEditForm: $('noteEditForm'),
-    noteAlert: $('noteAlert'),
-    editNoteId: $('editNoteId'),
-    editNoteName: $('editNoteName'),
-    editNoteCode: $('editNoteCode'),
-    editNoteGrade: $('editNoteGrade'),
-    saveNoteBtn: $('saveNoteBtn'),
-    toast: $('toast')
-  };
+  const state = { user: null, profile: null, subjects: [], editingId: null, deletingId: null, recovery: false, view: "overview", loadedFor: null };
 
-  const state = {
-    user: null,
-    profile: null,
-    notes: [],
-    mode: 'login',
-    busy: false,
-    tableMissing: false
-  };
+  /* ---------- الوضع الليلي ---------- */
+  function syncThemeIcons() {
+    const dark = document.documentElement.getAttribute("data-theme") === "dark";
+    $$(".js-theme use").forEach((u) => u.setAttribute("href", dark ? "#i-sun" : "#i-moon"));
+  }
+  $$(".js-theme").forEach((b) => b.addEventListener("click", () => {
+    const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("physics:theme", next); } catch (_) {}
+    syncThemeIcons();
+  }));
+  syncThemeIcons();
 
-  /* ---------------- Helpers ---------------- */
-
-  let toastTimer = null;
-  function toast(message, type = 'info') {
-    ui.toast.textContent = message;
-    ui.toast.className = 'toast show' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { ui.toast.className = 'toast'; }, 3200);
+  /* ---------- أدوات واجهة ---------- */
+  function toast(msg, type) {
+    const el = document.createElement("div");
+    el.className = "toast " + (type === "err" ? "err" : "ok");
+    el.innerHTML = '<span class="t-ico"><svg class="i"><use href="#' + (type === "err" ? "i-x" : "i-check") + '"/></svg></span><span></span>';
+    el.lastChild.textContent = msg;
+    $("toasts").appendChild(el);
+    setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 260); }, 3600);
   }
 
-  function setAlert(el, message) {
-    if (!el) return;
-    const textTarget = el.querySelector('.alert-text');
-    if (!message) {
-      el.hidden = true;
-      if (textTarget) textTarget.textContent = '';
-      else el.textContent = '';
-      return;
+  function showAlert(box, msg, type) {
+    if (!msg) { box.hidden = true; box.innerHTML = ""; return; }
+    const icon = type === "success" ? "i-check" : type === "info" ? "i-info" : "i-alert";
+    box.className = "alert alert-" + (type || "error");
+    box.innerHTML = '<svg class="i"><use href="#' + icon + '"/></svg><div></div>';
+    box.lastChild.textContent = msg;
+    box.hidden = false;
+    box.setAttribute("role", type === "error" || !type ? "alert" : "status");
+  }
+
+  function setBusy(btn, busy, label) {
+    if (!btn) return;
+    if (busy) {
+      btn.dataset.label = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>' + (label ? "<span>" + label + "</span>" : "");
+    } else {
+      btn.disabled = false;
+      if (btn.dataset.label) btn.innerHTML = btn.dataset.label;
     }
-    el.hidden = false;
-    if (textTarget) textTarget.textContent = message;
-    else el.textContent = message;
   }
 
-  function renderSetupNote() {
-    if (ui.setupNote) ui.setupNote.hidden = !state.tableMissing;
+  const ERRORS = [
+    [/invalid login credentials/i, "البريد الإلكتروني أو كلمة المرور غير صحيحة."],
+    [/email not confirmed/i, "لم يتم تأكيد بريدك بعد. افتح رسالة التفعيل المرسلة إلى بريدك ثم حاول مجددًا."],
+    [/already registered|already been registered|user already exists/i, "هذا البريد مسجّل مسبقًا. جرّب تسجيل الدخول أو استعادة كلمة المرور."],
+    [/password should be at least|weak password|password is too weak/i, "كلمة المرور ضعيفة. استخدم ٨ أحرف على الأقل مع أرقام ورموز."],
+    [/should be different from the old/i, "كلمة المرور الجديدة يجب أن تختلف عن القديمة."],
+    [/rate limit|too many requests|security purposes/i, "محاولات كثيرة خلال وقت قصير. انتظر قليلًا ثم أعد المحاولة."],
+    [/unable to validate email|invalid email|email address .* is invalid/i, "صيغة البريد الإلكتروني غير صحيحة."],
+    [/signups not allowed|signup is disabled/i, "التسجيل الجديد متوقف حاليًا."],
+    [/failed to fetch|networkerror|network request failed|load failed/i, "تعذّر الاتصال بالخادم. تحقّق من اتصالك بالإنترنت."],
+    [/jwt expired|session.*(missing|expired)|not authenticated/i, "انتهت الجلسة. سجّل الدخول من جديد."],
+    [/row-level security|permission denied/i, "ليست لديك صلاحية لهذا الإجراء."],
+    [/relation .* does not exist|could not find the table|schema cache/i, "جداول قاعدة البيانات غير مهيّأة. شغّل ملف الإعداد SQL في Supabase."],
+    [/check constraint|violates check/i, "القيمة المدخلة غير مقبولة."],
+  ];
+  function friendly(err) {
+    const m = (err && (err.message || err.error_description || String(err))) || "";
+    for (const [re, t] of ERRORS) if (re.test(m)) return t;
+    return "حدث خطأ غير متوقع. حاول مرة أخرى." + (m ? " (" + m + ")" : "");
   }
 
-  function escapeHtml(value) {
-    return String(value == null ? '' : value)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+  const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+  function initials(name, email) {
+    const n = (name || "").trim();
+    if (n) {
+      const parts = n.split(/\s+/);
+      return (parts[0][0] + (parts[1] ? " " + parts[1][0] : "")).replace(" ", "‌");
+    }
+    return (email || "؟")[0].toUpperCase();
   }
 
-  function initials(name) {
-    const clean = (name || '').trim();
-    if (!clean) return 'ط';
-    const parts = clean.split(/\s+/).filter(Boolean);
-    if (parts.length === 1) return parts[0].slice(0, 2);
-    return (parts[0][0] + parts[parts.length - 1][0]);
+  /* ---------- قوة كلمة المرور ---------- */
+  function scorePassword(p) {
+    let s = 0;
+    if (p.length >= 8) s++;
+    if (p.length >= 12) s++;
+    if (/[0-9]/.test(p) && /[^\d]/.test(p)) s++;
+    if (/[^A-Za-z0-9؀-ۿ]/.test(p) || (/[a-z]/.test(p) && /[A-Z]/.test(p))) s++;
+    return p ? Math.max(1, s) : 0;
+  }
+  const STRENGTH = [
+    ["استخدم ٨ أحرف أو أكثر مع أرقام ورموز.", "var(--line)"],
+    ["ضعيفة", "var(--danger)"], ["مقبولة", "var(--orange)"], ["جيدة", "var(--info)"], ["قوية", "var(--ok)"],
+  ];
+  $$(".js-strength").forEach((inp) => inp.addEventListener("input", () => {
+    const s = scorePassword(inp.value);
+    const meter = $(inp.dataset.meter);
+    $$("span", meter).forEach((bar, i) => { bar.style.background = i < s ? STRENGTH[s][1] : "var(--line)"; });
+    const txt = $(inp.dataset.meter + "Text");
+    txt.textContent = s ? "قوة كلمة المرور: " + STRENGTH[s][0] : STRENGTH[0][0];
+    txt.style.color = s ? STRENGTH[s][1] : "";
+  }));
+
+  /* ---------- إظهار/إخفاء كلمة المرور ---------- */
+  $$(".js-reveal").forEach((b) => b.addEventListener("click", () => {
+    const inp = b.parentElement.querySelector("input");
+    const show = inp.type === "password";
+    inp.type = show ? "text" : "password";
+    b.querySelector("use").setAttribute("href", show ? "#i-eye-off" : "#i-eye");
+    b.setAttribute("aria-label", show ? "إخفاء كلمة المرور" : "إظهار كلمة المرور");
+  }));
+
+  /* ---------- التقديرات ---------- */
+  function level(g) {
+    if (g == null) return { t: "لم تُرصد", c: "var(--text-3)", s: "var(--surface-2)" };
+    if (g >= 90) return { t: "ممتاز", c: "var(--ok)", s: "var(--ok-soft)" };
+    if (g >= 80) return { t: "جيد جدًا", c: "var(--info)", s: "var(--info-soft)" };
+    if (g >= 70) return { t: "جيد", c: "var(--warn)", s: "var(--warn-soft)" };
+    if (g >= 60) return { t: "مقبول", c: "var(--orange)", s: "var(--orange-soft)" };
+    return { t: "يحتاج تحسين", c: "var(--danger)", s: "var(--danger-soft)" };
+  }
+
+  /* =========================================================
+     Supabase
+     ========================================================= */
+  if (!window.supabase || !window.supabase.createClient) {
+    $("bootText").textContent = "تعذّر تحميل مكتبة Supabase. تحقّق من اتصالك بالإنترنت ثم حدّث الصفحة.";
+    return;
+  }
+  // اكتشاف رابط استعادة كلمة المرور قبل أن تعالجه المكتبة
+  if (/type=recovery/.test(location.hash) || /type=recovery/.test(location.search)) state.recovery = true;
+
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+  });
+  const pageUrl = location.origin + location.pathname;
+
+  function showView(which) {
+    $("boot").hidden = true;
+    $("authView").hidden = which !== "auth";
+    $("appView").hidden = which !== "app";
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- لوحات الدخول ---------- */
+  function showPanel(name) {
+    ["Main", "Forgot", "Recovery"].forEach((p) => { $("panel" + p).hidden = p !== name; });
+    [$("authAlert"), $("forgotAlert"), $("recoveryAlert")].forEach((b) => showAlert(b, ""));
+  }
+  function setMode(mode) {
+    const signup = mode === "signup";
+    $("tabLogin").setAttribute("aria-selected", String(!signup));
+    $("tabSignup").setAttribute("aria-selected", String(signup));
+    $("loginForm").hidden = signup;
+    $("signupForm").hidden = !signup;
+    $("mainTitle").textContent = signup ? "أنشئ حسابك" : "مرحبًا بعودتك";
+    $("mainLead").textContent = signup ? "دقيقة واحدة وتبدأ بتنظيم بياناتك الدراسية." : "سجّل الدخول للوصول إلى بياناتك الخاصة.";
+    showAlert($("authAlert"), "");
+  }
+  $("tabLogin").addEventListener("click", () => setMode("login"));
+  $("tabSignup").addEventListener("click", () => setMode("signup"));
+  $("toForgot").addEventListener("click", () => { $("fgEmail").value = $("loginEmail").value; showPanel("Forgot"); $("fgEmail").focus(); });
+  $("backToLogin").addEventListener("click", () => { showPanel("Main"); setMode("login"); });
+
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = $("loginEmail").value.trim(), password = $("loginPass").value;
+    const box = $("authAlert");
+    if (!emailOk(email)) return showAlert(box, "أدخل بريدًا إلكترونيًا صحيحًا.");
+    if (!password) return showAlert(box, "أدخل كلمة المرور.");
+    const btn = e.submitter || $("loginForm").querySelector("[type=submit]");
+    setBusy(btn, true, "جارٍ الدخول…");
+    showAlert(box, "");
+    try {
+      const { data, error } = await db.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      $("loginPass").value = "";
+      await enterApp(data.user);
+    } catch (err) {
+      showAlert(box, friendly(err));
+    } finally { setBusy(btn, false); }
+  });
+
+  $("signupForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = $("suName").value.trim(), email = $("suEmail").value.trim();
+    const p1 = $("suPass").value, p2 = $("suPass2").value;
+    const box = $("authAlert");
+    if (name.length < 3) return showAlert(box, "أدخل اسمك الكامل.");
+    if (!emailOk(email)) return showAlert(box, "أدخل بريدًا إلكترونيًا صحيحًا.");
+    if (p1.length < 8) return showAlert(box, "كلمة المرور يجب ألا تقل عن ٨ أحرف.");
+    if (p1 !== p2) return showAlert(box, "كلمتا المرور غير متطابقتين.");
+    const btn = $("signupForm").querySelector("[type=submit]");
+    setBusy(btn, true, "جارٍ إنشاء الحساب…");
+    showAlert(box, "");
+    try {
+      const { data, error } = await db.auth.signUp({
+        email, password: p1,
+        options: { data: { full_name: name }, emailRedirectTo: pageUrl },
+      });
+      if (error) throw error;
+      // عند تفعيل حماية تعداد البريد يرجع Supabase مستخدمًا بلا هويات إن كان البريد مسجّلًا
+      if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        throw new Error("User already registered");
+      }
+      if (data.session) {
+        await enterApp(data.user);
+        toast("تم إنشاء حسابك بنجاح. أهلًا بك!");
+      } else {
+        $("signupForm").reset();
+        setMode("login");
+        $("loginEmail").value = email;
+        showAlert($("authAlert"), "تم إنشاء الحساب. أرسلنا رابط تفعيل إلى " + email + " — افتحه ثم سجّل الدخول.", "success");
+      }
+    } catch (err) {
+      showAlert(box, friendly(err));
+    } finally { setBusy(btn, false); }
+  });
+
+  $("forgotForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = $("fgEmail").value.trim(), box = $("forgotAlert");
+    if (!emailOk(email)) return showAlert(box, "أدخل بريدًا إلكترونيًا صحيحًا.");
+    const btn = $("forgotForm").querySelector("[type=submit]");
+    setBusy(btn, true, "جارٍ الإرسال…");
+    try {
+      const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: pageUrl });
+      if (error) throw error;
+      showAlert(box, "إن كان البريد مسجّلًا لدينا، فستصلك رسالة خلال دقائق تحتوي على رابط تعيين كلمة المرور.", "success");
+    } catch (err) { showAlert(box, friendly(err)); }
+    finally { setBusy(btn, false); }
+  });
+
+  $("recoveryForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const p1 = $("rcPass").value, p2 = $("rcPass2").value, box = $("recoveryAlert");
+    if (p1.length < 8) return showAlert(box, "كلمة المرور يجب ألا تقل عن ٨ أحرف.");
+    if (p1 !== p2) return showAlert(box, "كلمتا المرور غير متطابقتين.");
+    const btn = $("recoveryForm").querySelector("[type=submit]");
+    setBusy(btn, true, "جارٍ الحفظ…");
+    try {
+      const { data, error } = await db.auth.updateUser({ password: p1 });
+      if (error) throw error;
+      state.recovery = false;
+      history.replaceState(null, "", pageUrl);
+      $("recoveryForm").reset();
+      await enterApp(data.user);
+      toast("تم تعيين كلمة المرور الجديدة بنجاح.");
+    } catch (err) { showAlert(box, friendly(err)); }
+    finally { setBusy(btn, false); }
+  });
+
+  /* =========================================================
+     اللوحة
+     ========================================================= */
+  async function enterApp(user) {
+    if (!user) return;
+    state.user = user;
+    showView("app");
+    if (state.loadedFor !== user.id) {
+      state.loadedFor = user.id;
+      renderHeader();
+      renderOverview(true);
+      renderGrades(true);
+      await Promise.all([loadProfile(), loadSubjects()]);
+    }
+    renderAll();
+  }
+
+  function leaveApp() {
+    state.user = null; state.profile = null; state.subjects = []; state.loadedFor = null;
+    $("userMenu").hidden = true;
+    showPanel("Main"); setMode("login");
+    showView("auth");
+  }
+
+  async function loadProfile() {
+    const uid = state.user.id;
+    const { data, error } = await db.from("profiles")
+      .select("full_name, student_id, grade_level, major, created_at, updated_at")
+      .eq("user_id", uid).maybeSingle();
+    if (error) { toast(friendly(error), "err"); state.profile = {}; return; }
+    if (!data) {
+      // إنشاء ملف تلقائيًا إن لم يُنشئه المُشغّل في قاعدة البيانات
+      const full_name = (state.user.user_metadata && state.user.user_metadata.full_name) || "";
+      const ins = await db.from("profiles").upsert({ user_id: uid, full_name }, { onConflict: "user_id" })
+        .select("full_name, student_id, grade_level, major, created_at, updated_at").maybeSingle();
+      state.profile = ins.data || { full_name };
+      if (ins.error) toast(friendly(ins.error), "err");
+    } else state.profile = data;
+  }
+
+  async function loadSubjects() {
+    const { data, error } = await db.from("student_notes")
+      .select("id, subject_name, subject_code, grade, created_at, updated_at")
+      .eq("user_id", state.user.id)
+      .order("created_at", { ascending: false });
+    if (error) { toast(friendly(error), "err"); state.subjects = []; return; }
+    state.subjects = data || [];
   }
 
   function displayName() {
-    if (state.profile && state.profile.full_name) return state.profile.full_name;
-    if (state.user && state.user.email) return state.user.email.split('@')[0];
-    return 'طالب';
+    const n = state.profile && state.profile.full_name && state.profile.full_name.trim();
+    return n || (state.user.user_metadata && state.user.user_metadata.full_name) || state.user.email.split("@")[0];
   }
 
-  function gradeClass(grade) {
-    if (grade >= 80) return '';
-    if (grade >= 60) return 'mid';
-    return 'low';
-  }
-
-  function statusFor(gpa) {
-    if (gpa >= 90) return 'ممتاز';
-    if (gpa >= 80) return 'جيد جداً';
-    if (gpa >= 70) return 'جيد';
-    if (gpa >= 60) return 'مقبول';
-    return 'يحتاج متابعة';
-  }
-
-  function arabicAuthError(error) {
-    const code = (error && error.code) || '';
-    const msg = (error && error.message) || '';
-
-    if (code === 'invalid_credentials' || /invalid login credentials/i.test(msg)) {
-      return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-    }
-    if (code === 'email_not_confirmed' || /email not confirmed/i.test(msg)) {
-      return 'لم يتم تأكيد بريدك الإلكتروني بعد. افتح رسالة التأكيد في بريدك ثم حاول مرة أخرى.';
-    }
-    if (code === 'user_already_exists' || /already registered|already exists/i.test(msg)) {
-      return 'هذا البريد مسجّل مسبقاً. جرّب تسجيل الدخول.';
-    }
-    if (code === 'weak_password' || /password should be at least/i.test(msg)) {
-      return 'كلمة المرور قصيرة. استخدم 6 أحرف على الأقل.';
-    }
-    if (code === 'over_email_send_rate_limit' || /rate limit/i.test(msg)) {
-      return 'تم إرسال رسائل كثيرة خلال وقت قصير. انتظر قليلاً ثم حاول مجدداً.';
-    }
-    if (code === 'signup_disabled') {
-      return 'إنشاء الحسابات متوقف حالياً في إعدادات الموقع.';
-    }
-    if (/failed to fetch|networkerror|load failed/i.test(msg)) {
-      return 'تعذّر الاتصال بالخادم. تحقّق من اتصال الإنترنت ثم حاول مجدداً.';
-    }
-    if (code === '42501' || /row-level security/i.test(msg)) {
-      return 'لا تملك صلاحية تنفيذ هذه العملية على هذه البيانات.';
-    }
-    if (code === '42P01' || code === 'PGRST205' || /relation .* does not exist|could not find the table/i.test(msg)) {
-      return 'جداول قاعدة البيانات غير موجودة. يلزم تشغيل كود إعداد قاعدة البيانات في Supabase.';
-    }
-    return msg || 'حدث خطأ غير متوقع. حاول مرة أخرى.';
-  }
-
-  /* ---------------- Auth screen ---------------- */
-
-  function setMode(mode) {
-    state.mode = mode;
-    const isSignup = mode === 'signup';
-
-    ui.tabLogin.setAttribute('aria-selected', String(!isSignup));
-    ui.tabSignup.setAttribute('aria-selected', String(isSignup));
-    ui.fullNameField.hidden = !isSignup;
-    ui.confirmField.hidden = !isSignup;
-    ui.passwordHint.hidden = !isSignup;
-
-    ui.fullName.required = isSignup;
-    ui.confirmPassword.required = isSignup;
-    ui.password.autocomplete = isSignup ? 'new-password' : 'current-password';
-
-    ui.authTitle.textContent = isSignup ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
-    ui.authSubtitle.textContent = isSignup
-      ? 'أدخل اسمك وبريدك وكلمة مرور خاصة بك لإنشاء سجلك الأكاديمي.'
-      : 'أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى سجلك الأكاديمي.';
-    ui.authSubmit.textContent = isSignup ? 'إنشاء الحساب' : 'دخول إلى حسابي';
-    ui.switchLine.firstChild.textContent = isSignup ? 'لديك حساب بالفعل؟ ' : 'لا تملك حساباً؟ ';
-    ui.switchMode.textContent = isSignup ? 'سجّل الدخول' : 'أنشئ حساباً جديداً';
-
-    setAlert(ui.authAlert, '');
-    setAlert(ui.authNotice, '');
-  }
-
-  function showAuth() {
-    state.user = null;
-    state.profile = null;
-    state.notes = [];
-    ui.header.hidden = true;
-    ui.appView.hidden = true;
-    ui.authView.hidden = false;
-    document.body.classList.remove('is-app');
-  }
-
-  function showApp() {
-    ui.authView.hidden = true;
-    ui.appView.hidden = false;
-    ui.header.hidden = false;
-    document.body.classList.add('is-app');
-    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
-  }
-
-  async function handleSignIn(email, password) {
-    const { data, error } = await db.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    if (!data.session || !data.user) {
-      throw new Error('تعذّر إنشاء الجلسة. حاول مرة أخرى.');
-    }
-    state.user = data.user;
-    await enterApp();
-    toast('تم تسجيل الدخول بنجاح', 'success');
-  }
-
-  async function handleSignUp(fullName, email, password) {
-    const { data, error } = await db.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName } }
-    });
-    if (error) throw error;
-
-    // If the email already exists, Supabase may return a user with no identities.
-    if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-      setAlert(ui.authNotice, '');
-      throw Object.assign(new Error('هذا البريد مسجّل مسبقاً. جرّب تسجيل الدخول.'), { code: 'user_already_exists' });
-    }
-
-    if (data.session) {
-      state.user = data.user;
-      await enterApp();
-      toast('تم إنشاء الحساب وتسجيل دخولك بنجاح', 'success');
-      return;
-    }
-
-    setAlert(ui.authNotice, 'تم إنشاء حسابك. أرسلنا رسالة تأكيد إلى بريدك الإلكتروني — افتح الرسالة واضغط رابط التأكيد، ثم سجّل الدخول.');
-    setMode('login');
-    ui.email.value = email;
-    ui.password.value = '';
-    ui.password.focus();
-    toast('تم إنشاء الحساب. يرجى تأكيد البريد الإلكتروني.', 'success');
-  }
-
-  ui.authForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (state.busy) return;
-
-    const isSignup = state.mode === 'signup';
-    const fullName = ui.fullName.value.trim();
-    const email = ui.email.value.trim();
-    const password = ui.password.value;
-
-    setAlert(ui.authAlert, '');
-    setAlert(ui.authNotice, '');
-
-    if (isSignup && fullName.length < 3) {
-      setAlert(ui.authAlert, 'أدخل الاسم الكامل (3 أحرف على الأقل).');
-      ui.fullName.focus();
-      return;
-    }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setAlert(ui.authAlert, 'أدخل بريداً إلكترونياً صحيحاً.');
-      ui.email.focus();
-      return;
-    }
-    if (password.length < 6) {
-      setAlert(ui.authAlert, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
-      ui.password.focus();
-      return;
-    }
-    if (isSignup && password !== ui.confirmPassword.value) {
-      setAlert(ui.authAlert, 'كلمتا المرور غير متطابقتين.');
-      ui.confirmPassword.focus();
-      return;
-    }
-
-    state.busy = true;
-    ui.authSubmit.disabled = true;
-    ui.authSubmit.textContent = 'جارٍ المعالجة…';
-
-    try {
-      if (isSignup) {
-        await handleSignUp(fullName, email, password);
-      } else {
-        await handleSignIn(email, password);
-      }
-    } catch (error) {
-      setAlert(ui.authAlert, arabicAuthError(error));
-      console.error('[auth]', error);
-    } finally {
-      state.busy = false;
-      ui.authSubmit.disabled = false;
-      ui.authSubmit.textContent = state.mode === 'signup' ? 'إنشاء الحساب' : 'دخول إلى حسابي';
-    }
-  });
-
-  ui.tabLogin.addEventListener('click', () => setMode('login'));
-  ui.tabSignup.addEventListener('click', () => setMode('signup'));
-  ui.switchMode.addEventListener('click', () => setMode(state.mode === 'login' ? 'signup' : 'login'));
-  ui.backHome.addEventListener('click', () => { window.location.href = 'index.html'; });
-
-  /* ---------------- Data ---------------- */
-
-  async function loadProfile() {
-    if (!state.user) return;
-    const { data, error } = await db
-      .from('profiles')
-      .select('user_id, full_name, student_id, grade_level, major, updated_at')
-      .eq('user_id', state.user.id)
-      .maybeSingle();
-
-    if (error) {
-      console.error('[profile load]', error);
-      if (error.code === 'PGRST205' || /could not find the table/i.test(error.message || '')) {
-        state.tableMissing = true;
-      } else if (error.code !== 'PGRST116') {
-        toast('تعذّر تحميل الملف الشخصي: ' + arabicAuthError(error), 'error');
-      }
-      state.profile = null;
-      return;
-    }
-    state.profile = data || null;
-  }
-
-  async function loadNotes() {
-    if (!state.user) return;
-    const { data, error } = await db
-      .from('student_notes')
-      .select('id, user_id, subject_name, subject_code, grade, created_at, updated_at')
-      .eq('user_id', state.user.id)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('[notes load]', error);
-      if (error.code === 'PGRST205' || /could not find the table/i.test(error.message || '')) {
-        state.tableMissing = true;
-      } else {
-        toast('تعذّر تحميل المواد: ' + arabicAuthError(error), 'error');
-      }
-      state.notes = [];
-      return;
-    }
-    state.notes = data || [];
-  }
-
-  async function enterApp() {
-    showApp();
-    renderHeader();
-    renderProfile();
-    ui.notesList.innerHTML = '<div class="empty-state"><strong>جارٍ تحميل البيانات…</strong><span>لحظات من فضلك.</span></div>';
-    state.tableMissing = false;
-    await Promise.all([loadProfile(), loadNotes()]);
-    renderSetupNote();
-    renderHeader();
-    renderProfile();
-    renderStats();
-    renderNotes();
-  }
-
-  async function refreshAll(silent) {
-    if (!state.user) return;
-    ui.refreshBtn.disabled = true;
-    ui.refreshBtn.textContent = '… جارٍ التحديث';
-    try {
-      state.tableMissing = false;
-      await Promise.all([loadProfile(), loadNotes()]);
-      renderSetupNote();
-      renderHeader();
-      renderProfile();
-      renderStats();
-      renderNotes();
-      if (!silent) toast('تم تحديث البيانات', 'success');
-    } finally {
-      ui.refreshBtn.disabled = false;
-      ui.refreshBtn.textContent = '↻ تحديث البيانات';
-    }
-  }
-
-  /* ---------------- Rendering ---------------- */
+  function renderAll() { renderHeader(); renderOverview(); renderProfile(); renderGrades(); renderSecurity(); }
 
   function renderHeader() {
-    const name = displayName();
-    ui.headerName.textContent = name;
-    ui.headerAvatar.textContent = initials(state.profile && state.profile.full_name ? state.profile.full_name : name);
-    ui.headerAvatar.title = name;
+    const name = displayName(), ini = initials(name, state.user.email);
+    $("topAvatar").textContent = ini; $("heroAvatar").textContent = ini;
+    $("topName").textContent = name; $("menuName").textContent = name;
+    $("menuEmail").textContent = state.user.email;
+    $("navCount").textContent = fmt(state.subjects.length);
   }
 
-  function renderProfile() {
-    const profile = state.profile || {};
-    const name = displayName();
-    ui.profileName.textContent = name;
-    ui.profileEmail.textContent = (state.user && state.user.email) || '—';
-    ui.profileStudentId.textContent = profile.student_id || '—';
-    ui.profileGrade.textContent = profile.grade_level || '—';
-    ui.profileMajor.textContent = profile.major || '—';
-    ui.profileAvatar.textContent = initials(profile.full_name || name);
+  function stats() {
+    const graded = state.subjects.filter((s) => s.grade != null);
+    if (!graded.length) return { graded, avg: null, max: null, min: null };
+    const avg = graded.reduce((a, s) => a + s.grade, 0) / graded.length;
+    const max = graded.reduce((a, s) => (s.grade > a.grade ? s : a));
+    const min = graded.reduce((a, s) => (s.grade < a.grade ? s : a));
+    return { graded, avg, max, min };
   }
 
-  function renderStats() {
-    const grades = state.notes
-      .map((note) => Number(note.grade))
-      .filter((grade) => Number.isFinite(grade));
+  function renderOverview(loading) {
+    const h = new Date().getHours();
+    const greet = h < 12 ? "صباح الخير" : h < 18 ? "مساء الخير" : "مساء النور";
+    if (state.user) $("heroGreeting").textContent = greet + "، " + displayName().split(/\s+/)[0];
 
-    ui.statCount.textContent = String(state.notes.length);
+    const chips = $("heroChips"); chips.innerHTML = "";
+    const p = state.profile || {};
+    [p.grade_level, p.major, p.student_id && ("الرقم الأكاديمي: " + p.student_id)].filter(Boolean).forEach((t) => {
+      const c = document.createElement("span"); c.className = "chip"; c.textContent = t; chips.appendChild(c);
+    });
 
-    if (!grades.length) {
-      ui.statGpa.textContent = '—';
-      ui.statGpaSub.textContent = 'أضف موادك لحساب المعدل';
-      ui.statStatus.textContent = 'لا توجد مواد';
-      ui.statHigh.textContent = '—';
+    if (loading) {
+      ["stCount", "stAvg", "stMax", "stMin"].forEach((id) => { $(id).innerHTML = '<span class="skel" style="display:block;width:70px;height:30px"></span>'; });
+      $("barsBody").innerHTML = [1, 2, 3, 4].map(() => '<div class="skel" style="height:14px;margin-bottom:18px"></div>').join("");
       return;
     }
 
-    const gpa = grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
-    const highest = Math.max(...grades);
-    ui.statGpa.textContent = gpa.toFixed(2);
-    ui.statGpaSub.textContent = `محسوب من ${grades.length} مادة`;
-    ui.statStatus.textContent = statusFor(gpa);
-    ui.statHigh.textContent = String(highest);
-  }
+    const st = stats();
+    $("stCount").textContent = fmt(state.subjects.length);
+    $("stCountSub").textContent = st.graded.length === state.subjects.length ? "مادة مسجّلة" : fmt(st.graded.length) + " منها مرصودة الدرجة";
+    $("stAvg").textContent = st.avg == null ? "—" : fmt(Math.round(st.avg * 10) / 10);
+    $("stAvgSub").textContent = st.avg == null ? "أضف درجاتك لحساب المعدّل" : "من ١٠٠ · " + level(st.avg).t;
+    $("stMax").textContent = st.max ? fmt(st.max.grade) : "—";
+    $("stMaxSub").textContent = st.max ? st.max.subject_name : "لا توجد درجات بعد";
+    $("stMin").textContent = st.min ? fmt(st.min.grade) : "—";
+    $("stMinSub").textContent = st.min ? st.min.subject_name : "لا توجد درجات بعد";
 
-  function formatDate(value) {
-    if (!value) return '';
-    try {
-      return new Intl.DateTimeFormat('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(value));
-    } catch (error) {
-      return '';
-    }
-  }
-
-  function renderNotes() {
-    if (!state.notes.length) {
-      ui.notesList.innerHTML = `
-        <div class="empty-state">
-          <strong>لا توجد مواد مضافة بعد</strong>
-          <span>أضف أول مادة من النموذج أعلاه، وستظهر درجاتك ومعدلك هنا مباشرة.</span>
-        </div>`;
-      return;
-    }
-
-    ui.notesList.innerHTML = state.notes.map((note) => {
-      const grade = Number(note.grade);
-      const safeGrade = Number.isFinite(grade) ? grade : 0;
-      const date = formatDate(note.updated_at || note.created_at);
-      return `
-        <div class="note-row" data-id="${escapeHtml(note.id)}">
-          <div>
-            <div class="note-title">
-              <span>${escapeHtml(note.subject_name)}</span>
-              ${note.subject_code ? `<span class="code-chip">${escapeHtml(note.subject_code)}</span>` : ''}
-            </div>
-            <div class="note-meta">${date ? 'آخر تحديث: ' + escapeHtml(date) : ''}</div>
-          </div>
-          <div class="grade-chip ${gradeClass(safeGrade)}">${escapeHtml(safeGrade)}</div>
-          <div class="note-actions">
-            <button class="icon-btn" type="button" data-action="edit" data-id="${escapeHtml(note.id)}" title="تعديل" aria-label="تعديل ${escapeHtml(note.subject_name)}">✎</button>
-            <button class="icon-btn danger" type="button" data-action="delete" data-id="${escapeHtml(note.id)}" title="حذف" aria-label="حذف ${escapeHtml(note.subject_name)}">🗑</button>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  /* ---------------- Notes CRUD ---------------- */
-
-  ui.noteForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!state.user) return;
-
-    const name = ui.noteName.value.trim();
-    const code = ui.noteCode.value.trim();
-    const gradeRaw = ui.noteGrade.value.trim();
-    const grade = Number(gradeRaw);
-
-    if (name.length < 2) { toast('أدخل اسم المادة', 'error'); ui.noteName.focus(); return; }
-    if (gradeRaw === '' || !Number.isFinite(grade) || grade < 0 || grade > 100) {
-      toast('أدخل درجة صحيحة بين 0 و 100', 'error');
-      ui.noteGrade.focus();
-      return;
-    }
-
-    ui.addNoteBtn.disabled = true;
-    ui.addNoteBtn.textContent = '… جارٍ الإضافة';
-
-    try {
-      const { error } = await db.from('student_notes').insert({
-        user_id: state.user.id,
-        subject_name: name,
-        subject_code: code || null,
-        grade: Math.round(grade)
+    const body = $("barsBody");
+    if (!st.graded.length) {
+      body.innerHTML = '<div class="empty" style="padding:28px 8px"><div class="e-ico"><svg class="i"><use href="#i-chart"/></svg></div><h3>لا توجد درجات لعرضها</h3><p>أضف موادك ودرجاتك لترى مخطط أدائك هنا.</p><button class="btn btn-primary js-add-subject" type="button"><svg class="i"><use href="#i-plus"/></svg> إضافة مادة</button></div>';
+    } else {
+      const rows = [...st.graded].sort((a, b) => b.grade - a.grade).slice(0, 8);
+      const wrap = document.createElement("div"); wrap.className = "bars";
+      rows.forEach((s) => {
+        const lv = level(s.grade);
+        const r = document.createElement("div"); r.className = "bar-row";
+        r.innerHTML = '<span class="b-name"></span><div class="bar-track"><div class="bar-fill"></div></div><span class="b-val num"></span>';
+        r.querySelector(".b-name").textContent = s.subject_name;
+        r.querySelector(".b-name").title = s.subject_name;
+        r.querySelector(".b-val").textContent = fmt(s.grade);
+        const f = r.querySelector(".bar-fill"); f.style.background = lv.c;
+        requestAnimationFrame(() => requestAnimationFrame(() => { f.style.width = s.grade + "%"; }));
+        wrap.appendChild(r);
       });
-      if (error) throw error;
-
-      ui.noteName.value = '';
-      ui.noteCode.value = '';
-      ui.noteGrade.value = '';
-      await loadNotes();
-      renderStats();
-      renderNotes();
-      toast('تمت إضافة المادة بنجاح', 'success');
-      ui.noteName.focus();
-    } catch (error) {
-      console.error('[note insert]', error);
-      toast('تعذّرت إضافة المادة: ' + arabicAuthError(error), 'error');
-    } finally {
-      ui.addNoteBtn.disabled = false;
-      ui.addNoteBtn.textContent = '+ إضافة';
-    }
-  });
-
-  ui.notesList.addEventListener('click', async (event) => {
-    const button = event.target.closest('button[data-action]');
-    if (!button) return;
-
-    const note = state.notes.find((item) => item.id === button.dataset.id);
-    if (!note) return;
-
-    if (button.dataset.action === 'edit') {
-      openNoteModal(note);
-      return;
+      body.innerHTML = ""; body.appendChild(wrap);
     }
 
-    if (button.dataset.action === 'delete') {
-      const confirmed = window.confirm(`هل تريد حذف مادة «${note.subject_name}»؟`);
-      if (!confirmed) return;
-
-      button.disabled = true;
-      try {
-        const { error } = await db
-          .from('student_notes')
-          .delete()
-          .eq('id', note.id)
-          .eq('user_id', state.user.id);
-        if (error) throw error;
-
-        state.notes = state.notes.filter((item) => item.id !== note.id);
-        renderStats();
-        renderNotes();
-        toast('تم حذف المادة', 'success');
-      } catch (error) {
-        console.error('[note delete]', error);
-        toast('تعذّر حذف المادة: ' + arabicAuthError(error), 'error');
-        button.disabled = false;
-      }
-    }
-  });
-
-  /* ---------------- Note modal ---------------- */
-
-  function openNoteModal(note) {
-    setAlert(ui.noteAlert, '');
-    ui.editNoteId.value = note.id;
-    ui.editNoteName.value = note.subject_name || '';
-    ui.editNoteCode.value = note.subject_code || '';
-    ui.editNoteGrade.value = note.grade == null ? '' : note.grade;
-    ui.noteModal.hidden = false;
-    setTimeout(() => ui.editNoteName.focus(), 30);
+    // اكتمال الملف
+    const items = [
+      ["الاسم الكامل", !!(p.full_name && p.full_name.trim())],
+      ["الرقم الأكاديمي", !!p.student_id],
+      ["الصف الدراسي", !!p.grade_level],
+      ["المسار", !!p.major],
+      ["إضافة مادة واحدة على الأقل", state.subjects.length > 0],
+    ];
+    const done = items.filter((i) => i[1]).length;
+    const pct = Math.round((done / items.length) * 100);
+    $("ringArc").setAttribute("stroke-dasharray", pct + " 100");
+    $("ringArc").setAttribute("stroke", pct === 100 ? "var(--ok)" : "var(--accent)");
+    $("ringVal").textContent = fmt(pct) + "٪";
+    $("ringText").textContent = pct === 100 ? "ملفك مكتمل. عمل رائع!" : "أكملت " + fmt(done) + " من " + fmt(items.length) + " خطوات.";
+    $("checklist").innerHTML = "";
+    items.forEach(([t, ok]) => {
+      const li = document.createElement("li"); if (ok) li.className = "done";
+      li.innerHTML = '<span class="ck">' + (ok ? '<svg class="i"><use href="#i-check"/></svg>' : "") + "</span><span></span>";
+      li.lastChild.textContent = t;
+      $("checklist").appendChild(li);
+    });
   }
 
-  ui.noteEditForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!state.user) return;
-
-    const id = ui.editNoteId.value;
-    const name = ui.editNoteName.value.trim();
-    const code = ui.editNoteCode.value.trim();
-    const gradeRaw = ui.editNoteGrade.value.trim();
-    const grade = Number(gradeRaw);
-
-    setAlert(ui.noteAlert, '');
-
-    if (name.length < 2) { setAlert(ui.noteAlert, 'أدخل اسم المادة.'); ui.editNoteName.focus(); return; }
-    if (gradeRaw === '' || !Number.isFinite(grade) || grade < 0 || grade > 100) {
-      setAlert(ui.noteAlert, 'أدخل درجة صحيحة بين 0 و 100.');
-      ui.editNoteGrade.focus();
-      return;
-    }
-
-    ui.saveNoteBtn.disabled = true;
-    ui.saveNoteBtn.textContent = '… جارٍ الحفظ';
-
-    try {
-      const { error } = await db
-        .from('student_notes')
-        .update({
-          subject_name: name,
-          subject_code: code || null,
-          grade: Math.round(grade),
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .eq('user_id', state.user.id);
-
-      if (error) throw error;
-
-      ui.noteModal.hidden = true;
-      await loadNotes();
-      renderStats();
-      renderNotes();
-      toast('تم تحديث المادة بنجاح', 'success');
-    } catch (error) {
-      console.error('[note update]', error);
-      setAlert(ui.noteAlert, 'تعذّر حفظ التعديل: ' + arabicAuthError(error));
-    } finally {
-      ui.saveNoteBtn.disabled = false;
-      ui.saveNoteBtn.textContent = 'حفظ التعديل';
-    }
-  });
-
-  /* ---------------- Profile modal ---------------- */
-
-  ui.editProfileBtn.addEventListener('click', () => {
-    const profile = state.profile || {};
-    setAlert(ui.profileAlert, '');
-    ui.editName.value = profile.full_name || displayName();
-    ui.editStudentId.value = profile.student_id || '';
-    ui.editGrade.value = profile.grade_level || '';
-    ui.editMajor.value = profile.major || '';
-    ui.profileModal.hidden = false;
-    setTimeout(() => ui.editName.focus(), 30);
-  });
-
-  ui.profileForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!state.user) return;
-
-    const fullName = ui.editName.value.trim();
-    setAlert(ui.profileAlert, '');
-
-    if (fullName.length < 3) {
-      setAlert(ui.profileAlert, 'أدخل الاسم الكامل (3 أحرف على الأقل).');
-      ui.editName.focus();
-      return;
-    }
-
-    ui.saveProfileBtn.disabled = true;
-    ui.saveProfileBtn.textContent = '… جارٍ الحفظ';
-
-    try {
-      const { error } = await db.from('profiles').upsert({
-        user_id: state.user.id,
-        full_name: fullName,
-        student_id: ui.editStudentId.value.trim() || null,
-        grade_level: ui.editGrade.value.trim() || null,
-        major: ui.editMajor.value.trim() || null,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' });
-
-      if (error) throw error;
-
-      await loadProfile();
-      renderHeader();
-      renderProfile();
-      ui.profileModal.hidden = true;
-      toast('تم تحديث بياناتك', 'success');
-    } catch (error) {
-      console.error('[profile save]', error);
-      setAlert(ui.profileAlert, 'تعذّر حفظ البيانات: ' + arabicAuthError(error));
-    } finally {
-      ui.saveProfileBtn.disabled = false;
-      ui.saveProfileBtn.textContent = 'حفظ التغييرات';
-    }
-  });
-
-  /* ---------------- Modal / global events ---------------- */
-
-  document.querySelectorAll('[data-close]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const modal = $(button.dataset.close);
-      if (modal) modal.hidden = true;
-    });
-  });
-
-  [ui.profileModal, ui.noteModal].forEach((modal) => {
-    modal.addEventListener('click', (event) => {
-      if (event.target === modal) modal.hidden = true;
-    });
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') return;
-    if (!ui.profileModal.hidden) ui.profileModal.hidden = true;
-    if (!ui.noteModal.hidden) ui.noteModal.hidden = true;
-  });
-
-  ui.refreshBtn.addEventListener('click', () => refreshAll(false));
-  ui.logoutBtn.addEventListener('click', async () => {
-    ui.logoutBtn.disabled = true;
-    try {
-      await db.auth.signOut();
-    } catch (error) {
-      console.error('[signout]', error);
-    } finally {
-      ui.logoutBtn.disabled = false;
-      showAuth();
-      setMode('login');
-      toast('تم تسجيل الخروج', 'success');
-    }
-  });
-
-  function updateOnlineState() {
-    ui.offlineNote.hidden = navigator.onLine;
+  /* ---------- الملف الشخصي ---------- */
+  function setSelect(sel, val) {
+    if (val && !Array.from(sel.options).some((o) => o.value === val)) sel.add(new Option(val, val));
+    sel.value = val || "";
   }
-  window.addEventListener('online', updateOnlineState);
-  window.addEventListener('offline', updateOnlineState);
-  updateOnlineState();
-
-  /* ---------------- Boot ---------------- */
-
-  setMode('login');
-
-  (async () => {
+  function renderProfile() {
+    const p = state.profile || {};
+    $("pfName").value = p.full_name || "";
+    $("pfStudentId").value = p.student_id || "";
+    setSelect($("pfLevel"), p.grade_level);
+    setSelect($("pfMajor"), p.major);
+    $("pfEmail").textContent = state.user.email;
+    $("profileStatus").textContent = p.updated_at ? "آخر تحديث: " + dtf.format(new Date(p.updated_at)) : "";
+  }
+  $("profileReset").addEventListener("click", renderProfile);
+  $("profileForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const payload = {
+      user_id: state.user.id,
+      full_name: $("pfName").value.trim(),
+      student_id: $("pfStudentId").value.trim() || null,
+      grade_level: $("pfLevel").value || null,
+      major: $("pfMajor").value || null,
+      updated_at: new Date().toISOString(),
+    };
+    if (payload.full_name.length < 3) { toast("أدخل اسمك الكامل.", "err"); $("pfName").focus(); return; }
+    const btn = $("profileSave");
+    setBusy(btn, true, "جارٍ الحفظ…");
     try {
-      const { data, error } = await db.auth.getSession();
-      if (error) console.error('[session]', error);
+      const { data, error } = await db.from("profiles").upsert(payload, { onConflict: "user_id" })
+        .select("full_name, student_id, grade_level, major, created_at, updated_at").single();
+      if (error) throw error;
+      state.profile = data;
+      renderAll();
+      toast("تم حفظ الملف الشخصي.");
+    } catch (err) { toast(friendly(err), "err"); }
+    finally { setBusy(btn, false); }
+  });
 
-      if (data && data.session && data.session.user) {
-        state.user = data.session.user;
-        await enterApp();
+  /* ---------- المواد والدرجات ---------- */
+  $("search").addEventListener("input", () => renderGrades());
+  $("sortBy").addEventListener("change", () => renderGrades());
+
+  function renderGrades(loading) {
+    const body = $("gradesBody");
+    if (loading) {
+      body.innerHTML = '<div style="padding:18px">' + [1, 2, 3].map(() => '<div class="skel" style="height:44px;margin-bottom:12px"></div>').join("") + "</div>";
+      return;
+    }
+    if (!state.subjects.length) {
+      body.innerHTML = '<div class="empty"><div class="e-ico"><svg class="i"><use href="#i-book"/></svg></div><h3>لم تُضف أي مادة بعد</h3><p>ابدأ بإضافة موادك الدراسية ودرجاتك، وسنحسب لك المعدّل والتقديرات تلقائيًا.</p><button class="btn btn-primary js-add-subject" type="button"><svg class="i"><use href="#i-plus"/></svg> إضافة أول مادة</button></div>';
+      return;
+    }
+    const q = $("search").value.trim().toLowerCase();
+    let list = state.subjects.filter((s) => !q || (s.subject_name || "").toLowerCase().includes(q) || (s.subject_code || "").toLowerCase().includes(q));
+    const sort = $("sortBy").value;
+    const g = (s, d) => (s.grade == null ? d : s.grade);
+    if (sort === "high") list.sort((a, b) => g(b, -1) - g(a, -1));
+    else if (sort === "low") list.sort((a, b) => g(a, 101) - g(b, 101));
+    else if (sort === "name") list.sort((a, b) => a.subject_name.localeCompare(b.subject_name, "ar"));
+
+    if (!list.length) {
+      body.innerHTML = '<div class="empty"><div class="e-ico"><svg class="i"><use href="#i-search"/></svg></div><h3>لا توجد نتائج</h3><p>لا توجد مادة تطابق بحثك. جرّب كلمة أخرى.</p></div>';
+      return;
+    }
+
+    const table = document.createElement("table"); table.className = "table";
+    table.innerHTML = '<thead><tr><th>المادة</th><th>الرمز</th><th>الدرجة</th><th>التقدير</th><th><span class="sr-only">إجراءات</span></th></tr></thead><tbody></tbody>';
+    const tb = table.tBodies[0];
+    list.forEach((s) => {
+      const lv = level(s.grade);
+      const tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td class="c-subj"><div class="subj"><span class="subj-ico"></span><div><strong></strong><span class="hint"></span></div></div></td>' +
+        '<td class="c-code"></td>' +
+        '<td class="c-grade"><div class="grade-cell"><span class="g-num num"></span><span class="mini-track"><span></span></span></div></td>' +
+        '<td class="c-level"><span class="pill"></span></td>' +
+        '<td class="c-act"><div class="row-actions">' +
+          '<button class="icon-btn" type="button" data-edit aria-label="تعديل"><svg class="i"><use href="#i-edit"/></svg></button>' +
+          '<button class="icon-btn del" type="button" data-del aria-label="حذف"><svg class="i"><use href="#i-trash"/></svg></button>' +
+        "</div></td>";
+      const ico = tr.querySelector(".subj-ico");
+      ico.textContent = (s.subject_name || "؟").trim()[0];
+      ico.style.background = lv.s; ico.style.color = lv.c;
+      tr.querySelector("strong").textContent = s.subject_name;
+      tr.querySelector(".subj .hint").textContent = "أُضيفت " + df.format(new Date(s.created_at));
+      const codeTd = tr.querySelector(".c-code");
+      if (s.subject_code) { const c = document.createElement("span"); c.className = "code"; c.textContent = s.subject_code; codeTd.appendChild(c); }
+      else codeTd.innerHTML = '<span class="hint">—</span>';
+      tr.querySelector(".g-num").textContent = s.grade == null ? "—" : fmt(s.grade);
+      const mt = tr.querySelector(".mini-track span");
+      mt.style.width = (s.grade || 0) + "%"; mt.style.background = lv.c;
+      const pill = tr.querySelector(".pill"); pill.textContent = lv.t; pill.style.background = lv.s; pill.style.color = lv.c;
+      tr.querySelector("[data-edit]").addEventListener("click", () => openSubject(s));
+      tr.querySelector("[data-del]").addEventListener("click", () => askDelete(s));
+      tr.querySelector("[data-edit]").setAttribute("aria-label", "تعديل " + s.subject_name);
+      tr.querySelector("[data-del]").setAttribute("aria-label", "حذف " + s.subject_name);
+      tb.appendChild(tr);
+    });
+    const foot = document.createElement("div"); foot.className = "table-foot";
+    const st = stats();
+    foot.innerHTML = "<span></span><span></span>";
+    foot.firstChild.textContent = "عرض " + fmt(list.length) + " من " + fmt(state.subjects.length) + " مادة";
+    foot.lastChild.textContent = st.avg == null ? "" : "المعدّل: " + fmt(Math.round(st.avg * 10) / 10);
+    body.innerHTML = ""; body.appendChild(table); body.appendChild(foot);
+  }
+
+  // فتح نافذة إضافة/تعديل
+  const subjectDlg = $("subjectDlg"), confirmDlg = $("confirmDlg");
+  function openSubject(s) {
+    state.editingId = s ? s.id : null;
+    $("subjectDlgTitle").textContent = s ? "تعديل المادة" : "إضافة مادة";
+    $("subjectDlgSub").textContent = s ? "حدّث بيانات المادة ثم احفظ." : "أدخل بيانات المادة ودرجتك فيها.";
+    $("sjName").value = s ? s.subject_name : "";
+    $("sjCode").value = s && s.subject_code ? s.subject_code : "";
+    $("sjGrade").value = s && s.grade != null ? s.grade : "";
+    ["sjName", "sjGrade"].forEach((id) => { $(id).removeAttribute("aria-invalid"); $(id + "Err").textContent = ""; });
+    subjectDlg.showModal();
+    setTimeout(() => $("sjName").focus(), 30);
+  }
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".js-add-subject")) { if (state.view !== "grades") go("grades"); openSubject(null); }
+    const goBtn = e.target.closest("[data-go]");
+    if (goBtn) { go(goBtn.dataset.go); $("userMenu").hidden = true; $("userBtn").setAttribute("aria-expanded", "false"); }
+    if (e.target.closest("[data-close]")) e.target.closest("dialog").close();
+  });
+  [subjectDlg, confirmDlg].forEach((d) => d.addEventListener("click", (e) => { if (e.target === d) d.close(); }));
+
+  $("subjectForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = $("sjName").value.trim(), code = $("sjCode").value.trim(), gRaw = $("sjGrade").value.trim();
+    let ok = true;
+    $("sjName").removeAttribute("aria-invalid"); $("sjNameErr").textContent = "";
+    $("sjGrade").removeAttribute("aria-invalid"); $("sjGradeErr").textContent = "";
+    if (!name) { $("sjName").setAttribute("aria-invalid", "true"); $("sjNameErr").textContent = "اسم المادة مطلوب."; ok = false; }
+    let grade = null;
+    if (gRaw !== "") {
+      grade = Number(gRaw);
+      if (!Number.isInteger(grade) || grade < 0 || grade > 100) { $("sjGrade").setAttribute("aria-invalid", "true"); $("sjGradeErr").textContent = "أدخل رقمًا صحيحًا بين ٠ و١٠٠."; ok = false; }
+    }
+    if (!ok) return;
+    const dup = state.subjects.find((s) => s.id !== state.editingId && s.subject_name.trim() === name);
+    if (dup) { $("sjName").setAttribute("aria-invalid", "true"); $("sjNameErr").textContent = "هذه المادة مضافة مسبقًا."; return; }
+
+    const btn = $("subjectSave");
+    setBusy(btn, true, "جارٍ الحفظ…");
+    const row = { subject_name: name, subject_code: code || null, grade };
+    try {
+      let res;
+      if (state.editingId) {
+        res = await db.from("student_notes").update({ ...row, updated_at: new Date().toISOString() })
+          .eq("id", state.editingId).eq("user_id", state.user.id)
+          .select("id, subject_name, subject_code, grade, created_at, updated_at").single();
       } else {
-        showAuth();
+        res = await db.from("student_notes").insert({ ...row, user_id: state.user.id })
+          .select("id, subject_name, subject_code, grade, created_at, updated_at").single();
       }
-    } catch (error) {
-      console.error('[boot]', error);
-      showAuth();
+      if (res.error) throw res.error;
+      if (state.editingId) state.subjects = state.subjects.map((s) => (s.id === state.editingId ? res.data : s));
+      else state.subjects.unshift(res.data);
+      subjectDlg.close();
+      renderAll();
+      toast(state.editingId ? "تم تحديث المادة." : "تمت إضافة المادة.");
+    } catch (err) { toast(friendly(err), "err"); }
+    finally { setBusy(btn, false); }
+  });
+
+  function askDelete(s) {
+    state.deletingId = s.id;
+    $("confirmTitle").textContent = "حذف «" + s.subject_name + "»؟";
+    $("confirmText").textContent = "ستُحذف المادة ودرجتها نهائيًا من حسابك، ولا يمكن التراجع عن ذلك.";
+    confirmDlg.showModal();
+  }
+  $("confirmOk").addEventListener("click", async () => {
+    const btn = $("confirmOk"), id = state.deletingId;
+    setBusy(btn, true, "جارٍ الحذف…");
+    try {
+      const { error } = await db.from("student_notes").delete().eq("id", id).eq("user_id", state.user.id);
+      if (error) throw error;
+      state.subjects = state.subjects.filter((s) => s.id !== id);
+      confirmDlg.close();
+      renderAll();
+      toast("تم حذف المادة.");
+    } catch (err) { toast(friendly(err), "err"); }
+    finally { setBusy(btn, false); }
+  });
+
+  /* ---------- الأمان ---------- */
+  function renderSecurity() {
+    const u = state.user;
+    $("secEmail").textContent = u.email;
+    $("secCreated").textContent = u.created_at ? df.format(new Date(u.created_at)) : "—";
+    $("secLast").textContent = u.last_sign_in_at ? dtf.format(new Date(u.last_sign_in_at)) : "—";
+  }
+  $("pwForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const p1 = $("pwNew").value, p2 = $("pwNew2").value;
+    $("pwErr").textContent = "";
+    if (p1.length < 8) { $("pwErr").textContent = "كلمة المرور يجب ألا تقل عن ٨ أحرف."; return; }
+    if (p1 !== p2) { $("pwErr").textContent = "كلمتا المرور غير متطابقتين."; return; }
+    const btn = $("pwForm").querySelector("[type=submit]");
+    setBusy(btn, true, "جارٍ التحديث…");
+    try {
+      const { error } = await db.auth.updateUser({ password: p1 });
+      if (error) throw error;
+      $("pwForm").reset();
+      $("pwNew").dispatchEvent(new Event("input"));
+      toast("تم تحديث كلمة المرور بنجاح.");
+    } catch (err) { $("pwErr").textContent = friendly(err); }
+    finally { setBusy(btn, false); }
+  });
+
+  async function signOut(scope) {
+    try { await db.auth.signOut(scope ? { scope } : undefined); } catch (_) {}
+    leaveApp();
+    toast(scope === "global" ? "تم تسجيل الخروج من جميع الأجهزة." : "تم تسجيل الخروج.");
+  }
+  $$(".js-signout").forEach((b) => b.addEventListener("click", () => signOut()));
+  $("signoutAll").addEventListener("click", () => signOut("global"));
+
+  /* ---------- التنقل بين الأقسام ---------- */
+  function go(view) {
+    state.view = view;
+    $$(".sidenav [data-view]").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === view)));
+    $$("[data-panel]").forEach((p) => { p.hidden = p.dataset.panel !== view; });
+    const active = document.querySelector('.sidenav [data-view="' + view + '"]');
+    if (active && active.scrollIntoView && innerWidth <= 920) active.scrollIntoView({ inline: "center", block: "nearest" });
+    if (view === "overview") renderOverview();
+    if (history.replaceState && state.user) history.replaceState(null, "", "#" + view);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $$(".sidenav [data-view]").forEach((b) => b.addEventListener("click", () => go(b.dataset.view)));
+
+  // قائمة المستخدم
+  $("userBtn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    const m = $("userMenu"); m.hidden = !m.hidden;
+    $("userBtn").setAttribute("aria-expanded", String(!m.hidden));
+  });
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".user-menu")) { $("userMenu").hidden = true; $("userBtn").setAttribute("aria-expanded", "false"); }
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("userMenu").hidden = true; $("userBtn").setAttribute("aria-expanded", "false"); } });
+
+  /* =========================================================
+     بدء التشغيل ومراقبة الجلسة
+     ========================================================= */
+  db.auth.onAuthStateChange((event, session) => {
+    // تجنّب استدعاء Supabase مباشرة داخل المستمع (توصية المكتبة)
+    setTimeout(() => {
+      if (event === "PASSWORD_RECOVERY") {
+        state.recovery = true;
+        showView("auth"); showPanel("Recovery");
+        $("rcPass").focus();
+      } else if (event === "SIGNED_OUT") {
+        if (state.user) leaveApp();
+      } else if (event === "USER_UPDATED" && session) {
+        state.user = session.user;
+        if (!$("appView").hidden) renderSecurity();
+      } else if (event === "SIGNED_IN" && session && !state.recovery) {
+        if (!state.user || state.user.id !== session.user.id) enterApp(session.user);
+      }
+    }, 0);
+  });
+
+  (async function boot() {
+    const hashView = (location.hash || "").replace("#", "");
+    const errDesc = new URLSearchParams(location.hash.replace(/^#/, "")).get("error_description");
+    try {
+      const { data: { session } } = await db.auth.getSession();
+      if (state.recovery && session) {
+        showView("auth"); showPanel("Recovery");
+      } else if (session) {
+        await enterApp(session.user);
+        if (["overview", "profile", "grades", "security"].includes(hashView)) go(hashView);
+        else if (/access_token|type=/.test(location.hash)) history.replaceState(null, "", pageUrl);
+      } else {
+        showView("auth"); showPanel("Main"); setMode("login");
+        if (errDesc) showAlert($("authAlert"), "انتهت صلاحية الرابط أو أنه غير صالح. اطلب رابطًا جديدًا.", "error");
+      }
+    } catch (err) {
+      showView("auth"); showPanel("Main"); setMode("login");
+      showAlert($("authAlert"), friendly(err));
     }
   })();
-
-  db.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_OUT' || !session) {
-      if (state.user) showAuth();
-      return;
-    }
-
-    if (!state.user || state.user.id !== session.user.id) {
-      state.user = session.user;
-      enterApp();
-    }
-  });
 })();
 </script>
 </body>
