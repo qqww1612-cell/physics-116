@@ -335,7 +335,6 @@
   </footer>
 
   <script>
-    /* ================= إعداد Supabase ================= */
     const SUPABASE_URL = 'https://jbqotzkinlatewrjvadi.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_F93GOC_LaWY-NWadmN8wmA_F0qEh_iO';
 
@@ -349,7 +348,6 @@
     let currentUser = null;
     let isLoginMode = true;
 
-    /* عناصر الصفحة */
     const authScreen = document.getElementById('authScreen');
     const mainContent = document.getElementById('mainContent');
     const mainHeader = document.getElementById('mainHeader');
@@ -365,7 +363,6 @@
     const authSubtitle = document.getElementById('authSubtitle');
     const btnBackHome = document.getElementById('btnBackHome');
 
-    /* دوال المساعدة */
     function showToast(message, type = 'info') {
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
@@ -385,7 +382,6 @@
       return parts[0][0].toUpperCase();
     }
 
-    /* دوال Supabase */
     async function handleSignIn(email, password) {
       if (!supabase) { showToast('خطأ في الاتصال بالخادم', 'error'); return false; }
       try {
@@ -479,7 +475,6 @@
       }
     }
 
-    /* تبديل الشاشات */
     function showAuthScreen() {
       document.getElementById('authScreen').style.display = 'flex';
       mainContent.style.display = 'none';
@@ -513,7 +508,6 @@
       }
     }
 
-    /* عرض الملف الشخصي */
     function renderProfile() {
       if (!currentUser || !supabase) return;
 
@@ -579,7 +573,6 @@
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    /* أحداث النموذج */
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = authEmail.value.trim();
@@ -608,7 +601,6 @@
     toggleBtn.addEventListener('click', toggleAuthMode);
     btnBackHome.addEventListener('click', () => { window.location.href = 'index.html'; });
 
-    /* أحداث المحتوى الرئيسي */
     document.getElementById('btnLogout').addEventListener('click', handleSignOut);
 
     document.getElementById('btnAddSubject').addEventListener('click', () => {
@@ -644,7 +636,6 @@
       }
     });
 
-    /* بدء التشغيل */
     (async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
