@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1738">
+<title>تسجيل دخول الطالب | منصة الفيزياء</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1738;--navy2:#122653;--blue:#4263eb;--cyan:#67e8f9;--ink:#17233f;--muted:#71809d;--line:#e7ebf4;--bg:#f5f7fc;--white:#fff;--green:#138a68;--red:#c24154;--shadow:0 24px 70px #0b17381c}
+*{box-sizing:border-box}body{margin:0;font-family:"IBM Plex Sans Arabic",Tahoma,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}button,input,textarea{font:inherit}button{cursor:pointer}.shell{min-height:100vh;display:grid;grid-template-columns:minmax(340px, .92fr) 1.08fr}.brand-panel{background:radial-gradient(circle at 15% 12%,#284da3 0,transparent 34%),linear-gradient(145deg,#0b1738,#102b58 70%,#123b69);color:white;padding:44px clamp(28px,5vw,76px);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}.brand-panel:after{content:"";position:absolute;width:420px;height:420px;border:1px solid #ffffff17;border-radius:50%;left:-150px;bottom:70px;box-shadow:0 0 0 45px #ffffff08,0 0 0 90px #ffffff05}.brand,.content{position:relative;z-index:1}.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px}.logo{height:46px;width:46px;border-radius:15px;background:linear-gradient(145deg,#7dd3fc,#4f72ff);display:grid;place-items:center;color:#091737;font-size:24px;box-shadow:0 10px 30px #0002}.eyebrow{display:inline-flex;gap:8px;align-items:center;background:#ffffff12;border:1px solid #ffffff22;padding:8px 13px;border-radius:30px;color:#c9e8ff;font-size:13px}.dot{height:7px;width:7px;border-radius:50%;background:#6ee7b7}.hero{max-width:520px;margin:72px 0 60px}.hero h1{font-size:clamp(34px,4vw,54px);line-height:1.35;margin:22px 0 18px;letter-spacing:-1.2px}.hero h1 span{color:#81e5f7}.hero p{font-size:17px;line-height:2;color:#c0cce4;max-width:450px}.feature-list{display:grid;gap:17px;margin-top:35px}.feature{display:flex;gap:13px;align-items:center;color:#e4edff;font-size:14px}.feature-icon{height:38px;width:38px;border:1px solid #ffffff20;background:#ffffff0b;border-radius:12px;display:grid;place-items:center;font-size:17px}.panel-footer{font-size:12px;color:#8da1c5;display:flex;justify-content:space-between;gap:20px;position:relative;z-index:1}.main-panel{display:flex;align-items:center;justify-content:center;padding:38px 24px}.card{width:min(100%,470px);background:white;border:1px solid #e8ecf5;border-radius:26px;padding:clamp(26px,4vw,42px);box-shadow:var(--shadow)}.mobile-brand{display:none;align-items:center;gap:10px;font-weight:700;margin-bottom:28px}.heading h2{font-size:28px;margin:0 0 7px;letter-spacing:-.5px}.heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.9}.tabs{display:grid;grid-template-columns:1fr 1fr;background:#f2f5fb;padding:5px;border-radius:13px;margin:27px 0 24px}.tab{border:0;border-radius:10px;padding:11px 8px;background:transparent;color:#687795;font-weight:600}.tab.active{background:white;color:var(--navy);box-shadow:0 3px 12px #12265310}.field{margin-bottom:17px}.field label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:#34415c}.input-wrap{position:relative}.field input,.field textarea{width:100%;border:1px solid #dfe5f0;background:#fbfcff;border-radius:12px;padding:13px 14px;outline:none;color:var(--ink);transition:.2s}.field input:focus,.field textarea:focus{border-color:#6680f4;box-shadow:0 0 0 4px #4263eb13;background:white}.field input::placeholder,.field textarea::placeholder{color:#a4aec1}.show-pass{position:absolute;left:10px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#71809d;font-size:12px;padding:6px}.hint{font-size:11px;color:#8995aa;margin-top:7px;line-height:1.7}.primary{width:100%;border:0;border-radius:12px;background:linear-gradient(105deg,#4263eb,#3153d9);color:white;font-weight:700;padding:14px;box-shadow:0 8px 18px #4263eb30;transition:transform .2s,box-shadow .2s}.primary:hover{transform:translateY(-1px);box-shadow:0 12px 24px #4263eb38}.message{display:none;margin:14px 0 0;padding:11px 13px;border-radius:11px;font-size:13px;line-height:1.7}.message.error{display:block;background:#fff1f2;color:#a52d40;border:1px solid #ffe0e4}.message.success{display:block;background:#ecfdf5;color:#087653;border:1px solid #c7f3e1}.fineprint{text-align:center;color:#8b96aa;font-size:11px;line-height:1.8;margin:19px 0 0}.dashboard{display:none;width:min(100%,720px)}.dash-top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.dash-top h2{margin:0;font-size:26px}.dash-top p{margin:4px 0;color:var(--muted);font-size:13px}.logout{border:1px solid #dfe5f0;background:white;color:#34415c;border-radius:10px;padding:9px 14px;font-weight:600}.welcome{background:linear-gradient(115deg,#122653,#3153b9);border-radius:20px;color:white;padding:25px;position:relative;overflow:hidden;margin-bottom:20px}.welcome:after{content:"φ";font-family:serif;position:absolute;left:25px;top:-25px;font-size:140px;color:#ffffff10}.welcome small{color:#b9c9f8}.welcome h3{font-size:25px;margin:8px 0}.welcome p{margin:0;color:#d6e0ff;font-size:13px}.data-card{background:white;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:16px}.data-card h3{margin:0 0 7px;font-size:17px}.data-card>p{margin:0 0 16px;color:var(--muted);font-size:12px}.field textarea{min-height:105px;resize:vertical}.save-row{display:flex;justify-content:space-between;align-items:center;gap:12px}.save-row .primary{width:auto;padding:10px 22px}.saved{font-size:12px;color:var(--green)}.privacy-note{border:1px solid #f2e5bb;background:#fffaf0;color:#7c5d16;padding:13px 15px;border-radius:13px;font-size:12px;line-height:1.9;margin-top:17px}.hide{display:none!important}#notesList button{font-size:12px}button:disabled{cursor:wait;opacity:.65}@media(max-width:900px){.shell{grid-template-columns:1fr}.brand-panel{display:none}.main-panel{padding:20px 14px;align-items:flex-start}.card{margin:12px auto}.mobile-brand{display:flex}.dashboard{margin:0 auto}.heading h2{font-size:25px}}@media(min-width:901px){.main-panel{padding:50px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="brand-panel">
+    <div class="brand"><div class="logo">φ</div><div>منصة الفيزياء <small style="display:block;font-size:10px;color:#9db4dd;font-weight:400">PHYSICS LEARNING SPACE</small></div></div>
+    <div class="content">
+      <span class="eyebrow"><span class="dot"></span> مساحة تعلمك الشخصية</span>
+      <div class="hero">
+        <h1>رحلتك في الفيزياء،<br><span>بأسلوبك أنتِ.</span></h1>
+        <p>مساحة تعليمية شخصية تحفظ ملاحظاتك وأهدافك في قاعدة بيانات آمنة وتتيح لك الوصول إليها بعد تسجيل الدخول.</p>
+        <div class="feature-list">
+          <div class="feature"><span class="feature-icon">✦</span><span>واجهة عربية بالكامل وتجربة RTL متكاملة</span></div>
+          <div class="feature"><span class="feature-icon">▤</span><span>ملاحظات خاصة مرتبطة بحسابك وتُحفظ عبر Supabase</span></div>
+          <div class="feature"><span class="feature-icon">⌁</span><span>تصميم متجاوب للجوال والحاسوب</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer"><span>© منصة الفيزياء · 2026</span><span>تعلّم • اكتشف • تقدّم</span></div>
+  </aside>
+  <main class="main-panel">
+    <section class="card" id="authCard">
+      <div class="mobile-brand"><div class="logo">φ</div><span>منصة الفيزياء</span></div>
+      <div class="heading"><h2 id="formTitle">مرحبًا بعودتك</h2><p id="formSubtitle">سجّلي الدخول للوصول إلى مساحتك التعليمية.</p></div>
+      <div class="tabs" role="tablist" aria-label="نوع الحساب">
+        <button class="tab active" id="loginTab" type="button">تسجيل الدخول</button>
+        <button class="tab" id="registerTab" type="button">إنشاء حساب</button>
+      </div>
+      <form id="authForm" autocomplete="on">
+        <div class="field hide" id="nameField"><label for="studentName">اسم الطالبة</label><input id="studentName" name="name" type="text" placeholder="اكتبي اسمك" autocomplete="name" maxlength="80"></div>
+        <div class="field"><label for="email">البريد الإلكتروني</label><input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="email" required maxlength="254" dir="ltr"></div>
+        <div class="field"><label for="password">كلمة المرور</label><div class="input-wrap"><input id="password" name="password" type="password" placeholder="أدخلي كلمة المرور" autocomplete="current-password" required minlength="8" dir="ltr"><button class="show-pass" type="button" id="togglePass">إظهار</button></div><div class="hint" id="passwordHint">استخدمي كلمة المرور التي أنشأتِ بها حسابك.</div></div>
+        <button class="primary" id="submitBtn" type="submit">تسجيل الدخول <span aria-hidden="true">←</span></button>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+      </form>
+      <p class="fineprint">تتم إدارة كلمات المرور بواسطة Supabase Auth، وتُحمى بيانات كل حساب بسياسات RLS.</p>
+    </section>
+    <section class="dashboard" id="dashboard">
+      <div class="dash-top"><div><h2>مساحتك التعليمية</h2><p id="dashEmail"></p></div><button class="logout" id="logoutBtn">تسجيل الخروج ↗</button></div>
+      <div class="welcome"><small>أهلًا بكِ من جديد</small><h3 id="welcomeName">مرحبًا!</h3><p>كل خطوة صغيرة تقرّبك من فهم أكبر.</p></div>
+      <div class="data-card"><h3>📝 ملاحظاتي التعليمية</h3><p>أضيفي ملاحظة جديدة أو اختاري ملاحظة من القائمة لتعديلها أو حذفها.</p>
+        <div class="field"><label for="noteTitle">عنوان الملاحظة</label><input id="noteTitle" type="text" maxlength="140" placeholder="مثلًا: قوانين نيوتن"></div>
+        <div class="field"><label for="studentNotes">المحتوى</label><textarea id="studentNotes" maxlength="20000" placeholder="اكتبي ملاحظاتك هنا..."></textarea></div>
+        <div class="save-row"><span id="saveStatus" class="saved" aria-live="polite"></span><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="logout hide" id="cancelEdit" type="button">إلغاء التعديل</button><button class="primary" id="saveNotes" type="button">إضافة الملاحظة</button></div></div>
+        <div id="notesList" style="display:grid;gap:12px;margin-top:20px"></div>
+      </div>
+      <div class="data-card"><h3>🎯 هدفي القادم</h3><p>حددي هدفًا صغيرًا لجلستك القادمة.</p><div class="field"><input id="studentGoal" type="text" maxlength="180" placeholder="مثلًا: أتقن جمع المتجهات"></div><div class="save-row"><span id="goalStatus" class="saved" aria-live="polite"></span><button class="primary" id="saveGoal" type="button">حفظ الهدف</button></div></div>
+      <div class="privacy-note"><strong>تنبيه أمني:</strong> تعتمد الخصوصية على تفعيل سياسات RLS في Supabase وتنفيذ ملف SQL المرفق. ضعي في الصفحة رابط المشروع والمفتاح العام Publishable/anon فقط. لا تضعي أبدًا مفتاح service_role أو أي مفتاح سري في HTML أو GitHub.</div>
+    </section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(() => {
+  "use strict";
+  // استبدلي القيمتين التاليتين من Supabase > Project Settings > API.
+  // استخدمي Project URL و Publishable key (أو anon key القديم) فقط.
+  // ممنوع وضع service_role / secret key في صفحة HTML عامة.
+  const SUPABASE_URL = "https://jbqotzkinlatewrjvadi.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_F93GOC_LaWY-NWadmN8wmA_F0qEh_iO";
+  const $ = id => document.getElementById(id);
+  let mode = "login", supabase, currentUser = null, editingNoteId = null, notesCache = [];
+  const normalizedEmail = value => value.trim().toLowerCase();
+  function showMessage(text, type="error") { $("message").textContent = text; $("message").className = "message " + type; }
+  function clearMessage(){ $("message").textContent=""; $("message").className="message"; }
+  function setStatus(id,text,isError=false){ $(id).textContent=text; $(id).style.color=isError?"#c24154":"#138a68"; }
+  function setMode(next) {
+    mode = next; clearMessage();
+    const isRegister = mode === "register";
+    $("loginTab").classList.toggle("active", !isRegister);
+    $("registerTab").classList.toggle("active", isRegister);
+    $("nameField").classList.toggle("hide", !isRegister);
+    $("formTitle").textContent = isRegister ? "أنشئي حسابك" : "مرحبًا بعودتك";
+    $("formSubtitle").textContent = isRegister ? "أنشئي حسابك للوصول إلى مساحة تعليمية خاصة." : "سجّلي الدخول للوصول إلى ملاحظاتك من أي جهاز.";
+    $("submitBtn").innerHTML = isRegister ? "إنشاء الحساب <span aria-hidden=\"true\">←</span>" : "تسجيل الدخول <span aria-hidden=\"true\">←</span>";
+    $("password").autocomplete = isRegister ? "new-password" : "current-password";
+    $("passwordHint").textContent = isRegister ? "8 أحرف على الأقل. ستتم إدارة كلمة المرور بواسطة Supabase." : "أدخلي كلمة المرور المرتبطة بحسابك.";
+  }
+  function setBusy(busy){ $("submitBtn").disabled=busy; $("submitBtn").style.opacity=busy?".7":"1"; }
+  function friendlyError(error) {
+    const msg=(error?.message||"").toLowerCase();
+    if(msg.includes("invalid login credentials")) return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+    if(msg.includes("user already registered")) return "هذا البريد مسجل مسبقًا. جرّبي تسجيل الدخول.";
+    if(msg.includes("email not confirmed")) return "تحققي من بريدك الإلكتروني واضغطي رابط تأكيد الحساب أولًا.";
+    if(msg.includes("failed to fetch")) return "تعذر الاتصال بـ Supabase. تحققي من رابط المشروع والمفتاح العام والاتصال.";
+    return error?.message || "حدث خطأ غير متوقع. حاولي مرة أخرى.";
+  }
+  function escapeHtml(value){ return String(value??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  async function ensureProfile(user) {
+    const name=(user.user_metadata?.full_name||user.email?.split("@")[0]||"طالبة").toString().slice(0,80);
+    const {error}=await supabase.from("student_profiles").upsert({user_id:user.id,display_name:name},{onConflict:"user_id",ignoreDuplicates:true});
+    if(error) throw error;
+  }
+  async function loadProfile(){
+    const {data,error}=await supabase.from("student_profiles").select("display_name,goal").eq("user_id",currentUser.id).maybeSingle();
+    if(error) throw error;
+    if(!data){ await ensureProfile(currentUser); return loadProfile(); }
+    $("welcomeName").textContent=data.display_name||currentUser.email||"مرحبًا بكِ!";
+    $("studentGoal").value=data.goal||"";
+    setStatus("goalStatus","");
+  }
+  async function loadNotes(){
+    $("notesList").innerHTML="<p style='color:#71809d;font-size:13px'>جارٍ تحميل الملاحظات...</p>";
+    const {data,error}=await supabase.from("student_notes").select("id,title,content,created_at,updated_at").eq("user_id",currentUser.id).order("updated_at",{ascending:false});
+    if(error) throw error;
+    notesCache=data||[]; renderNotes();
+  }
+  function renderNotes(){
+    const list=$("notesList");
+    if(!notesCache.length){ list.innerHTML="<p style='color:#8995aa;font-size:13px'>لا توجد ملاحظات بعد. أضيفي أول ملاحظة أعلاه.</p>"; return; }
+    list.innerHTML=notesCache.map(n=>`<article style="border:1px solid #e7ebf4;border-radius:13px;padding:15px;background:#fbfcff"><div style="display:flex;justify-content:space-between;gap:12px;align-items:start"><div style="min-width:0"><h4 style="margin:0 0 7px;font-size:15px;overflow-wrap:anywhere">${escapeHtml(n.title)}</h4><p style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.9;color:#52617c">${escapeHtml(n.content)}</p><small style="display:block;color:#8995aa;margin-top:10px">آخر تحديث: ${new Date(n.updated_at||n.created_at).toLocaleString("ar-SA")}</small></div><div style="display:flex;gap:6px;flex-shrink:0"><button class="logout" type="button" data-edit="${n.id}" style="padding:7px 10px">تعديل</button><button class="logout" type="button" data-delete="${n.id}" style="padding:7px 10px;color:#b42336">حذف</button></div></div></article>`).join("");
+  }
+  function resetNoteForm(){ editingNoteId=null; $("noteTitle").value=""; $("studentNotes").value=""; $("saveNotes").textContent="إضافة الملاحظة"; $("cancelEdit").classList.add("hide"); }
+  async function showDashboard(user){
+    currentUser=user; $("authCard").classList.add("hide"); $("dashboard").style.display="block"; $("dashEmail").textContent=user.email||"";
+    try { await ensureProfile(user); await loadProfile(); await loadNotes(); }
+    catch(err){ setStatus("saveStatus","تعذر تحميل البيانات: "+friendlyError(err),true); }
+  }
+  async function logout(showAuth=true){
+    if(supabase) await supabase.auth.signOut(); currentUser=null; notesCache=[]; resetNoteForm();
+    $("dashboard").style.display="none"; $("authCard").classList.remove("hide"); $("authForm").reset(); setMode("login");
+    if(!showAuth) $("authCard").classList.remove("hide");
+  }
+  $("loginTab").addEventListener("click",()=>setMode("login"));
+  $("registerTab").addEventListener("click",()=>setMode("register"));
+  $("togglePass").addEventListener("click",()=>{const p=$("password"),reveal=p.type==="password";p.type=reveal?"text":"password";$("togglePass").textContent=reveal?"إخفاء":"إظهار";});
+  $("authForm").addEventListener("submit",async e=>{
+    e.preventDefault(); clearMessage();
+    if(!supabase){ showMessage("أكملي إعداد SUPABASE_URL و SUPABASE_PUBLISHABLE_KEY داخل الملف أولًا."); return; }
+    const email=normalizedEmail($("email").value), password=$("password").value;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showMessage("تحققي من كتابة البريد الإلكتروني بصورة صحيحة.");
+    if(password.length<8) return showMessage("يجب ألا تقل كلمة المرور عن 8 أحرف.");
+    setBusy(true);
+    try {
+      if(mode==="register"){
+        const name=$("studentName").value.trim(); if(!name) { setBusy(false); return showMessage("اكتبي اسم الطالبة لإكمال إنشاء الحساب."); }
+        const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:location.origin+location.pathname}});
+        if(error) throw error;
+        if(data.session && data.user){ await showDashboard(data.user); showMessage("تم إنشاء الحساب بنجاح.","success"); }
+        else { setMode("login"); showMessage("تم إنشاء الحساب. افتحي رسالة التأكيد التي أرسلناها إلى بريدك الإلكتروني، ثم عودي لتسجيل الدخول.","success"); }
+      } else {
+        const {data,error}=await supabase.auth.signInWithPassword({email,password}); if(error) throw error;
+        if(data.user) await showDashboard(data.user);
+      }
+    } catch(err){ showMessage(friendlyError(err)); }
+    finally{setBusy(false);}
+  });
+  $("saveNotes").addEventListener("click",async()=>{
+    if(!currentUser) return;
+    const title=$("noteTitle").value.trim(), content=$("studentNotes").value.trim();
+    if(!title) return setStatus("saveStatus","اكتبي عنوان الملاحظة أولًا.",true);
+    if(!content) return setStatus("saveStatus","اكتبي محتوى الملاحظة أولًا.",true);
+    $("saveNotes").disabled=true; setStatus("saveStatus","جارٍ الحفظ...");
+    const wasEditing=Boolean(editingNoteId);
+    try {
+      let result;
+      if(editingNoteId) result=await supabase.from("student_notes").update({title,content}).eq("id",editingNoteId).eq("user_id",currentUser.id).select("id").single();
+      else result=await supabase.from("student_notes").insert({user_id:currentUser.id,title,content}).select("id").single();
+      if(result.error) throw result.error;
+      resetNoteForm(); await loadNotes(); setStatus("saveStatus",wasEditing?"تم تحديث الملاحظة ✓":"تم حفظ الملاحظة في حسابك ✓");
+    } catch(err){setStatus("saveStatus","تعذر حفظ الملاحظة: "+friendlyError(err),true);}
+    finally{$("saveNotes").disabled=false;}
+  });
+  $("notesList").addEventListener("click",async e=>{
+    const editBtn=e.target.closest("[data-edit]"), deleteBtn=e.target.closest("[data-delete]");
+    if(editBtn){const n=notesCache.find(x=>x.id===editBtn.dataset.edit);if(!n)return;editingNoteId=n.id;$("noteTitle").value=n.title;$("studentNotes").value=n.content;$("saveNotes").textContent="حفظ التعديلات";$("cancelEdit").classList.remove("hide");setStatus("saveStatus","أنتِ تعدلين ملاحظة موجودة.");$("noteTitle").focus();return;}
+    if(deleteBtn){const id=deleteBtn.dataset.delete;if(!confirm("هل تريدين حذف هذه الملاحظة نهائيًا؟"))return;setStatus("saveStatus","جارٍ الحذف...");try{const {error}=await supabase.from("student_notes").delete().eq("id",id).eq("user_id",currentUser.id);if(error)throw error;if(editingNoteId===id)resetNoteForm();await loadNotes();setStatus("saveStatus","تم حذف الملاحظة ✓");}catch(err){setStatus("saveStatus","تعذر الحذف: "+friendlyError(err),true);}}
+  });
+  $("cancelEdit").addEventListener("click",resetNoteForm);
+  $("saveGoal").addEventListener("click",async()=>{
+    if(!currentUser)return;setStatus("goalStatus","جارٍ الحفظ...");
+    try{const {error}=await supabase.from("student_profiles").upsert({user_id:currentUser.id,display_name:$("welcomeName").textContent,goal:$("studentGoal").value.trim()},{onConflict:"user_id"});if(error)throw error;setStatus("goalStatus","تم حفظ الهدف ✓");}
+    catch(err){setStatus("goalStatus","تعذر حفظ الهدف: "+friendlyError(err),true);}
+  });
+  $("logoutBtn").addEventListener("click",()=>logout(true));
+  async function init(){
+    if(!window.supabase?.createClient){showMessage("تعذر تحميل مكتبة Supabase. تحققي من الاتصال بالإنترنت.");return;}
+    if(SUPABASE_URL.includes("YOUR_PROJECT_REF")||SUPABASE_PUBLISHABLE_KEY.includes("YOUR_SUPABASE")){showMessage("قبل الاستخدام، ضعي رابط مشروع Supabase والمفتاح العام في أعلى الكود.");return;}
+    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    const {data:{session},error}=await supabase.auth.getSession();
+    if(error){showMessage(friendlyError(error));return;}
+    if(session?.user) await showDashboard(session.user);
+    supabase.auth.onAuthStateChange((event,sessionNow)=>{if(event==="SIGNED_OUT"){currentUser=null;$("dashboard").style.display="none";$("authCard").classList.remove("hide");} });
+  }
+  init();
+})();
+</script>
+</body>
+</html>
