@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1b33" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>بيانات الطالب — فيزياء المسارات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --ink: #0b1b33;
+      --ink-2: #13294b;
+      --accent: #2563eb;
+      --accent-soft: #e8efff;
+      --sky: #38bdf8;
+      --success: #0f9d6e;
+      --success-soft: #e6f7f0;
+      --warning: #b7791f;
+      --warning-soft: #fdf5e6;
+      --danger: #dc2626;
+      --danger-soft: #fdecec;
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --text: #0b1b33;
+      --muted: #5f6f89;
+      --line: #e3e8f2;
+      --shadow-sm: 0 1px 2px rgba(11, 27, 51, .05);
+      --shadow: 0 10px 30px -12px rgba(11, 27, 51, .18);
+      --shadow-lg: 0 30px 70px -30px rgba(11, 27, 51, .35);
+      --radius: 18px;
+      --font-display: "Aref Ruqaa", "IBM Plex Sans Arabic", serif;
+      --font-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      direction: rtl;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--accent); }
+
+    [hidden] { display: none !important; }
+
+    .container {
+      width: min(1120px, 100% - 40px);
+      margin-inline: auto;
+    }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(11, 27, 51, .96);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .site-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 70px;
+      padding-block: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(56, 189, 248, .22), rgba(37, 99, 235, .35));
+      border: 1px solid rgba(255, 255, 255, .18);
+      flex: none;
+    }
+
+    .brand-mark svg { width: 26px; height: 26px; }
+
+    .brand h1 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+
+    .brand p {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .62);
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .header-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .header-greeting {
+      text-align: left;
+      min-width: 0;
+    }
+
+    .header-greeting strong {
+      display: block;
+      font-size: .86rem;
+      font-weight: 600;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .header-greeting span {
+      display: block;
+      font-size: .7rem;
+      color: rgba(255, 255, 255, .6);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: .9rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--sky));
+      border: 2px solid rgba(255, 255, 255, .22);
+      flex: none;
+    }
+
+    .btn-ghost-light {
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .18);
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: .8rem;
+      font-weight: 500;
+      transition: .2s;
+      white-space: nowrap;
+    }
+
+    .btn-ghost-light:hover { background: rgba(255, 255, 255, .16); }
+
+    /* ---------- Auth ---------- */
+    .auth-view {
+      min-height: calc(100vh - 70px);
+      display: grid;
+      place-items: center;
+      padding: 48px 20px;
+      background:
+        radial-gradient(900px 420px at 85% -10%, #dbe7ff 0%, transparent 60%),
+        radial-gradient(700px 380px at 10% 110%, #dff5ff 0%, transparent 60%),
+        var(--bg);
+    }
+
+    .auth-card {
+      width: min(940px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .auth-aside {
+      position: relative;
+      padding: 46px 40px;
+      color: #fff;
+      background:
+        radial-gradient(500px 300px at 100% 0%, rgba(56, 189, 248, .35), transparent 60%),
+        linear-gradient(160deg, #0b1b33 0%, #13294b 60%, #1e3a68 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 30px;
+      overflow: hidden;
+    }
+
+    .auth-aside::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -110px auto;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .14);
+      box-shadow: 0 0 0 40px rgba(255, 255, 255, .04), 0 0 0 90px rgba(255, 255, 255, .03);
+      pointer-events: none;
+    }
+
+    .auth-aside .brand-mark {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .auth-aside h2 {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      line-height: 1.45;
+      margin-top: 20px;
+    }
+
+    .auth-aside p {
+      color: rgba(255, 255, 255, .72);
+      font-size: .92rem;
+      margin-top: 12px;
+      max-width: 34ch;
+    }
+
+    .auth-points {
+      list-style: none;
+      display: grid;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-points li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: .85rem;
+      color: rgba(255, 255, 255, .82);
+    }
+
+    .auth-points .tick {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(56, 189, 248, .22);
+      border: 1px solid rgba(56, 189, 248, .5);
+      font-size: .65rem;
+      flex: none;
+      margin-top: 3px;
+    }
+
+    .auth-form-side { padding: 46px 42px; }
+
+    .auth-form-side h3 {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      line-height: 1.4;
+    }
+
+    .auth-sub {
+      color: var(--muted);
+      font-size: .86rem;
+      margin-top: 6px;
+      margin-bottom: 24px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      background: #eef2f9;
+      border-radius: 12px;
+      margin-bottom: 22px;
+    }
+
+    .auth-tab {
+      border: 0;
+      background: transparent;
+      border-radius: 9px;
+      padding: 9px 10px;
+      font-size: .86rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: .18s;
+    }
+
+    .auth-tab[aria-selected="true"] {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .field { margin-bottom: 15px; }
+
+    .field label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 600;
+      color: #41506a;
+      margin-bottom: 6px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 11px;
+      background: #fbfcfe;
+      color: var(--text);
+      font-size: .92rem;
+      transition: .18s;
+    }
+
+    .input::placeholder { color: #9aa7bb; }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    }
+
+    .input[aria-invalid="true"] {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, .1);
+    }
+
+    .hint {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, var(--accent), #1d4ed8);
+      color: #fff;
+      font-weight: 700;
+      font-size: .95rem;
+      box-shadow: 0 12px 24px -12px rgba(37, 99, 235, .7);
+      transition: .2s;
+    }
+
+    .btn-primary:hover:not(:disabled) { transform: translateY(-1px); }
+
+    .btn-primary:disabled { opacity: .65; cursor: not-allowed; box-shadow: none; }
+
+    .auth-footer-note {
+      margin-top: 16px;
+      text-align: center;
+      font-size: .86rem;
+      color: var(--muted);
+    }
+
+    .link-button {
+      border: 0;
+      background: none;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: inherit;
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .back-home {
+      display: block;
+      margin: 18px auto 0;
+      border: 0;
+      background: none;
+      color: var(--muted);
+      font-size: .8rem;
+      padding: 6px;
+    }
+
+    .back-home:hover { color: var(--accent); }
+
+    /* ---------- Alerts ---------- */
+    .alert {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: 11px;
+      font-size: .82rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      border: 1px solid transparent;
+    }
+
+    .alert.error { background: var(--danger-soft); color: #8f1d1d; border-color: #f6c9c9; }
+    .alert.success { background: var(--success-soft); color: #0b6047; border-color: #bfe8d8; }
+    .alert.info { background: var(--accent-soft); color: #1e3a8a; border-color: #cfdefb; }
+    .alert.warn { background: var(--warning-soft); color: #7a5412; border-color: #f1dfb8; }
+
+    /* ---------- App layout ---------- */
+    .app-view { padding: 30px 0 60px; }
+
+    .page-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .page-head h2 {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      line-height: 1.4;
+    }
+
+    .page-head p { color: var(--muted); font-size: .86rem; margin-top: 4px; }
+
+    .offline-note { margin-bottom: 18px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-card .stat-label {
+      font-size: .74rem;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-card .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .stat-card .stat-sub { font-size: .72rem; color: var(--muted); }
+
+    .stat-card.accent {
+      background: linear-gradient(150deg, #0b1b33, #173563);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .stat-card.accent .stat-label,
+    .stat-card.accent .stat-sub { color: rgba(255, 255, 255, .66); }
+
+    /* ---------- Profile card ---------- */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+      flex-wrap: wrap;
+    }
+
+    .panel-head h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .panel-head h3 .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .panel-head p { font-size: .76rem; color: var(--muted); margin-top: 2px; }
+
+    .panel-body { padding: 24px; }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .avatar-lg {
+      width: 92px;
+      height: 92px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(140deg, var(--ink), var(--accent));
+      box-shadow: 0 14px 26px -14px rgba(11, 27, 51, .6);
+    }
+
+    .profile-name {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      line-height: 1.4;
+    }
+
+    .profile-email {
+      color: var(--muted);
+      font-size: .84rem;
+      word-break: break-all;
+      margin-top: 3px;
+    }
+
+    .profile-fields {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .profile-field {
+      background: #f8fafd;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 13px;
+    }
+
+    .profile-field span {
+      display: block;
+      font-size: .7rem;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .profile-field strong {
+      font-size: .86rem;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: .8rem;
+      font-weight: 600;
+      transition: .18s;
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: #f7faff; }
+
+    .btn-secondary.danger { color: var(--danger); }
+    .btn-secondary.danger:hover { border-color: var(--danger); background: var(--danger-soft); }
+
+    /* ---------- Notes ---------- */
+    .note-form {
+      display: grid;
+      grid-template-columns: 1.4fr .9fr .6fr auto;
+      gap: 12px;
+      align-items: end;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .note-form .field { margin: 0; }
+
+    .note-form .btn-primary { width: auto; padding-inline: 22px; }
+
+    .notes-list { display: grid; gap: 10px; padding: 20px 24px 24px; }
+
+    .note-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      transition: .18s;
+    }
+
+    .note-row:hover { border-color: #c9d7f0; box-shadow: var(--shadow-sm); }
+
+    .note-title {
+      font-weight: 700;
+      font-size: .92rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .code-chip {
+      font-size: .68rem;
+      font-weight: 600;
+      color: #41506a;
+      background: #eef2f9;
+      border: 1px solid var(--line);
+      padding: 1px 8px;
+      border-radius: 999px;
+      direction: ltr;
+    }
+
+    .note-meta { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+
+    .grade-chip {
+      min-width: 58px;
+      text-align: center;
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: .88rem;
+      direction: ltr;
+      background: var(--success-soft);
+      color: var(--success);
+      border: 1px solid #bfe8d8;
+    }
+
+    .grade-chip.mid { background: var(--warning-soft); color: var(--warning); border-color: #f1dfb8; }
+    .grade-chip.low { background: var(--danger-soft); color: var(--danger); border-color: #f6c9c9; }
+
+    .note-actions { display: flex; gap: 6px; }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      color: var(--muted);
+      transition: .18s;
+    }
+
+    .icon-btn:hover { color: var(--accent); border-color: var(--accent); background: #f7faff; }
+    .icon-btn.danger:hover { color: var(--danger); border-color: var(--danger); background: var(--danger-soft); }
+
+    .empty-state {
+      text-align: center;
+      padding: 34px 20px;
+      border: 1.5px dashed #d7e0ef;
+      border-radius: 13px;
+      color: var(--muted);
+      background: #fbfcfe;
+    }
+
+    .empty-state strong { display: block; color: var(--ink); font-size: .95rem; margin-bottom: 4px; }
+    .empty-state span { font-size: .8rem; }
+
+    /* ---------- Modals ---------- */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(11, 27, 51, .45);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-card {
+      width: min(520px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--line);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-head h3 { font-family: var(--font-display); font-size: 1.15rem; }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .modal-close:hover { color: var(--danger); border-color: var(--danger); }
+
+    .modal-body { padding: 22px; }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+      padding-top: 6px;
+    }
+
+    .modal-actions .btn-primary { width: auto; padding-inline: 24px; }
+    .modal-actions .btn-secondary { padding: 11px 20px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ---------- Toast ---------- */
+    .toast {
+      position: fixed;
+      z-index: 300;
+      inset-inline: 20px;
+      bottom: 22px;
+      margin-inline: auto;
+      width: fit-content;
+      max-width: min(460px, 100%);
+      padding: 12px 20px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: .86rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      background: var(--ink);
+      transform: translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: #0b7a57; }
+    .toast.error { background: #b91c1c; }
+
+    /* ---------- Footer ---------- */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 26px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .76rem;
+      background: #fff;
+    }
+
+    .site-footer a { color: var(--muted); text-decoration: none; }
+    .site-footer a:hover { color: var(--accent); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      .auth-card { grid-template-columns: 1fr; max-width: 520px; }
+      .auth-aside { display: none; }
+      .auth-form-side { padding: 34px 26px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .note-form { grid-template-columns: 1fr 1fr; }
+      .note-form .btn-primary { grid-column: 1 / -1; width: 100%; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: calc(100% - 28px); }
+      .brand p { display: none; }
+      .header-greeting { display: none; }
+      .auth-view { padding: 26px 14px; min-height: calc(100vh - 64px); }
+      .app-view { padding-top: 20px; }
+      .page-head h2 { font-size: 1.4rem; }
+      .profile-grid { grid-template-columns: 1fr; }
+      .avatar-lg { width: 72px; height: 72px; border-radius: 18px; font-size: 1.5rem; }
+      .profile-fields { grid-template-columns: 1fr; }
+      .note-form { grid-template-columns: 1fr; padding: 16px; }
+      .notes-list { padding: 16px; }
+      .panel-body { padding: 18px; }
+      .panel-head { padding: 15px 18px; }
+      .note-row { grid-template-columns: 1fr auto; }
+      .note-actions { grid-column: 1 / -1; justify-content: flex-start; }
+      .form-row { grid-template-columns: 1fr; }
+      .site-header .container { min-height: 62px; }
+      .header-user { gap: 8px; }
+      .btn-ghost-light { padding: 7px 11px; font-size: .74rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================= Header (hidden until login) ================= -->
+<header class="site-header" id="siteHeader" hidden>
+  <div class="container">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="#7dd3fc" stroke-width="3">
+          <circle cx="32" cy="32" r="5.5" fill="#7dd3fc" stroke="none"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10.5"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10.5" transform="rotate(60 32 32)"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10.5" transform="rotate(120 32 32)"/>
+        </svg>
+      </span>
+      <div class="brand-text">
+        <h1>بيانات الطالب</h1>
+        <p>السجل الأكاديمي — فيزياء المسارات</p>
+      </div>
+    </div>
+
+    <div class="header-user">
+      <div class="header-greeting">
+        <strong id="headerName">—</strong>
+        <span>مرحباً بعودتك</span>
+      </div>
+      <div class="avatar" id="headerAvatar" aria-hidden="true">ط</div>
+      <button class="btn-ghost-light" id="logoutBtn" type="button">تسجيل الخروج</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= Auth view ================= -->
+<section class="auth-view" id="authView">
+  <div class="auth-card">
+    <aside class="auth-aside">
+      <div>
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" stroke="#e2e8f0" stroke-width="2.6">
+            <circle cx="32" cy="32" r="6" fill="#e2e8f0" stroke="none"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" transform="rotate(60 32 32)"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" transform="rotate(120 32 32)"/>
+          </svg>
+        </span>
+        <h2>سجلك الأكاديمي<br />في مكان واحد</h2>
+        <p>تابع موادك ودرجاتك ومعدلك التراكمي من خلال حساب خاص بك، لا يطّلع عليه أحد غيرك.</p>
+      </div>
+      <ul class="auth-points">
+        <li><span class="tick">✓</span><span>بياناتك محمية ولا يراها أي مستخدم آخر.</span></li>
+        <li><span class="tick">✓</span><span>إضافة المواد والدرجات وتعديلها في أي وقت.</span></li>
+        <li><span class="tick">✓</span><span>حساب المعدل التراكمي تلقائياً.</span></li>
+      </ul>
+    </aside>
+
+    <div class="auth-form-side">
+      <h3 id="authTitle">تسجيل الدخول</h3>
+      <p class="auth-sub" id="authSubtitle">أدخل بيانات حسابك للوصول إلى سجلك الأكاديمي.</p>
+
+      <div class="auth-tabs" role="tablist" aria-label="نوع الدخول">
+        <button class="auth-tab" id="tabLogin" type="button" role="tab" aria-selected="true">دخول</button>
+        <button class="auth-tab" id="tabSignup" type="button" role="tab" aria-selected="false">حساب جديد</button>
+      </div>
+
+      <div class="alert error" id="authAlert" hidden>
+        <span aria-hidden="true">⚠</span><span class="alert-text" id="authAlertText"></span>
+      </div>
+      <div class="alert success" id="authNotice" hidden>
+        <span aria-hidden="true">✓</span><span class="alert-text" id="authNoticeText"></span>
+      </div>
+
+      <form id="authForm" novalidate>
+        <div class="field" id="fullNameField" hidden>
+          <label for="fullName">الاسم الكامل</label>
+          <input class="input" type="text" id="fullName" name="fullName" autocomplete="name" placeholder="مثال: محمد عبدالله العتيبي" />
+        </div>
+
+        <div class="field">
+          <label for="email">البريد الإلكتروني</label>
+          <input class="input" type="email" id="email" name="email" autocomplete="email" inputmode="email" dir="ltr" placeholder="name@example.com" required />
+        </div>
+
+        <div class="field">
+          <label for="password">كلمة المرور</label>
+          <input class="input" type="password" id="password" name="password" autocomplete="current-password" dir="ltr" placeholder="••••••••" required />
+          <div class="hint" id="passwordHint" hidden>6 أحرف على الأقل.</div>
+        </div>
+
+        <div class="field" id="confirmField" hidden>
+          <label for="confirmPassword">تأكيد كلمة المرور</label>
+          <input class="input" type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" dir="ltr" placeholder="••••••••" />
+        </div>
+
+        <button class="btn-primary" type="submit" id="authSubmit">دخول إلى حسابي</button>
+      </form>
+
+      <p class="auth-footer-note" id="switchLine">
+        لا تملك حساباً؟
+        <button class="link-button" type="button" id="switchMode">أنشئ حساباً جديداً</button>
+      </p>
+
+      <button class="back-home" type="button" id="backHome">← العودة إلى موقع فيزياء المسارات</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= App view ================= -->
+<main class="app-view" id="appView" hidden>
+  <div class="container">
+    <div class="alert warn offline-note" id="offlineNote" hidden>
+      <span aria-hidden="true">⚠</span>
+      <span>لا يوجد اتصال بالإنترنت. قد لا تتمكن من حفظ التغييرات حتى يعود الاتصال.</span>
+    </div>
+
+    <div class="alert error offline-note" id="setupNote" hidden>
+      <span aria-hidden="true">⚠</span>
+      <span>قاعدة البيانات غير مهيّأة بعد: جداول <b>profiles</b> و<b>student_notes</b> غير موجودة. شغّل كود إعداد قاعدة البيانات في Supabase SQL Editor ثم حدّث الصفحة.</span>
+    </div>
+
+    <div class="page-head">
+      <div>
+        <h2>السجل الأكاديمي</h2>
+        <p>نظرة سريعة على أدائك وموادك الدراسية.</p>
+      </div>
+      <button class="btn-secondary" type="button" id="refreshBtn">↻ تحديث البيانات</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card accent">
+        <span class="stat-label">المعدل التراكمي</span>
+        <span class="stat-value" id="statGpa">—</span>
+        <span class="stat-sub" id="statGpaSub">من 100</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">عدد المواد</span>
+        <span class="stat-value" id="statCount">0</span>
+        <span class="stat-sub">مادة مسجّلة</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">الحالة الأكاديمية</span>
+        <span class="stat-value" id="statStatus" style="font-size:1.15rem;">—</span>
+        <span class="stat-sub">حسب المعدل</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">أعلى درجة</span>
+        <span class="stat-value" id="statHigh">—</span>
+        <span class="stat-sub">أفضل مادة</span>
+      </div>
+    </div>
+
+    <section class="panel" aria-labelledby="profileTitle">
+      <div class="panel-head">
+        <div>
+          <h3 id="profileTitle"><span class="dot"></span> الملف الشخصي</h3>
+          <p>بياناتك الأساسية المرتبطة بحسابك.</p>
+        </div>
+        <button class="btn-secondary" type="button" id="editProfileBtn">✎ تعديل البيانات</button>
+      </div>
+      <div class="panel-body">
+        <div class="profile-grid">
+          <div class="avatar-lg" id="profileAvatar" aria-hidden="true">ط</div>
+          <div>
+            <div class="profile-name" id="profileName">—</div>
+            <div class="profile-email" id="profileEmail" dir="ltr">—</div>
+            <div class="profile-fields">
+              <div class="profile-field"><span>رقم الطالب</span><strong id="profileStudentId">—</strong></div>
+              <div class="profile-field"><span>الصف الدراسي</span><strong id="profileGrade">—</strong></div>
+              <div class="profile-field"><span>المسار / التخصص</span><strong id="profileMajor">—</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="notesTitle">
+      <div class="panel-head">
+        <div>
+          <h3 id="notesTitle"><span class="dot"></span> المواد والدرجات</h3>
+          <p>أضف موادك ودرجاتك، ويمكنك تعديلها أو حذفها في أي وقت.</p>
+        </div>
+      </div>
+
+      <form class="note-form" id="noteForm" novalidate>
+        <div class="field">
+          <label for="noteName">اسم المادة</label>
+          <input class="input" type="text" id="noteName" placeholder="مثال: فيزياء ٢" maxlength="80" required />
+        </div>
+        <div class="field">
+          <label for="noteCode">كود المادة</label>
+          <input class="input" type="text" id="noteCode" placeholder="PHY201" maxlength="20" dir="ltr" />
+        </div>
+        <div class="field">
+          <label for="noteGrade">الدرجة</label>
+          <input class="input" type="number" id="noteGrade" placeholder="0 - 100" min="0" max="100" step="1" inputmode="numeric" required />
+        </div>
+        <button class="btn-primary" type="submit" id="addNoteBtn">+ إضافة</button>
+      </form>
+
+      <div class="notes-list" id="notesList"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <span>فيزياء المسارات — </span>
+  <a href="index.html">الصفحة الرئيسية</a>
+  <span> · بياناتك محفوظة بشكل آمن ولا يطّلع عليها أحد غيرك.</span>
+</footer>
+
+<!-- ================= Profile modal ================= -->
+<div class="modal" id="profileModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <div class="modal-head">
+      <h3 id="profileModalTitle">تعديل البيانات الشخصية</h3>
+      <button class="modal-close" type="button" data-close="profileModal" aria-label="إغلاق">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert error" id="profileAlert" hidden></div>
+      <form id="profileForm" novalidate>
+        <div class="field">
+          <label for="editName">الاسم الكامل</label>
+          <input class="input" type="text" id="editName" maxlength="100" required />
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="editStudentId">رقم الطالب</label>
+            <input class="input" type="text" id="editStudentId" maxlength="30" dir="ltr" />
+          </div>
+          <div class="field">
+            <label for="editGrade">الصف الدراسي</label>
+            <input class="input" type="text" id="editGrade" maxlength="40" placeholder="مثال: الثاني الثانوي" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="editMajor">المسار / التخصص</label>
+          <input class="input" type="text" id="editMajor" maxlength="60" placeholder="مثال: مسار عام" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" type="submit" id="saveProfileBtn">حفظ التغييرات</button>
+          <button class="btn-secondary" type="button" data-close="profileModal">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================= Note modal ================= -->
+<div class="modal" id="noteModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="noteModalTitle">
+    <div class="modal-head">
+      <h3 id="noteModalTitle">تعديل المادة</h3>
+      <button class="modal-close" type="button" data-close="noteModal" aria-label="إغلاق">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert error" id="noteAlert" hidden></div>
+      <form id="noteEditForm" novalidate>
+        <input type="hidden" id="editNoteId" />
+        <div class="field">
+          <label for="editNoteName">اسم المادة</label>
+          <input class="input" type="text" id="editNoteName" maxlength="80" required />
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="editNoteCode">كود المادة</label>
+            <input class="input" type="text" id="editNoteCode" maxlength="20" dir="ltr" />
+          </div>
+          <div class="field">
+            <label for="editNoteGrade">الدرجة</label>
+            <input class="input" type="number" id="editNoteGrade" min="0" max="100" step="1" required />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" type="submit" id="saveNoteBtn">حفظ التعديل</button>
+          <button class="btn-secondary" type="button" data-close="noteModal">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const SUPABASE_URL = 'https://jbqotzkinlatewrjvadi.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_F93GOC_LaWY-NWadmN8wmA_F0qEh_iO';
+
+  // IMPORTANT: use window.supabase so the client variable does not shadow the library.
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  });
+
+  const $ = (id) => document.getElementById(id);
+
+  const ui = {
+    header: $('siteHeader'),
+    authView: $('authView'),
+    appView: $('appView'),
+    authForm: $('authForm'),
+    authTitle: $('authTitle'),
+    authSubtitle: $('authSubtitle'),
+    tabLogin: $('tabLogin'),
+    tabSignup: $('tabSignup'),
+    fullNameField: $('fullNameField'),
+    fullName: $('fullName'),
+    email: $('email'),
+    password: $('password'),
+    confirmField: $('confirmField'),
+    confirmPassword: $('confirmPassword'),
+    passwordHint: $('passwordHint'),
+    authSubmit: $('authSubmit'),
+    authAlert: $('authAlert'),
+    authAlertText: $('authAlertText'),
+    authNotice: $('authNotice'),
+    authNoticeText: $('authNoticeText'),
+    switchLine: $('switchLine'),
+    switchMode: $('switchMode'),
+    backHome: $('backHome'),
+    headerName: $('headerName'),
+    headerAvatar: $('headerAvatar'),
+    logoutBtn: $('logoutBtn'),
+    refreshBtn: $('refreshBtn'),
+    offlineNote: $('offlineNote'),
+    setupNote: $('setupNote'),
+    statGpa: $('statGpa'),
+    statGpaSub: $('statGpaSub'),
+    statCount: $('statCount'),
+    statStatus: $('statStatus'),
+    statHigh: $('statHigh'),
+    profileAvatar: $('profileAvatar'),
+    profileName: $('profileName'),
+    profileEmail: $('profileEmail'),
+    profileStudentId: $('profileStudentId'),
+    profileGrade: $('profileGrade'),
+    profileMajor: $('profileMajor'),
+    editProfileBtn: $('editProfileBtn'),
+    noteForm: $('noteForm'),
+    noteName: $('noteName'),
+    noteCode: $('noteCode'),
+    noteGrade: $('noteGrade'),
+    addNoteBtn: $('addNoteBtn'),
+    notesList: $('notesList'),
+    profileModal: $('profileModal'),
+    profileForm: $('profileForm'),
+    profileAlert: $('profileAlert'),
+    editName: $('editName'),
+    editStudentId: $('editStudentId'),
+    editGrade: $('editGrade'),
+    editMajor: $('editMajor'),
+    saveProfileBtn: $('saveProfileBtn'),
+    noteModal: $('noteModal'),
+    noteEditForm: $('noteEditForm'),
+    noteAlert: $('noteAlert'),
+    editNoteId: $('editNoteId'),
+    editNoteName: $('editNoteName'),
+    editNoteCode: $('editNoteCode'),
+    editNoteGrade: $('editNoteGrade'),
+    saveNoteBtn: $('saveNoteBtn'),
+    toast: $('toast')
+  };
+
+  const state = {
+    user: null,
+    profile: null,
+    notes: [],
+    mode: 'login',
+    busy: false,
+    tableMissing: false
+  };
+
+  /* ---------------- Helpers ---------------- */
+
+  let toastTimer = null;
+  function toast(message, type = 'info') {
+    ui.toast.textContent = message;
+    ui.toast.className = 'toast show' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { ui.toast.className = 'toast'; }, 3200);
+  }
+
+  function setAlert(el, message) {
+    if (!el) return;
+    const textTarget = el.querySelector('.alert-text');
+    if (!message) {
+      el.hidden = true;
+      if (textTarget) textTarget.textContent = '';
+      else el.textContent = '';
+      return;
+    }
+    el.hidden = false;
+    if (textTarget) textTarget.textContent = message;
+    else el.textContent = message;
+  }
+
+  function renderSetupNote() {
+    if (ui.setupNote) ui.setupNote.hidden = !state.tableMissing;
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function initials(name) {
+    const clean = (name || '').trim();
+    if (!clean) return 'ط';
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].slice(0, 2);
+    return (parts[0][0] + parts[parts.length - 1][0]);
+  }
+
+  function displayName() {
+    if (state.profile && state.profile.full_name) return state.profile.full_name;
+    if (state.user && state.user.email) return state.user.email.split('@')[0];
+    return 'طالب';
+  }
+
+  function gradeClass(grade) {
+    if (grade >= 80) return '';
+    if (grade >= 60) return 'mid';
+    return 'low';
+  }
+
+  function statusFor(gpa) {
+    if (gpa >= 90) return 'ممتاز';
+    if (gpa >= 80) return 'جيد جداً';
+    if (gpa >= 70) return 'جيد';
+    if (gpa >= 60) return 'مقبول';
+    return 'يحتاج متابعة';
+  }
+
+  function arabicAuthError(error) {
+    const code = (error && error.code) || '';
+    const msg = (error && error.message) || '';
+
+    if (code === 'invalid_credentials' || /invalid login credentials/i.test(msg)) {
+      return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+    }
+    if (code === 'email_not_confirmed' || /email not confirmed/i.test(msg)) {
+      return 'لم يتم تأكيد بريدك الإلكتروني بعد. افتح رسالة التأكيد في بريدك ثم حاول مرة أخرى.';
+    }
+    if (code === 'user_already_exists' || /already registered|already exists/i.test(msg)) {
+      return 'هذا البريد مسجّل مسبقاً. جرّب تسجيل الدخول.';
+    }
+    if (code === 'weak_password' || /password should be at least/i.test(msg)) {
+      return 'كلمة المرور قصيرة. استخدم 6 أحرف على الأقل.';
+    }
+    if (code === 'over_email_send_rate_limit' || /rate limit/i.test(msg)) {
+      return 'تم إرسال رسائل كثيرة خلال وقت قصير. انتظر قليلاً ثم حاول مجدداً.';
+    }
+    if (code === 'signup_disabled') {
+      return 'إنشاء الحسابات متوقف حالياً في إعدادات الموقع.';
+    }
+    if (/failed to fetch|networkerror|load failed/i.test(msg)) {
+      return 'تعذّر الاتصال بالخادم. تحقّق من اتصال الإنترنت ثم حاول مجدداً.';
+    }
+    if (code === '42501' || /row-level security/i.test(msg)) {
+      return 'لا تملك صلاحية تنفيذ هذه العملية على هذه البيانات.';
+    }
+    if (code === '42P01' || code === 'PGRST205' || /relation .* does not exist|could not find the table/i.test(msg)) {
+      return 'جداول قاعدة البيانات غير موجودة. يلزم تشغيل كود إعداد قاعدة البيانات في Supabase.';
+    }
+    return msg || 'حدث خطأ غير متوقع. حاول مرة أخرى.';
+  }
+
+  /* ---------------- Auth screen ---------------- */
+
+  function setMode(mode) {
+    state.mode = mode;
+    const isSignup = mode === 'signup';
+
+    ui.tabLogin.setAttribute('aria-selected', String(!isSignup));
+    ui.tabSignup.setAttribute('aria-selected', String(isSignup));
+    ui.fullNameField.hidden = !isSignup;
+    ui.confirmField.hidden = !isSignup;
+    ui.passwordHint.hidden = !isSignup;
+
+    ui.fullName.required = isSignup;
+    ui.confirmPassword.required = isSignup;
+    ui.password.autocomplete = isSignup ? 'new-password' : 'current-password';
+
+    ui.authTitle.textContent = isSignup ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
+    ui.authSubtitle.textContent = isSignup
+      ? 'أدخل اسمك وبريدك وكلمة مرور خاصة بك لإنشاء سجلك الأكاديمي.'
+      : 'أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى سجلك الأكاديمي.';
+    ui.authSubmit.textContent = isSignup ? 'إنشاء الحساب' : 'دخول إلى حسابي';
+    ui.switchLine.firstChild.textContent = isSignup ? 'لديك حساب بالفعل؟ ' : 'لا تملك حساباً؟ ';
+    ui.switchMode.textContent = isSignup ? 'سجّل الدخول' : 'أنشئ حساباً جديداً';
+
+    setAlert(ui.authAlert, '');
+    setAlert(ui.authNotice, '');
+  }
+
+  function showAuth() {
+    state.user = null;
+    state.profile = null;
+    state.notes = [];
+    ui.header.hidden = true;
+    ui.appView.hidden = true;
+    ui.authView.hidden = false;
+    document.body.classList.remove('is-app');
+  }
+
+  function showApp() {
+    ui.authView.hidden = true;
+    ui.appView.hidden = false;
+    ui.header.hidden = false;
+    document.body.classList.add('is-app');
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }
+
+  async function handleSignIn(email, password) {
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    if (!data.session || !data.user) {
+      throw new Error('تعذّر إنشاء الجلسة. حاول مرة أخرى.');
+    }
+    state.user = data.user;
+    await enterApp();
+    toast('تم تسجيل الدخول بنجاح', 'success');
+  }
+
+  async function handleSignUp(fullName, email, password) {
+    const { data, error } = await db.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName } }
+    });
+    if (error) throw error;
+
+    // If the email already exists, Supabase may return a user with no identities.
+    if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      setAlert(ui.authNotice, '');
+      throw Object.assign(new Error('هذا البريد مسجّل مسبقاً. جرّب تسجيل الدخول.'), { code: 'user_already_exists' });
+    }
+
+    if (data.session) {
+      state.user = data.user;
+      await enterApp();
+      toast('تم إنشاء الحساب وتسجيل دخولك بنجاح', 'success');
+      return;
+    }
+
+    setAlert(ui.authNotice, 'تم إنشاء حسابك. أرسلنا رسالة تأكيد إلى بريدك الإلكتروني — افتح الرسالة واضغط رابط التأكيد، ثم سجّل الدخول.');
+    setMode('login');
+    ui.email.value = email;
+    ui.password.value = '';
+    ui.password.focus();
+    toast('تم إنشاء الحساب. يرجى تأكيد البريد الإلكتروني.', 'success');
+  }
+
+  ui.authForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (state.busy) return;
+
+    const isSignup = state.mode === 'signup';
+    const fullName = ui.fullName.value.trim();
+    const email = ui.email.value.trim();
+    const password = ui.password.value;
+
+    setAlert(ui.authAlert, '');
+    setAlert(ui.authNotice, '');
+
+    if (isSignup && fullName.length < 3) {
+      setAlert(ui.authAlert, 'أدخل الاسم الكامل (3 أحرف على الأقل).');
+      ui.fullName.focus();
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setAlert(ui.authAlert, 'أدخل بريداً إلكترونياً صحيحاً.');
+      ui.email.focus();
+      return;
+    }
+    if (password.length < 6) {
+      setAlert(ui.authAlert, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+      ui.password.focus();
+      return;
+    }
+    if (isSignup && password !== ui.confirmPassword.value) {
+      setAlert(ui.authAlert, 'كلمتا المرور غير متطابقتين.');
+      ui.confirmPassword.focus();
+      return;
+    }
+
+    state.busy = true;
+    ui.authSubmit.disabled = true;
+    ui.authSubmit.textContent = 'جارٍ المعالجة…';
+
+    try {
+      if (isSignup) {
+        await handleSignUp(fullName, email, password);
+      } else {
+        await handleSignIn(email, password);
+      }
+    } catch (error) {
+      setAlert(ui.authAlert, arabicAuthError(error));
+      console.error('[auth]', error);
+    } finally {
+      state.busy = false;
+      ui.authSubmit.disabled = false;
+      ui.authSubmit.textContent = state.mode === 'signup' ? 'إنشاء الحساب' : 'دخول إلى حسابي';
+    }
+  });
+
+  ui.tabLogin.addEventListener('click', () => setMode('login'));
+  ui.tabSignup.addEventListener('click', () => setMode('signup'));
+  ui.switchMode.addEventListener('click', () => setMode(state.mode === 'login' ? 'signup' : 'login'));
+  ui.backHome.addEventListener('click', () => { window.location.href = 'index.html'; });
+
+  /* ---------------- Data ---------------- */
+
+  async function loadProfile() {
+    if (!state.user) return;
+    const { data, error } = await db
+      .from('profiles')
+      .select('user_id, full_name, student_id, grade_level, major, updated_at')
+      .eq('user_id', state.user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('[profile load]', error);
+      if (error.code === 'PGRST205' || /could not find the table/i.test(error.message || '')) {
+        state.tableMissing = true;
+      } else if (error.code !== 'PGRST116') {
+        toast('تعذّر تحميل الملف الشخصي: ' + arabicAuthError(error), 'error');
+      }
+      state.profile = null;
+      return;
+    }
+    state.profile = data || null;
+  }
+
+  async function loadNotes() {
+    if (!state.user) return;
+    const { data, error } = await db
+      .from('student_notes')
+      .select('id, user_id, subject_name, subject_code, grade, created_at, updated_at')
+      .eq('user_id', state.user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('[notes load]', error);
+      if (error.code === 'PGRST205' || /could not find the table/i.test(error.message || '')) {
+        state.tableMissing = true;
+      } else {
+        toast('تعذّر تحميل المواد: ' + arabicAuthError(error), 'error');
+      }
+      state.notes = [];
+      return;
+    }
+    state.notes = data || [];
+  }
+
+  async function enterApp() {
+    showApp();
+    renderHeader();
+    renderProfile();
+    ui.notesList.innerHTML = '<div class="empty-state"><strong>جارٍ تحميل البيانات…</strong><span>لحظات من فضلك.</span></div>';
+    state.tableMissing = false;
+    await Promise.all([loadProfile(), loadNotes()]);
+    renderSetupNote();
+    renderHeader();
+    renderProfile();
+    renderStats();
+    renderNotes();
+  }
+
+  async function refreshAll(silent) {
+    if (!state.user) return;
+    ui.refreshBtn.disabled = true;
+    ui.refreshBtn.textContent = '… جارٍ التحديث';
+    try {
+      state.tableMissing = false;
+      await Promise.all([loadProfile(), loadNotes()]);
+      renderSetupNote();
+      renderHeader();
+      renderProfile();
+      renderStats();
+      renderNotes();
+      if (!silent) toast('تم تحديث البيانات', 'success');
+    } finally {
+      ui.refreshBtn.disabled = false;
+      ui.refreshBtn.textContent = '↻ تحديث البيانات';
+    }
+  }
+
+  /* ---------------- Rendering ---------------- */
+
+  function renderHeader() {
+    const name = displayName();
+    ui.headerName.textContent = name;
+    ui.headerAvatar.textContent = initials(state.profile && state.profile.full_name ? state.profile.full_name : name);
+    ui.headerAvatar.title = name;
+  }
+
+  function renderProfile() {
+    const profile = state.profile || {};
+    const name = displayName();
+    ui.profileName.textContent = name;
+    ui.profileEmail.textContent = (state.user && state.user.email) || '—';
+    ui.profileStudentId.textContent = profile.student_id || '—';
+    ui.profileGrade.textContent = profile.grade_level || '—';
+    ui.profileMajor.textContent = profile.major || '—';
+    ui.profileAvatar.textContent = initials(profile.full_name || name);
+  }
+
+  function renderStats() {
+    const grades = state.notes
+      .map((note) => Number(note.grade))
+      .filter((grade) => Number.isFinite(grade));
+
+    ui.statCount.textContent = String(state.notes.length);
+
+    if (!grades.length) {
+      ui.statGpa.textContent = '—';
+      ui.statGpaSub.textContent = 'أضف موادك لحساب المعدل';
+      ui.statStatus.textContent = 'لا توجد مواد';
+      ui.statHigh.textContent = '—';
+      return;
+    }
+
+    const gpa = grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
+    const highest = Math.max(...grades);
+    ui.statGpa.textContent = gpa.toFixed(2);
+    ui.statGpaSub.textContent = `محسوب من ${grades.length} مادة`;
+    ui.statStatus.textContent = statusFor(gpa);
+    ui.statHigh.textContent = String(highest);
+  }
+
+  function formatDate(value) {
+    if (!value) return '';
+    try {
+      return new Intl.DateTimeFormat('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(value));
+    } catch (error) {
+      return '';
+    }
+  }
+
+  function renderNotes() {
+    if (!state.notes.length) {
+      ui.notesList.innerHTML = `
+        <div class="empty-state">
+          <strong>لا توجد مواد مضافة بعد</strong>
+          <span>أضف أول مادة من النموذج أعلاه، وستظهر درجاتك ومعدلك هنا مباشرة.</span>
+        </div>`;
+      return;
+    }
+
+    ui.notesList.innerHTML = state.notes.map((note) => {
+      const grade = Number(note.grade);
+      const safeGrade = Number.isFinite(grade) ? grade : 0;
+      const date = formatDate(note.updated_at || note.created_at);
+      return `
+        <div class="note-row" data-id="${escapeHtml(note.id)}">
+          <div>
+            <div class="note-title">
+              <span>${escapeHtml(note.subject_name)}</span>
+              ${note.subject_code ? `<span class="code-chip">${escapeHtml(note.subject_code)}</span>` : ''}
+            </div>
+            <div class="note-meta">${date ? 'آخر تحديث: ' + escapeHtml(date) : ''}</div>
+          </div>
+          <div class="grade-chip ${gradeClass(safeGrade)}">${escapeHtml(safeGrade)}</div>
+          <div class="note-actions">
+            <button class="icon-btn" type="button" data-action="edit" data-id="${escapeHtml(note.id)}" title="تعديل" aria-label="تعديل ${escapeHtml(note.subject_name)}">✎</button>
+            <button class="icon-btn danger" type="button" data-action="delete" data-id="${escapeHtml(note.id)}" title="حذف" aria-label="حذف ${escapeHtml(note.subject_name)}">🗑</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ---------------- Notes CRUD ---------------- */
+
+  ui.noteForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!state.user) return;
+
+    const name = ui.noteName.value.trim();
+    const code = ui.noteCode.value.trim();
+    const gradeRaw = ui.noteGrade.value.trim();
+    const grade = Number(gradeRaw);
+
+    if (name.length < 2) { toast('أدخل اسم المادة', 'error'); ui.noteName.focus(); return; }
+    if (gradeRaw === '' || !Number.isFinite(grade) || grade < 0 || grade > 100) {
+      toast('أدخل درجة صحيحة بين 0 و 100', 'error');
+      ui.noteGrade.focus();
+      return;
+    }
+
+    ui.addNoteBtn.disabled = true;
+    ui.addNoteBtn.textContent = '… جارٍ الإضافة';
+
+    try {
+      const { error } = await db.from('student_notes').insert({
+        user_id: state.user.id,
+        subject_name: name,
+        subject_code: code || null,
+        grade: Math.round(grade)
+      });
+      if (error) throw error;
+
+      ui.noteName.value = '';
+      ui.noteCode.value = '';
+      ui.noteGrade.value = '';
+      await loadNotes();
+      renderStats();
+      renderNotes();
+      toast('تمت إضافة المادة بنجاح', 'success');
+      ui.noteName.focus();
+    } catch (error) {
+      console.error('[note insert]', error);
+      toast('تعذّرت إضافة المادة: ' + arabicAuthError(error), 'error');
+    } finally {
+      ui.addNoteBtn.disabled = false;
+      ui.addNoteBtn.textContent = '+ إضافة';
+    }
+  });
+
+  ui.notesList.addEventListener('click', async (event) => {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+
+    const note = state.notes.find((item) => item.id === button.dataset.id);
+    if (!note) return;
+
+    if (button.dataset.action === 'edit') {
+      openNoteModal(note);
+      return;
+    }
+
+    if (button.dataset.action === 'delete') {
+      const confirmed = window.confirm(`هل تريد حذف مادة «${note.subject_name}»؟`);
+      if (!confirmed) return;
+
+      button.disabled = true;
+      try {
+        const { error } = await db
+          .from('student_notes')
+          .delete()
+          .eq('id', note.id)
+          .eq('user_id', state.user.id);
+        if (error) throw error;
+
+        state.notes = state.notes.filter((item) => item.id !== note.id);
+        renderStats();
+        renderNotes();
+        toast('تم حذف المادة', 'success');
+      } catch (error) {
+        console.error('[note delete]', error);
+        toast('تعذّر حذف المادة: ' + arabicAuthError(error), 'error');
+        button.disabled = false;
+      }
+    }
+  });
+
+  /* ---------------- Note modal ---------------- */
+
+  function openNoteModal(note) {
+    setAlert(ui.noteAlert, '');
+    ui.editNoteId.value = note.id;
+    ui.editNoteName.value = note.subject_name || '';
+    ui.editNoteCode.value = note.subject_code || '';
+    ui.editNoteGrade.value = note.grade == null ? '' : note.grade;
+    ui.noteModal.hidden = false;
+    setTimeout(() => ui.editNoteName.focus(), 30);
+  }
+
+  ui.noteEditForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!state.user) return;
+
+    const id = ui.editNoteId.value;
+    const name = ui.editNoteName.value.trim();
+    const code = ui.editNoteCode.value.trim();
+    const gradeRaw = ui.editNoteGrade.value.trim();
+    const grade = Number(gradeRaw);
+
+    setAlert(ui.noteAlert, '');
+
+    if (name.length < 2) { setAlert(ui.noteAlert, 'أدخل اسم المادة.'); ui.editNoteName.focus(); return; }
+    if (gradeRaw === '' || !Number.isFinite(grade) || grade < 0 || grade > 100) {
+      setAlert(ui.noteAlert, 'أدخل درجة صحيحة بين 0 و 100.');
+      ui.editNoteGrade.focus();
+      return;
+    }
+
+    ui.saveNoteBtn.disabled = true;
+    ui.saveNoteBtn.textContent = '… جارٍ الحفظ';
+
+    try {
+      const { error } = await db
+        .from('student_notes')
+        .update({
+          subject_name: name,
+          subject_code: code || null,
+          grade: Math.round(grade),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .eq('user_id', state.user.id);
+
+      if (error) throw error;
+
+      ui.noteModal.hidden = true;
+      await loadNotes();
+      renderStats();
+      renderNotes();
+      toast('تم تحديث المادة بنجاح', 'success');
+    } catch (error) {
+      console.error('[note update]', error);
+      setAlert(ui.noteAlert, 'تعذّر حفظ التعديل: ' + arabicAuthError(error));
+    } finally {
+      ui.saveNoteBtn.disabled = false;
+      ui.saveNoteBtn.textContent = 'حفظ التعديل';
+    }
+  });
+
+  /* ---------------- Profile modal ---------------- */
+
+  ui.editProfileBtn.addEventListener('click', () => {
+    const profile = state.profile || {};
+    setAlert(ui.profileAlert, '');
+    ui.editName.value = profile.full_name || displayName();
+    ui.editStudentId.value = profile.student_id || '';
+    ui.editGrade.value = profile.grade_level || '';
+    ui.editMajor.value = profile.major || '';
+    ui.profileModal.hidden = false;
+    setTimeout(() => ui.editName.focus(), 30);
+  });
+
+  ui.profileForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!state.user) return;
+
+    const fullName = ui.editName.value.trim();
+    setAlert(ui.profileAlert, '');
+
+    if (fullName.length < 3) {
+      setAlert(ui.profileAlert, 'أدخل الاسم الكامل (3 أحرف على الأقل).');
+      ui.editName.focus();
+      return;
+    }
+
+    ui.saveProfileBtn.disabled = true;
+    ui.saveProfileBtn.textContent = '… جارٍ الحفظ';
+
+    try {
+      const { error } = await db.from('profiles').upsert({
+        user_id: state.user.id,
+        full_name: fullName,
+        student_id: ui.editStudentId.value.trim() || null,
+        grade_level: ui.editGrade.value.trim() || null,
+        major: ui.editMajor.value.trim() || null,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+
+      if (error) throw error;
+
+      await loadProfile();
+      renderHeader();
+      renderProfile();
+      ui.profileModal.hidden = true;
+      toast('تم تحديث بياناتك', 'success');
+    } catch (error) {
+      console.error('[profile save]', error);
+      setAlert(ui.profileAlert, 'تعذّر حفظ البيانات: ' + arabicAuthError(error));
+    } finally {
+      ui.saveProfileBtn.disabled = false;
+      ui.saveProfileBtn.textContent = 'حفظ التغييرات';
+    }
+  });
+
+  /* ---------------- Modal / global events ---------------- */
+
+  document.querySelectorAll('[data-close]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const modal = $(button.dataset.close);
+      if (modal) modal.hidden = true;
+    });
+  });
+
+  [ui.profileModal, ui.noteModal].forEach((modal) => {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) modal.hidden = true;
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (!ui.profileModal.hidden) ui.profileModal.hidden = true;
+    if (!ui.noteModal.hidden) ui.noteModal.hidden = true;
+  });
+
+  ui.refreshBtn.addEventListener('click', () => refreshAll(false));
+  ui.logoutBtn.addEventListener('click', async () => {
+    ui.logoutBtn.disabled = true;
+    try {
+      await db.auth.signOut();
+    } catch (error) {
+      console.error('[signout]', error);
+    } finally {
+      ui.logoutBtn.disabled = false;
+      showAuth();
+      setMode('login');
+      toast('تم تسجيل الخروج', 'success');
+    }
+  });
+
+  function updateOnlineState() {
+    ui.offlineNote.hidden = navigator.onLine;
+  }
+  window.addEventListener('online', updateOnlineState);
+  window.addEventListener('offline', updateOnlineState);
+  updateOnlineState();
+
+  /* ---------------- Boot ---------------- */
+
+  setMode('login');
+
+  (async () => {
+    try {
+      const { data, error } = await db.auth.getSession();
+      if (error) console.error('[session]', error);
+
+      if (data && data.session && data.session.user) {
+        state.user = data.session.user;
+        await enterApp();
+      } else {
+        showAuth();
+      }
+    } catch (error) {
+      console.error('[boot]', error);
+      showAuth();
+    }
+  })();
+
+  db.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT' || !session) {
+      if (state.user) showAuth();
+      return;
+    }
+
+    if (!state.user || state.user.id !== session.user.id) {
+      state.user = session.user;
+      enterApp();
+    }
+  });
+})();
+</script>
+</body>
+</html>

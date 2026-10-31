@@ -403,7 +403,10 @@
           <p style="font-size:.78rem;">اختبارات تفاعلية</p>
         </div>
       </div>
-      <a href="index.html" class="ctrl-btn-exams" style="margin-top:0;">العودة للملخصات ›</a>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <a href="student-data.html" class="ctrl-btn-exams" style="margin-top:0;">بيانات الطالب</a>
+        <a href="index.html" class="ctrl-btn-exams" style="margin-top:0;">العودة للملخصات ›</a>
+      </div>
     </div>
   </header>
 
@@ -843,7 +846,7 @@
                 q: "الزخم p معرف بأنه:",
                 options: ["القوة × الزمن", "الكتلة × السرعة", "الطاقة ÷ الزمن", "المسافة × الزمن"],
                 answer: 1,
-                expl: "p = m·v، كمية متجهة اتجاهها velocidad الجسم."
+                expl: "p = m·v، كمية متجهة اتجاهها اتجاه velocidad الجسم."
               },
               {
                 q: "الدفع J يساوي:",
@@ -1316,7 +1319,7 @@
       const pathname = location.pathname;
 
       if (!isLocalhost && !isPreview && !excludedPaths.some(p => pathname.startsWith(p))) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('sw.js')
           .then(reg => console.log('Service Worker registered:', reg.scope))
           .catch(err => console.log('Service Worker registration failed:', err));
       }

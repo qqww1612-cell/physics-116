@@ -63,10 +63,11 @@
           <span>الاختبارات</span>
         </a>
 
-        <!-- رابط بيانات الطالب -->
-        <a href="student-data.html" target="_blank" rel="noopener noreferrer" class="exams-link" title="بيانات الطالب والسجل الأكاديمي" aria-label="بيانات الطالب">
+        <!-- رابط صفحة بيانات الطالب -->
+        <a href="student-data.html" class="exams-link" title="الدخول إلى صفحة بيانات الطالب" aria-label="بيانات الطالب">
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
           <span>بيانات الطالب</span>
         </a>
@@ -100,18 +101,6 @@
     </div>
   </section>
 
-  <!-- ============ بطاقة الاختبارات السريعة ============ -->
-  <section class="exams-card">
-    <div class="exams-card-inner">
-      <div class="exams-card-icon" aria-hidden="true">📝</div>
-      <div class="exams-card-text">
-        <h3>اختبارات تفاعلية</h3>
-        <p>اختبر معلوماتك في كل فصل من فصول فيزياء ١ و ٢ مع تصحيح فوري وتوضيح الإجابات</p>
-      </div>
-      <a href="exams.html" target="_blank" rel="noopener noreferrer" class="exams-card-btn">بدء الاختبار ↗</a>
-    </div>
-  </section>
-
   <!-- ============ اختيار الكتاب + البحث ============ -->
   <nav class="book-nav">
     <div class="book-nav-inner">
@@ -129,6 +118,18 @@
   <main class="container">
     <!-- بطاقة تعريف الكتاب -->
     <section id="bookInfo" class="book-info"></section>
+
+    <!-- بطاقة الاختبارات السريعة -->
+    <section class="exams-card">
+      <div class="exams-card-inner">
+        <div class="exams-card-icon" aria-hidden="true">📝</div>
+        <div class="exams-card-text">
+          <h3>اختبارات تفاعلية</h3>
+          <p>اختبر معلوماتك في كل فصل من فصول فيزياء ١ و ٢ مع تصحيح فوري وتوضيح الإجابات</p>
+        </div>
+        <a href="exams.html" target="_blank" rel="noopener noreferrer" class="exams-card-btn">بدء الاختبار ↗</a>
+      </div>
+    </section>
 
     <!-- التصفية -->
     <div class="toolbar">
@@ -203,7 +204,7 @@
       const pathname = location.pathname;
 
       if (!isLocalhost && !isPreview && !excludedPaths.some(p => pathname.startsWith(p))) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('sw.js')
           .then(reg => console.log('Service Worker registered:', reg.scope))
           .catch(err => console.log('Service Worker registration failed:', err));
       }

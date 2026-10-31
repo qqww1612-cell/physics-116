@@ -1,8 +1,8 @@
 {
   "name": "فيزياء المسارات",
   "short_name": "فيزياء",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#101b3f",
