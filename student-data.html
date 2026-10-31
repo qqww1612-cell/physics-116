@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>بيانات الطالب — فيزياء المسارات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ================= متغيرات التصميم ================= */
+    :root {
+      --primary: #0f172a;
+      --primary-2: #1e293b;
+      --accent: #38bdf8;
+      --accent-2: #0ea5e9;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-soft: #64748b;
+      --line: #e2e8f0;
+      --shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25);
+      --radius: 24px;
+      --font-arabic: "Aref Ruqaa", "IBM Plex Sans Arabic", serif;
+      --font-ui: "IBM Plex Sans Arabic", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-ui);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(30, 41, 59, 0.12), transparent 60%),
+        radial-gradient(800px 400px at -10% 0%, rgba(56, 189, 248, 0.10), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      direction: rtl;
+      line-height: 1.7;
+    }
+
+    /* ================= الترويسة ================= */
+    .student-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .student-header .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand-student {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--accent-2) 70%, transparent);
+    }
+
+    .brand-logo svg {
+      width: 26px;
+      height: 26px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.5;
+    }
+
+    .brand-text h2 {
+      font-family: var(--font-arabic);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .brand-text p {
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .user-greeting {
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-logout {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover { background: rgba(255, 255, 255, 0.2); }
+
+    /* ================= شاشة المصادقة ================= */
+    .auth-screen {
+      min-height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      box-shadow: var(--shadow);
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .auth-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent-2));
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 20px 40px -15px color-mix(in srgb, var(--accent-2) 60%, transparent);
+    }
+
+    .auth-icon svg {
+      width: 34px;
+      height: 34px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.5;
+    }
+
+    .auth-card h2 {
+      font-family: var(--font-arabic);
+      font-size: 1.7rem;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .auth-card p {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: right;
+    }
+
+    .form-label {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .form-input {
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      font-family: var(--font-arabic);
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-2);
+      background: #fff;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 15%, transparent);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px -10px color-mix(in srgb, var(--primary) 60%, transparent);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .auth-toggle {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .auth-toggle p {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-bottom: 12px;
+    }
+
+    .auth-toggle button {
+      background: none;
+      border: none;
+      color: var(--accent-2);
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .btn-back-home {
+      margin-top: 16px;
+      background: none;
+      border: none;
+      color: var(--text-soft);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-back-home:hover { color: var(--text); }
+
+    /* ================= الحاوية الرئيسية ================= */
+    .student-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 24px;
+      display: none;
+    }
+
+    /* شريط الحالة */
+    .status-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      flex: 1;
+      min-width: 140px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 20px -10px rgba(15, 23, 42, 0.08);
+    }
+
+    .status-item .label {
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .status-item .value {
+      font-family: var(--font-arabic);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .status-item .value.highlight { color: var(--accent-2); }
+
+    /* بطاقة الملف الشخصي */
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 26px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .profile-avatar-lg {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent-2));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 2.2rem;
+      box-shadow: 0 20px 40px -15px color-mix(in srgb, var(--accent-2) 60%, transparent);
+      border: 4px solid var(--surface);
+    }
+
+    .profile-info h3 {
+      font-family: var(--font-arabic);
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .profile-info .email {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 18px;
+      word-break: break-all;
+    }
+
+    .profile-info .field-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .profile-info .field-key {
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      min-width: 120px;
+    }
+
+    .profile-info .field-value {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .btn-edit {
+      margin-top: 10px;
+      background: transparent;
+      border: 1.5px solid var(--accent-2);
+      color: var(--accent-2);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-edit:hover { background: var(--accent-2); color: #fff; }
+
+    /* بطاقة المواد */
+    .data-section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 16px;
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--accent-2) 15%, transparent);
+      color: var(--accent-2);
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .section-header h3 {
+      font-family: var(--font-arabic);
+      font-size: 1.3rem;
+      color: var(--text);
+    }
+
+    .section-header p {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .form-input {
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      font-family: var(--font-arabic);
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-2);
+      background: #fff;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 15%, transparent);
+    }
+
+    .form-input.error { border-color: var(--danger); }
+
+    .btn-save {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px -10px color-mix(in srgb, var(--primary) 60%, transparent);
+    }
+
+    .btn-save:active { transform: translateY(0); }
+
+    /* قائمة المواد */
+    .subjects-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .subject-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .subject-item:hover { background: var(--surface); }
+
+    .subject-info { flex: 1; }
+
+    .subject-name {
+      font-family: var(--font-arabic);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .subject-code {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      background: var(--line);
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .subject-grade {
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .btn-add-subject {
+      background: var(--surface);
+      border: 1.5px dashed var(--line);
+      color: var(--accent-2);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-add-subject:hover {
+      border-style: solid;
+      background: color-mix(in srgb, var(--accent-2) 8%, transparent);
+    }
+
+    /* الإشعارات */
+    .toast {
+      position: fixed;
+      top: 20px;
+      inset-inline-end: 20px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+    .toast.info { background: var(--accent-2); }
+
+    /* الفوتر */
+    .student-footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--text-soft);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--line);
+    }
+
+    /* نافذة إضافة مادة */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal.hidden { display: none; }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 32px;
+      width: min(450px, 92%);
+      box-shadow: var(--shadow);
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      inset-inline-end: 16px;
+      background: none;
+      border: none;
+      color: var(--text-soft);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-title {
+      font-family: var(--font-arabic);
+      font-size: 1.3rem;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { background: var(--line); }
+
+    /* تجاوب */
+    @media (max-width: 768px) {
+      .profile-card { grid-template-columns: 1fr; }
+      .status-item { min-width: 100%; }
+      .form-grid { grid-template-columns: 1fr; }
+      .student-header .container { flex-direction: column; gap: 16px; align-items: stretch; }
+      .user-greeting { text-align: center; }
+      .auth-card { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- الترويسة (تظهر بعد تسجيل الدخول) -->
+  <header class="student-header" id="mainHeader" style="display:none;">
+    <div class="container">
+      <div class="brand-student">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="6" fill="currentColor"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(60 32 32)"/>
+            <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(120 32 32)"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>بيانات الطالب</h2>
+          <p>نظام السجل الأكاديمي — فيزياء المسارات</p>
+        </div>
+      </div>
+
+      <div class="user-greeting" id="greetingText">زائر</div>
+      <div class="user-avatar" id="userAvatar">ز</div>
+      <button class="btn-logout" id="btnLogout">تسجيل الخروج</button>
+    </div>
+  </header>
+
+  <!-- شاشة المصادقة (تظهر أولاً) -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="6" fill="currentColor"/>
+          <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6"/>
+          <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(60 32 32)"/>
+          <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(120 32 32)"/>
+        </svg>
+      </div>
+      <h2 id="authTitle">تسجيل الدخول</h2>
+      <p id="authSubtitle">أدخل بريدك الإلكتروني وكلمة المرور للدخول إلى بياناتك</p>
+
+      <form id="authForm" class="auth-form">
+        <div class="form-group">
+          <label class="form-label">البريد الإلكتروني</label>
+          <input type="email" id="authEmail" class="form-input" required placeholder="example@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">كلمة المرور</label>
+          <input type="password" id="authPassword" class="form-input" required placeholder="كلمة المرور">
+        </div>
+        <button type="submit" id="authBtn" class="btn-submit">تسجيل الدخول</button>
+      </form>
+
+      <div class="auth-toggle">
+        <p id="toggleText">لا تملك حساباً؟</p>
+        <button type="button" id="toggleBtn">إنشاء حساب جديد</button>
+      </div>
+
+      <button type="button" class="btn-back-home" id="btnBackHome" style="margin-top:16px; background:none; border:none; color:var(--text-soft); cursor:pointer; font-family:var(--font-ui); font-size:0.9rem;">← العودة للصفحة الرئيسية</button>
+    </div>
+  </div>
+
+  <!-- المحتوى الرئيسي (مخفي حتى تسجيل الدخول) -->
+  <div class="student-container" id="mainContent">
+    <div id="authBar" style="display:flex; gap:12px; margin-bottom:26px; flex-wrap:wrap;"></div>
+
+    <div class="status-bar">
+      <div class="status-item">
+        <span class="label">المعدل التراكمي</span>
+        <span class="value highlight" id="gpaValue">—</span>
+      </div>
+      <div class="status-item">
+        <span class="label">عدد المواد</span>
+        <span class="value" id="subjectsCount">0</span>
+      </div>
+      <div class="status-item">
+        <span class="label">الحالة</span>
+        <span class="value" id="statusValue">—</span>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-avatar-lg" id="profileAvatar">ز</div>
+      <div class="profile-info">
+        <h3 id="studentName">—</h3>
+        <div class="email" id="studentEmail">—</div>
+        <div class="field-row">
+          <span class="field-key">رقم الطالب</span>
+          <span class="field-value" id="studentId">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-key">الصف الدراسي</span>
+          <span class="field-value" id="studentGrade">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-key">التخصص</span>
+          <span class="field-value" id="studentMajor">—</span>
+        </div>
+        <button class="btn-edit" id="btnEditProfile">تعديل الملف الشخصي</button>
+      </div>
+    </div>
+
+    <div class="data-section">
+      <div class="section-header">
+        <div class="section-icon" aria-hidden="true">📚</div>
+        <div>
+          <h3>المواد الدراسية</h3>
+          <p>إدارة ومتابعة درجات موادك الأكاديمية</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">اسم المادة</label>
+          <input type="text" id="subjectName" class="form-input" placeholder="مثال: فيزياء ٢">
+        </div>
+        <div class="form-group">
+          <label class="form-label">كود المادة</label>
+          <input type="text" id="subjectCode" class="form-input" placeholder="مثال: PHY201">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الدرجة</label>
+          <input type="number" id="subjectGrade" class="form-input" min="0" max="100" placeholder="0-100">
+        </div>
+        <button class="btn-add-subject" id="btnAddSubject">إضافة مادة</button>
+      </div>
+
+      <div class="subjects-list" id="subjectsList">
+        <!-- المواد تظهر هنا -->
+      </div>
+    </div>
+
+    <div class="modal hidden" id="addSubjectModal">
+      <div class="modal-card">
+        <button class="modal-close" id="closeModal">&times;</button>
+        <h3 class="modal-title">إضافة مادة جديدة</h3>
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-group">
+            <label class="form-label">اسم المادة</label>
+            <input type="text" id="modalSubjectName" class="form-input" placeholder="مثال: فيزياء ٢">
+          </div>
+          <div class="form-group">
+            <label class="form-label">كود المادة</label>
+            <input type="text" id="modalSubjectCode" class="form-input" placeholder="مثال: PHY201">
+          </div>
+          <div class="form-group">
+            <label class="form-label">الدرجة</label>
+            <input type="number" id="modalSubjectGrade" class="form-input" min="0" max="100" placeholder="0-100">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-secondary" id="btnCancelSubject">إلغاء</button>
+          <button class="btn-save" id="btnSaveSubject">إضافة المادة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="student-footer" id="mainFooter" style="display:none;">
+    فيزياء المسارات — بياناتك محفوظة محلياً على جهازك فقط
+  </footer>
+
+  <script>
+    /* ================= إعداد localStorage ================= */
+    const STORAGE_PREFIX = 'student_data_';
+    let currentUser = null;
+
+    /* عناصر الصفحة */
+    const authScreen = document.getElementById('authScreen');
+    const mainContent = document.getElementById('mainContent');
+    const mainHeader = document.getElementById('mainHeader');
+    const mainFooter = document.getElementById('mainFooter');
+
+    const authForm = document.getElementById('authForm');
+    const authEmail = document.getElementById('authEmail');
+    const authPassword = document.getElementById('authPassword');
+    const authBtn = document.getElementById('authBtn');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const toggleText = document.getElementById('toggleText');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const btnBackHome = document.getElementById('btnBackHome');
+
+    const els = {
+      greetingText: document.getElementById('greetingText'),
+      userAvatar: document.getElementById('userAvatar'),
+      btnLogout: document.getElementById('btnLogout'),
+      authBar: document.getElementById('authBar'),
+      studentName: document.getElementById('studentName'),
+      studentEmail: document.getElementById('studentEmail'),
+      studentId: document.getElementById('studentId'),
+      studentGrade: document.getElementById('studentGrade'),
+      studentMajor: document.getElementById('studentMajor'),
+      profileAvatar: document.getElementById('profileAvatar'),
+      gpaValue: document.getElementById('gpaValue'),
+      subjectsCount: document.getElementById('subjectsCount'),
+      statusValue: document.getElementById('statusValue'),
+      subjectsList: document.getElementById('subjectsList'),
+      subjectName: document.getElementById('subjectName'),
+      subjectCode: document.getElementById('subjectCode'),
+      subjectGrade: document.getElementById('subjectGrade'),
+      btnAddSubject: document.getElementById('btnAddSubject'),
+      modal: document.getElementById('addSubjectModal'),
+      closeModal: document.getElementById('closeModal'),
+      modalSubjectName: document.getElementById('modalSubjectName'),
+      modalSubjectCode: document.getElementById('modalSubjectCode'),
+      modalSubjectGrade: document.getElementById('modalSubjectGrade'),
+      btnCancelSubject: document.getElementById('btnCancelSubject'),
+      btnSaveSubject: document.getElementById('btnSaveSubject'),
+      btnEditProfile: document.getElementById('btnEditProfile')
+    };
+
+    let isLoginMode = true;
+
+    /* دوال التخزين المحلي */
+    function getStorageKey(email) {
+      return STORAGE_PREFIX + email.toLowerCase().trim();
+    }
+
+    function getUserData() {
+      if (!currentUser) return null;
+      try {
+        const raw = localStorage.getItem(getStorageKey(currentUser));
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveUserData(data) {
+      if (!currentUser) return false;
+      try {
+        localStorage.setItem(getStorageKey(currentUser), JSON.stringify(data));
+        return true;
+      } catch (e) {
+        showToast('فشل حفظ البيانات', 'error');
+        return false;
+      }
+    }
+
+    /* إشعارات */
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function getInitials(name) {
+      if (!name) return 'ز';
+      const parts = name.trim().split(/\s+/);
+      if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      return parts[0][0].toUpperCase();
+    }
+
+    /* تبديل الشاشات */
+    function showAuthScreen() {
+      authScreen.style.display = 'flex';
+      mainContent.style.display = 'none';
+      mainHeader.style.display = 'none';
+      mainFooter.style.display = 'none';
+      currentUser = null;
+    }
+
+    function showMainContent() {
+      authScreen.style.display = 'none';
+      mainContent.style.display = 'block';
+      mainHeader.style.display = 'block';
+      mainFooter.style.display = 'block';
+      renderProfile();
+    }
+
+    function toggleAuthMode() {
+      isLoginMode = !isLoginMode;
+      if (isLoginMode) {
+        authTitle.textContent = 'تسجيل الدخول';
+        authSubtitle.textContent = 'أدخل بريدك الإلكتروني وكلمة المرور للدخول إلى بياناتك';
+        authBtn.textContent = 'تسجيل الدخول';
+        toggleText.textContent = 'لا تملك حساباً؟';
+        toggleBtn.textContent = 'إنشاء حساب جديد';
+      } else {
+        authTitle.textContent = 'إنشاء حساب جديد';
+        authSubtitle.textContent = 'أنشئ حساباً جديداً لحفظ بياناتك بشكل آمن';
+        authBtn.textContent = 'إنشاء الحساب';
+        toggleText.textContent = 'لديك حساب بالفعل؟';
+        toggleBtn.textContent = 'تسجيل الدخول';
+      }
+    }
+
+    /* المصادقة */
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = authEmail.value.trim().toLowerCase();
+      const password = authPassword.value;
+
+      if (!email || !password) {
+        showToast('يرجى إدخال البريد الإلكتروني وكلمة المرور', 'error');
+        return;
+      }
+
+      if (isLoginMode) {
+        const raw = localStorage.getItem(getStorageKey(email));
+        if (!raw) {
+          showToast('البريد الإلكتروني غير مسجل', 'error');
+          return;
+        }
+        const user = JSON.parse(raw);
+        if (user.password !== password) {
+          showToast('كلمة المرور غير صحيحة', 'error');
+          return;
+        }
+        currentUser = email;
+        showMainContent();
+        showToast('تم تسجيل الدخول بنجاح', 'success');
+      } else {
+        const name = prompt('أدخل الاسم الكامل:', '');
+        if (!name) {
+          showToast('يجب إدخال الاسم}', 'error');
+          return;
+        }
+        if (localStorage.getItem(getStorageKey(email))) {
+          showToast('البريد الإلكتروني مسجل سابقاً', 'error');
+          return;
+        }
+        const userData = {
+          name,
+          email,
+          password,
+          studentId: '',
+          grade: '',
+          major: '',
+          subjects: [],
+          createdAt: new Date().toISOString()
+        };
+        localStorage.setItem(getStorageKey(email), JSON.stringify(userData));
+        currentUser = email;
+        showMainContent();
+        showToast('تم إنشاء الحساب بنجاح', 'success');
+      }
+    });
+
+    toggleBtn.addEventListener('click', toggleAuthMode);
+    btnBackHome.addEventListener('click', () => { window.location.href = 'index.html'; });
+
+    /* تسجيل الخروج */
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      currentUser = null;
+      showToast('تم تسجيل الخروج', 'info');
+      setTimeout(() => showAuthScreen(), 800);
+    });
+
+    /* عرض الملف الشخصي */
+    function renderProfile() {
+      if (!currentUser) return;
+
+      const data = getUserData();
+      if (!data) return;
+
+      els.studentName.textContent = data.name || '—';
+      els.studentEmail.textContent = data.email || '—';
+      els.studentId.textContent = data.studentId || '—';
+      els.studentGrade.textContent = data.grade || '—';
+      els.studentMajor.textContent = data.major || '—';
+      els.greetingText.textContent = `مرحباً، ${data.name || 'طالب'}`;
+      els.userAvatar.textContent = getInitials(data.name);
+      els.profileAvatar.textContent = getInitials(data.name);
+
+      const subjects = data.subjects || [];
+      els.subjectsCount.textContent = subjects.length;
+
+      if (subjects.length > 0) {
+        const gpa = (subjects.reduce((sum, s) => sum + (parseFloat(s.grade) || 0), 0) / subjects.length).toFixed(2);
+        els.gpaValue.textContent = gpa;
+        els.statusValue.textContent = gpa >= 85 ? 'ممتاز' : gpa >= 70 ? 'جيد جداً' : 'جيد';
+      } else {
+        els.gpaValue.textContent = '—';
+        els.statusValue.textContent = 'لا توجد مواد';
+      }
+
+      renderSubjects(subjects);
+    }
+
+    function clearProfile() {
+      els.studentName.textContent = '—';
+      els.studentEmail.textContent = '—';
+      els.studentId.textContent = '—';
+      els.studentGrade.textContent = '—';
+      els.studentMajor.textContent = '—';
+      els.gpaValue.textContent = '—';
+      els.subjectsCount.textContent = '0';
+      els.statusValue.textContent = '—';
+      els.subjectsList.innerHTML = '';
+    }
+
+    function renderSubjects(subjects) {
+      els.subjectsList.innerHTML = '';
+      if (subjects.length === 0) {
+        els.subjectsList.innerHTML = '<div style="text-align:center; color:var(--text-soft); padding:30px;">لا توجد مواد مضافة بعد</div>';
+        return;
+      }
+      subjects.forEach((s, idx) => {
+        const item = document.createElement('div');
+        item.className = 'subject-item';
+        item.innerHTML = `
+          <div class="subject-info">
+            <div class="subject-name">${escapeHtml(s.name)}</div>
+            <div class="subject-code">${escapeHtml(s.code || '—')}</div>
+          </div>
+          <div class="subject-grade">${s.grade}</div>
+        `;
+        els.subjectsList.appendChild(item);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    /* إضافة مادة */
+    els.btnAddSubject.addEventListener('click', () => {
+      els.modal.classList.remove('hidden');
+      els.modalSubjectName.value = '';
+      els.modalSubjectCode.value = '';
+      els.modalSubjectGrade.value = '';
+    });
+
+    els.closeModal.addEventListener('click', () => els.modal.classList.add('hidden'));
+    els.btnCancelSubject.addEventListener('click', () => els.modal.classList.add('hidden'));
+    els.modal.addEventListener('click', (e) => { if (e.target === els.modal) els.modal.classList.add('hidden'); });
+
+    els.btnSaveSubject.addEventListener('click', () => {
+      const name = els.modalSubjectName.value.trim();
+      const code = els.modalSubjectCode.value.trim();
+      const grade = els.modalSubjectGrade.value.trim();
+
+      if (!name || !grade) {
+        showToast('يرجى إدخال اسم المادة والدرجة', 'error');
+        return;
+      }
+
+      const data = getUserData();
+      data.subjects.push({ name, code, grade });
+      saveUserData(data);
+      renderProfile();
+      els.modal.classList.add('hidden');
+      showToast('تم إضافة المادة بنجاح', 'success');
+    });
+
+    /* تعديل الملف الشخصي */
+    els.btnEditProfile.addEventListener('click', () => {
+      const data = getUserData();
+      if (!data) return;
+
+      const name = prompt('أدخل الاسم الكامل:', data.name);
+      if (name) {
+        data.name = name;
+        saveUserData(data);
+        renderProfile();
+        showToast('تم تحديث الملف الشخصي', 'success');
+      }
+    });
+
+    /* بدء التشغيل */
+    showAuthScreen();
+  </script>
+</body>
+</html>
