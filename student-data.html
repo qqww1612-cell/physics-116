@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- مكتبة Supabase من CDN -->
+  <!-- مكتبة Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -147,7 +147,7 @@
   <script>
     /* ================= إعداد Supabase ================= */
     const SUPABASE_URL = 'https://jbqotzkinlatewrjvadi.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_F93GOC_LaWY-NWadmN8wmA_F0qEh_iO'; // ← الصق المفتاح من Supabase > Settings > API
+    const SUPABASE_ANON_KEY = 'sb_publishable_F93GOC_LaWY-NWadmN8wmA_F0qEh_iO';
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -226,7 +226,7 @@
         showToast(error.message, 'error');
         return false;
       }
-      showToast('تم إنشاء الحساب. يرجى التحقق من بريدك الإلكتروني', 'info');
+      showToast('تم إنشاء الحساب بنجاح', 'success');
       return true;
     }
 
@@ -246,19 +246,22 @@
         .eq('user_id', currentUser.id)
         .order('created_at', { ascending: false });
       if (error) {
-        showToast('فشل في جلب البيانات', 'error');
+        showToast('فشل في جلب البيانات: ' + error.message, 'error');
         return [];
       }
       return data || [];
     }
 
     async function addNote(subjectName, subjectCode, grade) {
-      if (!currentUser) return false;
-      const { error } = await supabase
+      if (!currentUser) {
+        showToast('يجب تسجيل الدخول أولاً', 'error');
+        return false;
+      }
+      const { data, error } = await supabase
         .from('student_notes')
         .insert([{ user_id: currentUser.id, subject_name: subjectName, subject_code: subjectCode, grade: parseInt(grade) }]);
       if (error) {
-        showToast('فشل في إضافة المادة', 'error');
+        showToast('فشل في إضافة المادة: ' + error.message, 'error');
         return false;
       }
       return true;
@@ -272,7 +275,7 @@
         .eq('id', id)
         .eq('user_id', currentUser.id);
       if (error) {
-        showToast('فشل في الحذف', 'error');
+        showToast('فشل في الحذف: ' + error.message, 'error');
         return false;
       }
       return true;
@@ -284,7 +287,8 @@
         .from('profiles')
         .upsert({ user_id: currentUser.id, ...updates });
       if (error) {
-        return true;
+        showToast('فشل في التحديث: ' + error.message, 'error');
+        return false;
       }
       return true;
     }
