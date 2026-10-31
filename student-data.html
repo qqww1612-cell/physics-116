@@ -9,10 +9,546 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
 
   <!-- مكتبة Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* ================= تنسيقات صفحة بيانات الطالب ================= */
+    :root {
+      --primary: #0f172a;
+      --primary-2: #1e293b;
+      --accent: #38bdf8;
+      --accent-2: #0ea5e9;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-soft: #64748b;
+      --line: #e2e8f0;
+      --shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.25);
+      --radius: 24px;
+      --font-arabic: "Aref Ruqaa", "IBM Plex Sans Arabic", serif;
+      --font-ui: "IBM Plex Sans Arabic", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-ui);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(30, 41, 59, 0.12), transparent 60%),
+        radial-gradient(800px 400px at -10% 0%, rgba(56, 189, 248, 0.10), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      direction: rtl;
+      line-height: 1.7;
+    }
+
+    /* ================= الترويسة ================= */
+    .student-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .student-header .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand-student {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--accent-2) 70%, transparent);
+    }
+
+    .brand-logo svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.5;
+    }
+
+    .brand-text h2 {
+      font-family: var(--font-arabic);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .brand-text p {
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .user-greeting {
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-logout {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover { background: rgba(255, 255, 255, 0.2); }
+
+    /* ================= الحاوية ================= */
+    .student-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 24px;
+    }
+
+    /* ================= شريط الحالة ================= */
+    .status-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      flex: 1;
+      min-width: 140px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 20px -10px rgba(15, 23, 42, 0.08);
+    }
+
+    .status-item .label {
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .status-item .value {
+      font-family: var(--font-arabic);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .status-item .value.highlight { color: var(--accent-2); }
+
+    /* ================= بطاقة الملف الشخصي ================= */
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 26px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .profile-avatar-lg {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent-2));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 2.2rem;
+      box-shadow: 0 20px 40px -15px color-mix(in srgb, var(--accent-2) 60%, transparent);
+      border: 4px solid var(--surface);
+    }
+
+    .profile-info h3 {
+      font-family: var(--font-arabic);
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .profile-info .email {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 18px;
+      word-break: break-all;
+    }
+
+    .profile-info .field-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .profile-info .field-key {
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      min-width: 120px;
+    }
+
+    .profile-info .field-value {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .btn-edit {
+      margin-top: 10px;
+      background: transparent;
+      border: 1.5px solid var(--accent-2);
+      color: var(--accent-2);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-edit:hover { background: var(--accent-2); color: #fff; }
+
+    /* ================= بطاقة البيانات ================= */
+    .data-section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 16px;
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--accent-2) 15%, transparent);
+      color: var(--accent-2);
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .section-header h3 {
+      font-family: var(--font-arabic);
+      font-size: 1.3rem;
+      color: var(--text);
+    }
+
+    .section-header p {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .form-input {
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      font-family: var(--font-arabic);
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-2);
+      background: #fff;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 15%, transparent);
+    }
+
+    .form-input.error { border-color: var(--danger); }
+
+    .btn-save {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px -10px color-mix(in srgb, var(--primary) 60%, transparent);
+    }
+
+    .btn-save:active { transform: translateY(0); }
+
+    /* ================= قائمة المواد ================= */
+    .subjects-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .subject-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .subject-item:hover { background: var(--surface); }
+
+    .subject-info { flex: 1; }
+
+    .subject-name {
+      font-family: var(--font-arabic);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .subject-code {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      background: var(--line);
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .subject-grade {
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .btn-add-subject {
+      background: var(--surface);
+      border: 1.5px dashed var(--line);
+      color: var(--accent-2);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-add-subject:hover {
+      border-style: solid;
+      background: color-mix(in srgb, var(--accent-2) 8%, transparent);
+    }
+
+    /* ================= شريط الإشعارات ================= */
+    .toast {
+      position: fixed;
+      top: 20px;
+      inset-inline-end: 20px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+    .toast.info { background: var(--accent-2); }
+
+    /* ================= الفوتر ================= */
+    .student-footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--text-soft);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ================= نافذة إضافة مادة ================= */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal.hidden { display: none; }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 32px;
+      width: min(450px, 92%);
+      box-shadow: var(--shadow);
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      inset-inline-end: 16px;
+      background: none;
+      border: none;
+      color: var(--text-soft);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-title {
+      font-family: var(--font-arabic);
+      font-size: 1.3rem;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { background: var(--line); }
+
+    /* ================= تجاوب ================= */
+    @media (max-width: 768px) {
+      .profile-card { grid-template-columns: 1fr; }
+      .status-item { min-width: 100%; }
+      .form-grid { grid-template-columns: 1fr; }
+      .student-header .container { flex-direction: column; gap: 16px; align-items: stretch; }
+      .user-greeting { text-align: center; }
+    }
+  </style>
 </head>
 <body>
 
