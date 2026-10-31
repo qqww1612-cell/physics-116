@@ -54,7 +54,7 @@
     .student-header {
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
       color: #fff;
-      padding: 24px 0;
+      padding: 20px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       position: sticky;
       top: 0;
@@ -62,7 +62,7 @@
     }
 
     .student-header .container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 0 24px;
       display: flex;
@@ -74,13 +74,13 @@
     .brand-student {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .brand-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       display: grid;
       place-items: center;
@@ -88,8 +88,8 @@
     }
 
     .brand-logo svg {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       fill: none;
       stroke: #fff;
       stroke-width: 2.5;
@@ -97,14 +97,14 @@
 
     .brand-text h2 {
       font-family: var(--font-arabic);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #fff;
     }
 
     .brand-text p {
       font-family: var(--font-ui);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: rgba(255, 255, 255, 0.7);
     }
 
@@ -116,8 +116,8 @@
     }
 
     .user-avatar {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--primary));
       display: grid;
@@ -133,7 +133,7 @@
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
-      padding: 8px 18px;
+      padding: 8px 16px;
       border-radius: 10px;
       font-family: var(--font-ui);
       font-size: 0.9rem;
@@ -144,11 +144,165 @@
 
     .btn-logout:hover { background: rgba(255, 255, 255, 0.2); }
 
-    /* ================= الحاوية ================= */
+    /* ================= شاشة المصادقة (تسجيل الدخول / التسجيل) ================= */
+    .auth-screen {
+      min-height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      box-shadow: var(--shadow);
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .auth-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent-2));
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 20px 40px -15px color-mix(in srgb, var(--accent-2) 60%, transparent);
+    }
+
+    .auth-icon svg {
+      width: 34px;
+      height: 34px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.5;
+    }
+
+    .auth-card h2 {
+      font-family: var(--font-arabic);
+      font-size: 1.7rem;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .auth-card p {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: right;
+    }
+
+    .form-label {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .form-input {
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      font-family: var(--font-arabic);
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-2);
+      background: #fff;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 15%, transparent);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px -10px color-mix(in srgb, var(--primary) 60%, transparent);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .auth-toggle {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .auth-toggle p {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-bottom: 12px;
+    }
+
+    .auth-toggle button {
+      background: none;
+      border: none;
+      color: var(--accent-2);
+      font-family: var(--font-arabic);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .auth-toggle button:hover { color: var(--accent); }
+
+    .btn-back-home {
+      margin-top: 16px;
+      background: none;
+      border: none;
+      color: var(--text-soft);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-back-home:hover { color: var(--text); }
+
+    /* ================= الحاوية الرئيسية (تظهر بعد التسجيل) ================= */
     .student-container {
       max-width: 1100px;
       margin: 30px auto;
       padding: 0 24px;
+      display: none; /* مخفية افتراضياً حتى يسجل الدخول */
     }
 
     /* ================= شريط الحالة ================= */
@@ -547,13 +701,14 @@
       .form-grid { grid-template-columns: 1fr; }
       .student-header .container { flex-direction: column; gap: 16px; align-items: stretch; }
       .user-greeting { text-align: center; }
+      .auth-card { padding: 36px 24px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ================= الترويسة ================= -->
-  <header class="student-header">
+  <!-- ================= الترويسة (تظهر بعد التسجيل فقط) ================= -->
+  <header class="student-header" id="mainHeader" style="display:none;">
     <div class="container">
       <div class="brand-student">
         <div class="brand-logo" aria-hidden="true">
@@ -572,12 +727,48 @@
 
       <div class="user-greeting" id="greetingText">زائر</div>
       <div class="user-avatar" id="userAvatar">ز</div>
-      <button class="btn-logout" id="btnLogout" style="display:none;">تسجيل الخروج</button>
+      <button class="btn-logout" id="btnLogout">تسجيل الخروج</button>
     </div>
   </header>
 
-  <div class="student-container">
-    <!-- شريط المصادقة -->
+  <!-- ================= شاشة المصادقة (تظهر دائماً إذا لم يسجل الدخول) ================= -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="6" fill="currentColor"/>
+          <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6"/>
+          <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(60 32 32)"/>
+          <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="currentColor" stroke-width="2.6" transform="rotate(120 32 32)"/>
+        </svg>
+      </div>
+      <h2 id="authTitle">تسجيل الدخول</h2>
+      <p id="authSubtitle">أدخل بريدك الإلكتروني وكلمة المرور للدخول إلى بياناتك</p>
+      
+      <form id="authForm" class="auth-form">
+        <div class="form-group">
+          <label class="form-label">البريد الإلكتروني</label>
+          <input type="email" id="authEmail" class="form-input" required placeholder="example@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">كلمة المرور</label>
+          <input type="password" id="authPassword" class="form-input" required placeholder="كلمة المرور">
+        </div>
+        <button type="submit" id="authBtn" class="btn-submit">تسجيل الدخول</button>
+      </form>
+
+      <div class="auth-toggle" id="authToggle">
+        <p id="toggleText">لا تملك حساباً؟</p>
+        <button type="button" id="toggleBtn" class="toggle-link">إنشاء حساب جديد</button>
+      </div>
+      
+      <button type="button" class="btn-back-home" id="btnBackHome">← العودة للصفحة الرئيسية</button>
+    </div>
+  </div>
+
+  <!-- ================= المحتوى الرئيسي (مخفي حتى التسجيل) ================= -->
+  <div class="student-container" id="mainContent">
+    <!-- شريط المصادقة العلوي -->
     <div id="authBar" style="display:flex; gap:12px; margin-bottom:26px; flex-wrap:wrap;"></div>
 
     <!-- شريط الحالة -->
@@ -676,7 +867,7 @@
     </div>
   </div>
 
-  <footer class="student-footer">
+  <footer class="student-footer" id="mainFooter" style="display:none;">
     فيزياء المسارات — بياناتك محفوظة بشكل آمن في قاعدة بيانات Supabase
   </footer>
 
@@ -687,8 +878,22 @@
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    /* ================= حالة التطبيق ================= */
-    let currentUser = null;
+    /* ================= عناصر الصفحة ================= */
+    const authScreen = document.getElementById('authScreen');
+    const mainContent = document.getElementById('mainContent');
+    const mainHeader = document.getElementById('mainHeader');
+    const mainFooter = document.getElementById('mainFooter');
+
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const authForm = document.getElementById('authForm');
+    const authEmail = document.getElementById('authEmail');
+    const authPassword = document.getElementById('authPassword');
+    const authBtn = document.getElementById('authBtn');
+    const authToggle = document.getElementById('authToggle');
+    const toggleText = document.getElementById('toggleText');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const btnBackHome = document.getElementById('btnBackHome');
 
     const els = {
       greetingText: document.getElementById('greetingText'),
@@ -719,23 +924,34 @@
       btnEditProfile: document.getElementById('btnEditProfile')
     };
 
+    /* ================= حالة التطبيق ================= */
+    let isLoginMode = true;
+    let currentUser = null;
+
     /* ================= دوال Supabase ================= */
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
     function renderAuthBar() {
       if (currentUser) {
         els.authBar.innerHTML = `
           <span style="font-family:var(--font-ui); font-size:0.9rem; color:var(--text-soft);">
             مسجل كـ: ${currentUser.email}
           </span>
-          <button id="btnSignOut" style="background:var(--danger); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-family:var(--font-ui); font-weight:600; cursor:pointer;">تسجيل الخروج</button>
+          <button id="btnSignOutTop" style="background:var(--danger); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-family:var(--font-ui); font-weight:600; cursor:pointer;">تسجيل الخروج</button>
         `;
-        document.getElementById('btnSignOut').addEventListener('click', handleSignOut);
+        document.getElementById('btnSignOutTop').addEventListener('click', handleSignOut);
       } else {
-        els.authBar.innerHTML = `
-          <button id="btnSignIn" style="background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-family:var(--font-arabic); font-weight:700; cursor:pointer;">تسجيل الدخول</button>
-          <button id="btnSignUp" style="background:var(--surface); border:1.5px solid var(--line); color:var(--text); padding:10px 20px; border-radius:8px; font-family:var(--font-arabic); font-weight:700; cursor:pointer;">إنشاء حساب</button>
-        `;
-        document.getElementById('btnSignIn').addEventListener('click', showLoginModal);
-        document.getElementById('btnSignUp').addEventListener('click', showRegisterModal);
+        els.authBar.innerHTML = '';
       }
     }
 
@@ -746,9 +962,7 @@
         return false;
       }
       currentUser = data.user;
-      renderAuthBar();
-      renderProfile();
-      showToast('تم تسجيل الدخول بنجاح', 'success');
+      showMainContent();
       return true;
     }
 
@@ -762,16 +976,15 @@
         showToast(error.message, 'error');
         return false;
       }
-      showToast('تم إنشاء الحساب بنجاح', 'success');
+      showToast('تم إنشاء الحساب بنجاح. يمكنك الآن تسجيل الدخول', 'success');
+      toggleAuthMode();
       return true;
     }
 
     async function handleSignOut() {
       await supabase.auth.signOut();
       currentUser = null;
-      renderAuthBar();
-      clearProfile();
-      showToast('تم تسجيل الخروج', 'info');
+      showAuthScreen();
     }
 
     async function fetchNotes() {
@@ -829,19 +1042,43 @@
       return true;
     }
 
-    /* ================= واجهة المستخدم ================= */
-    function showToast(message, type = 'info') {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      requestAnimationFrame(() => toast.classList.add('show'));
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
+    /* ================= تبديل شاشات العرض ================= */
+    function showAuthScreen() {
+      authScreen.style.display = 'flex';
+      mainContent.style.display = 'none';
+      mainHeader.style.display = 'none';
+      mainFooter.style.display = 'none';
+      currentUser = null;
+      renderAuthBar();
     }
 
+    function showMainContent() {
+      authScreen.style.display = 'none';
+      mainContent.style.display = 'block';
+      mainHeader.style.display = 'block';
+      mainFooter.style.display = 'block';
+      renderAuthBar();
+      renderProfile();
+    }
+
+    function toggleAuthMode() {
+      isLoginMode = !isLoginMode;
+      if (isLoginMode) {
+        authTitle.textContent = 'تسجيل الدخول';
+        authSubtitle.textContent = 'أدخل بريدك الإلكتروني وكلمة المرور للدخول إلى بياناتك';
+        authBtn.textContent = 'تسجيل الدخول';
+        toggleText.textContent = 'لا تملك حساباً؟';
+        toggleBtn.textContent = 'إنشاء حساب جديد';
+      } else {
+        authTitle.textContent = 'إنشاء حساب جديد';
+        authSubtitle.textContent = 'أنشئ حساباً جديداً لحفظ بياناتك بشكل آمن';
+        authBtn.textContent = 'إنشاء الحساب';
+        toggleText.textContent = 'لديك حساب بالفعل؟';
+        toggleBtn.textContent = 'تسجيل الدخول';
+      }
+    }
+
+    /* ================= عرض الملف الشخصي ================= */
     function getInitials(name) {
       if (!name) return 'ز';
       const parts = name.trim().split(/\s+/);
@@ -930,76 +1167,33 @@
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    function showLoginModal() {
-      const html = `
-        <div class="modal" id="authModal">
-          <div class="modal-card" style="max-width:420px;">
-            <button class="modal-close" id="closeAuthModal">&times;</button>
-            <h3 class="modal-title">تسجيل الدخول</h3>
-            <div class="form-grid" style="grid-template-columns: 1fr;">
-              <div class="form-group">
-                <label class="form-label">البريد الإلكتروني</label>
-                <input type="email" id="loginEmail" class="form-input" required placeholder="example@email.com">
-              </div>
-              <div class="form-group">
-                <label class="form-label">كلمة المرور</label>
-                <input type="password" id="loginPassword" class="form-input" required placeholder="كلمة المرور">
-              </div>
-            </div>
-            <div class="form-actions">
-              <button class="btn-secondary" id="closeAuthModalBtn">إلغاء</button>
-              <button class="btn-save" id="doLogin">تسجيل الدخول</button>
-            </div>
-          </div>
-        </div>`;
-      document.body.insertAdjacentHTML('beforeend', html);
-      document.getElementById('closeAuthModal').addEventListener('click', () => document.getElementById('authModal').remove());
-      document.getElementById('closeAuthModalBtn').addEventListener('click', () => document.getElementById('authModal').remove());
-      document.getElementById('doLogin').addEventListener('click', async () => {
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        await handleSignIn(email, password);
-        document.getElementById('authModal').remove();
-      });
-    }
+    /* ================= أحداث المصادقة ================= */
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = authEmail.value.trim();
+      const password = authPassword.value;
 
-    function showRegisterModal() {
-      const html = `
-        <div class="modal" id="authModal">
-          <div class="modal-card" style="max-width:420px;">
-            <button class="modal-close" id="closeAuthModal">&times;</button>
-            <h3 class="modal-title">إنشاء حساب جديد</h3>
-            <div class="form-grid" style="grid-template-columns: 1fr;">
-              <div class="form-group">
-                <label class="form-label">الاسم الكامل</label>
-                <input type="text" id="regName" class="form-input" required placeholder="أحمد محمد">
-              </div>
-              <div class="form-group">
-                <label class="form-label">البريد الإلكتروني</label>
-                <input type="email" id="regEmail" class="form-input" required placeholder="example@email.com">
-              </div>
-              <div class="form-group">
-                <label class="form-label">كلمة المرور</label>
-                <input type="password" id="regPassword" class="form-input" required minlength="6" placeholder="كلمة المرور">
-              </div>
-            </div>
-            <div class="form-actions">
-              <button class="btn-secondary" id="closeAuthModalBtn">إلغاء</button>
-              <button class="btn-save" id="doRegister">إنشاء الحساب</button>
-            </div>
-          </div>
-        </div>`;
-      document.body.insertAdjacentHTML('beforeend', html);
-      document.getElementById('closeAuthModal').addEventListener('click', () => document.getElementById('authModal').remove());
-      document.getElementById('closeAuthModalBtn').addEventListener('click', () => document.getElementById('authModal').remove());
-      document.getElementById('doRegister').addEventListener('click', async () => {
-        const name = document.getElementById('regName').value;
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
+      if (isLoginMode) {
+        await handleSignIn(email, password);
+      } else {
+        const fullName = authEmail.value.trim(); // نستخدم البريد كاسم مؤقت إذا لم يكن هناك حقل اسم
+        // نطلب الاسم بشكل منفصل
+        const name = prompt('أدخل الاسم الكامل:', '');
+        if (!name) {
+          showToast('يجب إدخال الاسم}', 'error');
+          return;
+        }
         await handleSignUp(email, password, name);
-        document.getElementById('authModal').remove();
-      });
-    }
+      }
+    });
+
+    toggleBtn.addEventListener('click', toggleAuthMode);
+    btnBackHome.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    /* ================= أحداث المحتوى الرئيسي ================= */
+    els.btnLogout.addEventListener('click', handleSignOut);
 
     els.btnAddSubject.addEventListener('click', () => {
       els.modal.classList.remove('hidden');
@@ -1038,16 +1232,24 @@
     });
 
     /* ================= بدء التشغيل ================= */
-    renderAuthBar();
+    // التحقق من وجود جلسة موجودة
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        currentUser = session.user;
+        showMainContent();
+      } else {
+        showAuthScreen();
+      }
+    });
+
+    // مراقبة تغيير حالة المصادقة
     supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
         currentUser = session.user;
-        renderAuthBar();
-        renderProfile();
+        showMainContent();
       } else {
         currentUser = null;
-        renderAuthBar();
-        clearProfile();
+        showAuthScreen();
       }
     });
   </script>
